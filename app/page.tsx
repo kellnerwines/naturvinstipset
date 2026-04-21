@@ -1,65 +1,135 @@
+import type { Metadata } from "next";
 import Image from "next/image";
+import { getWines, getRatings, combinedRating } from "@/lib/blob";
+import WineCard from "@/components/WineCard";
 
-export default function Home() {
+export const dynamic = "force-dynamic";
+
+export const metadata: Metadata = {
+  title: "Naturvinstipset – 100 bästa naturvinerna på Systembolaget",
+  description:
+    "Rankad lista över de bästa naturvinerna du kan köpa på Systembolaget. Betyg från riktiga vinälskare – utan krångel.",
+  openGraph: { url: "https://naturvinstipset.se" },
+};
+
+const jsonLd = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Naturvinstipset",
+  url: "https://naturvinstipset.se",
+  description: "De bästa naturvinerna på Systembolaget – rankade och betygsatta.",
+  inLanguage: "sv",
+};
+
+export default async function HomePage() {
+  const [wines, ratings] = await Promise.all([getWines(), getRatings()]);
+
+  const published = wines.filter((w) => w.published);
+  const ranked = published
+    .map((w) => {
+      const wineRatings = ratings.filter((r) => r.wineId === w.id);
+      return { wine: w, rating: combinedRating(w, ratings), count: wineRatings.length };
+    })
+    .sort((a, b) => b.rating - a.rating)
+    .slice(0, 100);
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
+    <div>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
+      {/* ── Hero with wavy bottom ───────────────────────────────────────────── */}
+      <section className="relative bg-[var(--fg)] overflow-hidden">
+        <div className="max-w-5xl mx-auto px-6 pt-20 pb-32 flex flex-col md:flex-row items-center gap-12">
+          {/* Text */}
+          <div className="flex-1">
+            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-white/40 mb-5">
+              De bästa naturvinerna på Systembolaget
+            </p>
+            <h1 className="text-4xl md:text-6xl font-extrabold leading-[1.05] tracking-tight text-white mb-6">
+              Rankade.<br />Betygsatta.<br />Utan krångel.
+            </h1>
+            <p className="text-base text-white/55 max-w-sm leading-relaxed mb-8">
+              Nybörjarvänliga tips, ärliga betyg och direktlänkar till Systembolaget.
+            </p>
             <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
+              href="#listan"
+              className="inline-flex items-center gap-2 text-sm font-semibold bg-white text-[var(--fg)] px-5 py-3 hover:opacity-90 transition-opacity"
             >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
+              Se listan →
+            </a>
+          </div>
+
+          {/* Illustration */}
+          <div className="shrink-0 flex items-center justify-center md:justify-end">
             <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+              src="/logo.png"
+              alt="Naturvinstipset"
+              width={160}
+              height={241}
+              unoptimized
+              className="opacity-80 drop-shadow-2xl"
+              style={{ filter: "brightness(0) invert(1) opacity(0.55)" }}
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+          </div>
+        </div>
+
+        {/* Wavy bottom — transitions to page background */}
+        <div className="absolute bottom-0 left-0 right-0 leading-[0]">
+          <svg
+            viewBox="0 0 1440 90"
+            xmlns="http://www.w3.org/2000/svg"
+            preserveAspectRatio="none"
+            className="w-full block"
+            style={{ height: "90px" }}
           >
-            Documentation
+            <path
+              d="M0,90 L0,52 C60,38 130,22 240,32 C340,41 390,60 490,52 C590,44 640,28 760,33 C870,38 920,54 1020,50 C1110,46 1170,32 1280,38 C1360,43 1410,55 1440,50 L1440,90 Z"
+              fill="#faf8f4"
+            />
+          </svg>
+        </div>
+      </section>
+
+      {/* ── Wine grid ───────────────────────────────────────────────────────── */}
+      <section id="listan" className="max-w-6xl mx-auto px-6 py-16">
+        <div className="flex items-baseline justify-between mb-10">
+          <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight uppercase text-[var(--fg)]">
+            Topp {ranked.length} naturviner
+          </h2>
+          <p className="text-xs text-[var(--faint)] tracking-widest uppercase">{published.length} viner</p>
+        </div>
+
+        {ranked.length === 0 ? (
+          <div className="text-center py-24 text-[var(--muted)]">
+            <p className="text-5xl mb-6 opacity-30">○</p>
+            <p className="text-sm">Viner laddas upp snart. Kom tillbaka!</p>
+          </div>
+        ) : (
+          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-12">
+            {ranked.map(({ wine, rating, count }, i) => (
+              <WineCard key={wine.id} wine={wine} rating={rating} ratingCount={count} rank={i + 1} />
+            ))}
+          </div>
+        )}
+      </section>
+
+      {/* ── CTA strip ──────────────────────────────────────────────────────── */}
+      <section className="border-t border-[var(--rule)] py-20 px-6">
+        <div className="max-w-3xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-6">
+          <div>
+            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--muted)] mb-2">Ny på naturvin?</p>
+            <h2 className="text-2xl md:text-3xl font-bold text-[var(--fg)] leading-tight">
+              Vi förklarar allt du behöver veta.
+            </h2>
+          </div>
+          <a
+            href="/vad-ar-naturvin"
+            className="shrink-0 inline-flex items-center gap-2 text-sm font-semibold text-[var(--fg)] border border-[var(--fg)] px-5 py-3 hover:bg-[var(--fg)] hover:text-[var(--bg)] transition-colors"
+          >
+            Läs vår guide →
           </a>
         </div>
-      </main>
+      </section>
     </div>
   );
 }

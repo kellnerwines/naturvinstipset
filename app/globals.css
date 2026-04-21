@@ -1,26 +1,52 @@
 @import "tailwindcss";
 
+/*
+  Design system — Naturvinstipset
+  Palette: warm cream + near-black, editorial minimal
+  Font: Outfit (geometric sans, upright proportions) — swap in Kynema later via --font-display
+*/
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg:      #faf8f4;
+  --fg:      #0d0d0d;
+  --muted:   rgba(13, 13, 13, 0.45);
+  --faint:   rgba(13, 13, 13, 0.22);
+  --rule:    rgba(13, 13, 13, 0.10);
+  --rule-xs: rgba(13, 13, 13, 0.06);
+  --card:    #ffffff;
+
+  /* Admin panel colors — not used on public pages */
+  --green:       #3d7a52;
+  --green-light: #eaf4ee;
+  --green-dark:  #2a5438;
+  --amber:       #b8722a;
+  --amber-light: #fdf3e7;
 }
 
 @theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+  --color-background: var(--bg);
+  --color-foreground: var(--fg);
+  --font-display: var(--font-syne);
+  --font-sans:    var(--font-syne);
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+html {
+  background: var(--bg);
+  color: var(--fg);
+  /* Explicit font-family ensures Outfit applies on every route, not just root */
+  font-family: var(--font-syne), "Outfit", "Helvetica Neue", Arial, sans-serif;
 }
 
 body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--fg);
+  font-family: inherit;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+}
+
+/* Selection */
+::selection {
+  background: var(--fg);
+  color: var(--bg);
 }
