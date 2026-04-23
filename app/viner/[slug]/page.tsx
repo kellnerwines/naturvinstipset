@@ -133,9 +133,9 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
           {/* Specs */}
           <div className="border-t border-black/8 pt-4 space-y-2 mb-6">
             {specs.map((s) => (
-              <div key={s.label} className="flex justify-between text-sm">
-                <span className="text-black/40">{s.label}</span>
-                <span className="font-medium">{s.value}</span>
+              <div key={s.label} className="flex justify-between text-sm gap-4">
+                <span className="text-black/40 shrink-0">{s.label}</span>
+                <span className="font-medium text-right">{s.value}</span>
               </div>
             ))}
           </div>

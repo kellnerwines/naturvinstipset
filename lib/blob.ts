@@ -27,6 +27,7 @@ export type Wine = {
   primaryImageUrl?: string;
   galleryImages?: string[];
   adminRating: number;       // 1–5, set by admin
+  wineOfMonth?: boolean;     // pinned to #1 with glowy border
   createdAt: string;
   published: boolean;
 };

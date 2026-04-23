@@ -15,7 +15,7 @@ const emptyWine = (): Omit<Wine, "id" | "slug" | "createdAt"> => ({
   wineType: "Rött", year: "", price: "", systembolagetUrl: "",
   description: "", longDescription: "", flavorTags: [],
   syra: 3, fyllighet: 3, funk: 2, stravhet: 2, flavorNotes: "",
-  primaryImageUrl: "", galleryImages: [], adminRating: 4, published: false,
+  primaryImageUrl: "", galleryImages: [], adminRating: 4, wineOfMonth: false, published: false,
 });
 
 const emptyBlog = (): Omit<BlogPost, "id" | "slug"> => ({
@@ -267,6 +267,11 @@ export default function AdminPanel() {
                 <div className="flex items-center gap-2">
                   <input type="checkbox" id="pub-wine" checked={editWine.published ?? false} onChange={(e) => setEditWine({ ...editWine, published: e.target.checked })} />
                   <label htmlFor="pub-wine" className="text-sm">Publicerat (visas på sajten)</label>
+                </div>
+
+                <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
+                  <input type="checkbox" id="motm-wine" checked={editWine.wineOfMonth ?? false} onChange={(e) => setEditWine({ ...editWine, wineOfMonth: e.target.checked })} className="accent-amber-500" />
+                  <label htmlFor="motm-wine" className="text-sm font-semibold text-amber-700">⭐ Månadens vin (visas på plats #1 med glödande ram)</label>
                 </div>
 
                 <div className="flex gap-3">
