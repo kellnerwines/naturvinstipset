@@ -1,9 +1,7 @@
 import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
-import Nav from "@/components/Nav";
-import Footer from "@/components/Footer";
-import AgeGate from "@/components/AgeGate";
+import SiteShell from "@/components/SiteShell";
 
 /*
   Outfit — clean geometric sans, upright proportions (not wide like Syne).
@@ -49,10 +47,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="sv" className={`${outfit.variable} h-full`}>
       <body className="min-h-full flex flex-col antialiased">
-        <AgeGate />
-        <Nav />
-        <main className="flex-1">{children}</main>
-        <Footer />
+        <SiteShell>{children}</SiteShell>
       </body>
     </html>
   );
