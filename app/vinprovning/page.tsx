@@ -1,9 +1,9 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Vinprovning",
+  title: "Vinprovning – Naturvinsupplevelser för grupper | Naturvinstipset",
   description:
-    "Vill ni ha en naturvinsupplevelse för er grupp eller företag? Vi erbjuder skräddarsydda vinprovningar med fokus på naturliga och spännande viner.",
+    "Skräddarsydda vinprovningar med fokus på naturvin — anpassade helt efter er grupp. After work, nybörjarkvällar och privata middagar. Hör av dig!",
   openGraph: { url: "https://naturvinstipset.se/vinprovning" },
 };
 
@@ -15,41 +15,32 @@ export default function VinprovningPage() {
         Naturvinsupplevelser för grupper
       </h1>
       <p className="text-lg text-black/70 leading-relaxed mb-4">
-        Är ni en grupp eller ett företag som vill upptäcka unika och spännande naturviner?
-      </p>
-      <p className="text-lg text-black/70 leading-relaxed mb-4">
-        Vi erbjuder vinprovningar med fokus på naturliga viner – tillgängliga, roliga och utan pretentioner.
-        Perfekt för after work, teambuilding eller en riktigt trevlig kväll.
+        Vi erbjuder vinprovningar med fokus på naturvin — utformade helt efter er grupp och vad ni vill ha ut av kvällen.
       </p>
       <p className="text-lg text-black/70 leading-relaxed mb-12">
-        Tveka inte att höra av dig – vi återkommer med ett förslag anpassat efter era önskemål och budget.
-        Vi är flexibla och kan ordna de flesta upplägg!
+        Vi anpassar allt efter er — antal personer, plats, nivå och känsla. Nybörjare som aldrig testat naturvin? Perfekt. Redan övertygade naturvinsälskare som vill gräva djupare? Också perfekt.
       </p>
 
-      <div className="grid md:grid-cols-3 gap-4 mb-16">
-        {[
-          { icon: "🎉", title: "After work", text: "Avslappnad vinprovning för grupper 5–20 pers." },
-          { icon: "🏢", title: "Företagsevent", text: "Tematiska provningar anpassade för er." },
-          { icon: "🎓", title: "Nybörjarkvällar", text: "Lär dig grunderna i naturvin från scratch." },
-        ].map((item) => (
-          <div key={item.title} className="bg-[var(--green-light)] rounded-xl p-5 text-center">
-            <div className="text-3xl mb-3">{item.icon}</div>
-            <p className="font-semibold text-[var(--green-dark)] mb-1">{item.title}</p>
-            <p className="text-sm text-black/60">{item.text}</p>
-          </div>
-        ))}
+      <div className="mb-12">
+        <p className="text-sm font-semibold text-black/40 uppercase tracking-widest mb-4">Vi har gjort provningar för</p>
+        <div className="flex flex-wrap gap-3">
+          {["After work", "Nybörjarkvällar", "Privata middagar"].map((item) => (
+            <span key={item} className="border border-[var(--green)] text-[var(--green-dark)] text-sm font-medium px-4 py-2">
+              {item}
+            </span>
+          ))}
+        </div>
       </div>
 
-      <div className="bg-white rounded-xl border border-black/10 p-8 text-center">
-        <h2 className="text-xl font-bold text-[var(--green-dark)] mb-2">Kontakta oss</h2>
-        <p className="text-black/60 mb-6 text-sm">Berätta lite om er grupp och vad ni är ute efter.</p>
+      <div className="bg-white border border-black/10 p-8 text-center">
+        <h2 className="text-xl font-bold text-[var(--green-dark)] mb-2">Hör av dig</h2>
+        <p className="text-black/60 mb-6 text-sm">Så hittar vi ett upplägg som passar er.</p>
         <a
           href="mailto:hej@naturvinstipset.se?subject=Vinprovningsförfrågan"
-          className="inline-block bg-[var(--green)] text-white font-semibold px-8 py-3 rounded-lg hover:bg-[var(--green-dark)] transition-colors"
+          className="inline-block bg-[var(--green)] text-white font-semibold px-8 py-3 hover:bg-[var(--green-dark)] transition-colors"
         >
-          Skicka ett mail →
+          hej@naturvinstipset.se →
         </a>
-        <p className="text-xs text-black/30 mt-4">hej@naturvinstipset.se</p>
       </div>
     </div>
   );

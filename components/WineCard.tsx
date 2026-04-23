@@ -6,7 +6,7 @@ import Image from "next/image";
 import { StarDisplay } from "./Stars";
 import type { Wine } from "@/lib/blob";
 
-type Props = { wine: Wine; rating: number; ratingCount: number; rank?: number };
+type Props = { wine: Wine; rating: number; ratingCount: number; rank?: number; wineOfMonth?: boolean };
 
 // Muted type-based background when no image is supplied
 const typeBg: Record<string, string> = {
@@ -32,18 +32,23 @@ function Meter({ label, value }: { label: string; value: number }) {
   );
 }
 
-export default function WineCard({ wine, rating, ratingCount, rank }: Props) {
+export default function WineCard({ wine, rating, ratingCount, rank, wineOfMonth }: Props) {
   const [open, setOpen] = useState(false);
 
   const hasProfile = wine.syra != null || wine.fyllighet != null || wine.funk != null || wine.stravhet != null;
   const bg = typeBg[wine.wineType] ?? "#d4d0c8";
 
   return (
-    <div className="flex flex-col">
+    <div className={`flex flex-col${wineOfMonth ? " motm-card" : ""}`}>
       {/* ── Image block ────────────────────────────────────────────────── */}
       <Link href={`/viner/${wine.slug}`} className="block relative group">
+        {wineOfMonth && (
+          <span className="absolute -top-3 left-1/2 -translate-x-1/2 z-10 text-[9px] font-bold tracking-[0.2em] uppercase bg-amber-400 text-white px-3 py-0.5 whitespace-nowrap">
+            Månadens vin
+          </span>
+        )}
         <div
-          className="w-full aspect-[3/4] overflow-hidden flex items-end justify-center"
+          className="w-full aspect-[3/4] overflow-hidden flex items-end justify-center rounded-lg"
           style={{ backgroundColor: bg }}
         >
           {wine.primaryImageUrl ? (
@@ -51,7 +56,7 @@ export default function WineCard({ wine, rating, ratingCount, rank }: Props) {
               src={wine.primaryImageUrl}
               alt={wine.name}
               fill
-              className="object-cover group-hover:scale-[1.02] transition-transform duration-500"
+              className="object-contain group-hover:scale-[1.03] transition-transform duration-500"
               unoptimized
             />
           ) : (
@@ -135,12 +140,28 @@ export default function WineCard({ wine, rating, ratingCount, rank }: Props) {
               <p className="text-[10px] text-[var(--faint)] tracking-wide">{wine.grape}</p>
             )}
 
-            <Link
-              href={`/viner/${wine.slug}`}
-              className="block text-[10px] tracking-[0.15em] uppercase text-[var(--muted)] border-b border-[var(--rule)] hover:text-[var(--fg)] hover:border-[var(--fg)] transition-colors pb-px w-fit mt-2"
-            >
-              Läs mer →
-            </Link>
+            <div className="flex items-center gap-4 mt-2 flex-wrap">
+              <Link
+                href={`/viner/${wine.slug}`}
+                className="block text-[10px] tracking-[0.15em] uppercase text-[var(--muted)] border-b border-[var(--rule)] hover:text-[var(--fg)] hover:border-[var(--fg)] transition-colors pb-px w-fit"
+              >
+                Läs mer →
+              </Link>
+              <Link
+                href={
+                  wine.wineType === "Orange" ? "/vad-ar-naturvin#orange-vin"
+                  : wine.wineType === "Pét Nat" ? "/vad-ar-naturvin#pet-nat"
+                  : wine.wineType === "Mousserande" ? "/vad-ar-naturvin#pet-nat"
+                  : "/vad-ar-naturvin"
+                }
+                className="block text-[10px] tracking-[0.15em] uppercase text-[var(--faint)] hover:text-[var(--muted)] transition-colors pb-px w-fit"
+              >
+                {wine.wineType === "Orange" ? "Vad är orange vin?"
+                  : wine.wineType === "Pét Nat" ? "Vad är pét-nat?"
+                  : wine.wineType === "Mousserande" ? "Om mousserande naturvin"
+                  : "Ny på naturvin?"}
+              </Link>
+            </div>
           </div>
         )}
       </div>

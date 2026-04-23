@@ -45,6 +45,20 @@ export default function Footer() {
           </div>
         </div>
 
+        {/* Tip CTA */}
+        <div className="border-t border-[var(--rule-xs)] pt-8 pb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
+          <div>
+            <p className="text-xs font-semibold text-[var(--fg)] mb-1">Saknar du ett vin?</p>
+            <p className="text-xs text-[var(--muted)]">Tipsa oss — vi uppdaterar listan löpande.</p>
+          </div>
+          <a
+            href="mailto:hej@naturvinstipset.se?subject=Vintips"
+            className="shrink-0 text-[11px] font-semibold text-[var(--fg)] border border-[var(--fg)] px-4 py-2 hover:bg-[var(--fg)] hover:text-[var(--bg)] transition-colors"
+          >
+            hej@naturvinstipset.se →
+          </a>
+        </div>
+
         {/* Bottom */}
         <div className="border-t border-[var(--rule-xs)] pt-6 text-[10px] text-[var(--faint)]">
           <p>Länkarna till Systembolaget kan vara affiliatelänkar. Naturvinstipset är en oberoende guide.</p>

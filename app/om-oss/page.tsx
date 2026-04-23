@@ -5,7 +5,7 @@ import Link from "next/link";
 export const metadata: Metadata = {
   title: "Om oss – Naturvinstipset",
   description:
-    "Vi startade Naturvinstipset för att göra det enklare att hitta naturviner på Systembolaget. Läs om vår mission och kom i kontakt med oss.",
+    "Vi gör det enklare att hitta naturvin du faktiskt gillar. Ärliga betyg, smart filtrering och en community för alla som älskar naturvin — nybörjare som experter.",
   openGraph: { url: "https://naturvinstipset.se/om-oss" },
 };
 
@@ -17,11 +17,8 @@ export default function OmOssPage() {
         <div className="max-w-2xl mx-auto">
           <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--muted)] mb-4">Om oss</p>
           <h1 className="text-4xl md:text-5xl font-extrabold text-[var(--fg)] leading-tight tracking-tight mb-6">
-            Vi gör det enklare att hitta naturvin.
+            Vi gör det enklare att hitta naturvin du faktiskt gillar.
           </h1>
-          <p className="text-base text-[var(--muted)] leading-relaxed max-w-lg">
-            Naturvin ska inte vara komplicerat. Vi skapade Naturvinstipset för att du snabbt ska hitta något gott — utan att behöva läsa dig igenom tusen recensioner eller förstå termer som bara sommelier-studenter kan.
-          </p>
         </div>
       </section>
 
@@ -30,16 +27,22 @@ export default function OmOssPage() {
         <div className="flex flex-col md:flex-row gap-12 items-start">
           <div className="flex-1 space-y-6 text-[var(--muted)] leading-relaxed text-[15px]">
             <p>
-              Systembolaget har hundratals naturviner i sortimentet — men de är svåra att hitta. Det finns inget filter för naturvin, och etiketterna berättar sällan vad som faktiskt är i glaset.
+              Naturvin är fantastiskt — men det kan vara svårt att veta var man ska börja. Vilket vin passar din smak? Vad är egentligen bra? Och hur hittar man det på Systembolaget?
             </p>
             <p>
-              Vår topp 100-lista är gjord för dig som är nyfiken på naturvin men inte vet var du ska börja. Varje vin har en tydlig smakprofil, ett ärligt betyg och en direktlänk till Systembolaget.
+              Det är de frågorna vi startade Naturvinstipset för att svara på.
             </p>
             <p>
-              Vi är inte sponsrade av producenter eller importörer. Betygen sätts av oss och av er som besöker sajten — ett betyg per person, inget konto behövs.
+              Vi samlar de bästa naturvinerna på Systembolaget, betygsätter dem och låter dig filtrera efter din smakprofil. Inga gissningar, inga pretentioner — bara ärliga betyg som hjälper dig hitta rätt.
             </p>
             <p>
-              Har du hittat ett naturvin vi missat, eller vill du tipsa om ett vin du gillar? Hör av dig.
+              Men lika viktigt som våra egna betyg är dina. Vi bygger en community där naturvinsälskare på alla nivåer kan betygsätta, dela och tipsa varandra. Nybörjare som precis testat sitt första naturvin är lika välkomna som den som druckit det i tio år.
+            </p>
+            <p>
+              Saknar du ett naturvin i vår lista? Tipsa oss gärna.
+            </p>
+            <p>
+              Tillsammans gör vi det lättare för fler att hitta viner de verkligen gillar.
             </p>
           </div>
 
@@ -56,34 +59,6 @@ export default function OmOssPage() {
         </div>
       </section>
 
-      {/* Values */}
-      <section className="border-t border-[var(--rule)] py-16 px-6">
-        <div className="max-w-2xl mx-auto">
-          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--muted)] mb-10">Vad vi tror på</p>
-          <div className="grid md:grid-cols-3 gap-8">
-            {[
-              {
-                title: "Enkelhet",
-                body: "Naturvin behöver inte förklaras med jargong. Vi håller det enkelt och rakt på sak.",
-              },
-              {
-                title: "Ärlighet",
-                body: "Betyg och smakprofiler speglar vad vi faktiskt tycker — inte vad producenten vill att vi ska tycka.",
-              },
-              {
-                title: "Tillgänglighet",
-                body: "Alla viner vi listar finns eller har funnits på Systembolaget. Inga obskyra importörer.",
-              },
-            ].map((v) => (
-              <div key={v.title}>
-                <h3 className="font-bold text-[var(--fg)] mb-2">{v.title}</h3>
-                <p className="text-sm text-[var(--muted)] leading-relaxed">{v.body}</p>
-              </div>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Contact */}
       <section className="border-t border-[var(--rule)] py-16 px-6" id="kontakt">
         <div className="max-w-2xl mx-auto">
@@ -92,7 +67,7 @@ export default function OmOssPage() {
             Frågor, tips eller samarbeten?
           </h2>
           <p className="text-[var(--muted)] text-[15px] leading-relaxed mb-8 max-w-md">
-            Vi svarar på allt — vinstips, frågor om sajten och förfrågningar om samarbeten. Hör av dig till oss direkt på mejl.
+            Hör av dig till oss direkt på mejl.
           </p>
 
           <a
@@ -101,19 +76,6 @@ export default function OmOssPage() {
           >
             hej@naturvinstipset.se →
           </a>
-
-          <div className="mt-12 pt-8 border-t border-[var(--rule-xs)] grid md:grid-cols-2 gap-6 text-sm">
-            <div>
-              <p className="text-[10px] font-semibold tracking-[0.18em] uppercase text-[var(--faint)] mb-2">Mejl</p>
-              <a href="mailto:hej@naturvinstipset.se" className="text-[var(--muted)] hover:text-[var(--fg)] transition-colors">
-                hej@naturvinstipset.se
-              </a>
-            </div>
-            <div>
-              <p className="text-[10px] font-semibold tracking-[0.18em] uppercase text-[var(--faint)] mb-2">Svartid</p>
-              <p className="text-[var(--muted)]">Vi svarar vanligtvis inom 2–3 dagar.</p>
-            </div>
-          </div>
         </div>
       </section>
 

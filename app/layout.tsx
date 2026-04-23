@@ -3,6 +3,7 @@ import { Outfit } from "next/font/google";
 import "./globals.css";
 import Nav from "@/components/Nav";
 import Footer from "@/components/Footer";
+import AgeGate from "@/components/AgeGate";
 
 /*
   Outfit — clean geometric sans, upright proportions (not wide like Syne).
@@ -30,8 +31,10 @@ export const metadata: Metadata = {
     icon: [
       { url: "/favicon.ico", sizes: "any" },
       { url: "/favicon.png", type: "image/png", sizes: "512x512" },
+      { url: "/icon-192.png", type: "image/png", sizes: "192x192" },
     ],
-    apple: "/apple-touch-icon.png",
+    apple: { url: "/apple-touch-icon.png", sizes: "180x180" },
+    shortcut: "/favicon.ico",
   },
   openGraph: {
     type: "website",
@@ -46,6 +49,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
   return (
     <html lang="sv" className={`${outfit.variable} h-full`}>
       <body className="min-h-full flex flex-col antialiased">
+        <AgeGate />
         <Nav />
         <main className="flex-1">{children}</main>
         <Footer />

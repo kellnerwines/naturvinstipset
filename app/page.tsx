@@ -1,14 +1,14 @@
 import type { Metadata } from "next";
 import Image from "next/image";
 import { getWines, getRatings, combinedRating } from "@/lib/blob";
-import WineCard from "@/components/WineCard";
+import WineGrid from "@/components/WineGrid";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Naturvinstipset – 100 bästa naturvinerna på Systembolaget",
+  title: "De bästa naturvinerna på Systembolaget – Naturvinstipset",
   description:
-    "Rankad lista över de bästa naturvinerna du kan köpa på Systembolaget. Betyg från riktiga vinälskare – utan krångel.",
+    "Hitta ditt nästa naturvin med ärliga betyg och direktlänk till Systembolaget. Utvalda naturviner rankade av riktiga vinälskare — utan krångel.",
   openGraph: { url: "https://naturvinstipset.se" },
 };
 
@@ -25,7 +25,7 @@ export default async function HomePage() {
   const [wines, ratings] = await Promise.all([getWines(), getRatings()]);
 
   const published = wines.filter((w) => w.published);
-  const ranked = published
+  const entries = published
     .map((w) => {
       const wineRatings = ratings.filter((r) => r.wineId === w.id);
       return { wine: w, rating: combinedRating(w, ratings), count: wineRatings.length };
@@ -37,19 +37,27 @@ export default async function HomePage() {
     <div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      {/* ── Hero with wavy bottom ───────────────────────────────────────────── */}
-      <section className="relative bg-[var(--fg)] overflow-hidden">
-        <div className="max-w-5xl mx-auto px-6 pt-20 pb-32 flex flex-col md:flex-row items-center gap-12">
+      {/* ── Hero with parallax background ──────────────────────────────────── */}
+      <section className="relative overflow-hidden"
+        style={{
+          backgroundImage: "url('/vineyard-hero.webp')",
+          backgroundSize: "cover",
+          backgroundPosition: "center 40%",
+          backgroundAttachment: "fixed",
+        }}>
+        {/* Darkening overlay */}
+        <div className="absolute inset-0" style={{ background: "rgba(13,13,13,0.62)" }} />
+        <div className="relative max-w-5xl mx-auto px-6 pt-20 pb-32 flex flex-col md:flex-row items-center gap-12">
           {/* Text */}
           <div className="flex-1">
             <p className="text-xs font-semibold tracking-[0.2em] uppercase text-white/40 mb-5">
               De bästa naturvinerna på Systembolaget
             </p>
             <h1 className="text-4xl md:text-6xl font-extrabold leading-[1.05] tracking-tight text-white mb-6">
-              Rankade.<br />Betygsatta.<br />Utan krångel.
+              Utvalda.<br />Betygsatta.<br />Något för alla.
             </h1>
             <p className="text-base text-white/55 max-w-sm leading-relaxed mb-8">
-              Nybörjarvänliga tips, ärliga betyg och direktlänkar till Systembolaget.
+              Hitta ditt nästa naturvin — med ärliga betyg och direktlänk till Systembolaget.
             </p>
             <a
               href="#listan"
@@ -92,25 +100,14 @@ export default async function HomePage() {
 
       {/* ── Wine grid ───────────────────────────────────────────────────────── */}
       <section id="listan" className="max-w-6xl mx-auto px-6 py-16">
-        <div className="flex items-baseline justify-between mb-10">
+        <div className="flex items-baseline justify-between mb-4">
           <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight uppercase text-[var(--fg)]">
-            Topp {ranked.length} naturviner
+            Viner
           </h2>
           <p className="text-xs text-[var(--faint)] tracking-widest uppercase">{published.length} viner</p>
         </div>
 
-        {ranked.length === 0 ? (
-          <div className="text-center py-24 text-[var(--muted)]">
-            <p className="text-5xl mb-6 opacity-30">○</p>
-            <p className="text-sm">Viner laddas upp snart. Kom tillbaka!</p>
-          </div>
-        ) : (
-          <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-12">
-            {ranked.map(({ wine, rating, count }, i) => (
-              <WineCard key={wine.id} wine={wine} rating={rating} ratingCount={count} rank={i + 1} />
-            ))}
-          </div>
-        )}
+        <WineGrid entries={entries} />
       </section>
 
       {/* ── CTA strip ──────────────────────────────────────────────────────── */}
