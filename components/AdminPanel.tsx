@@ -1,6 +1,6 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
+import { useState, useEffect, useCallback, useRef } from "react";
 import Image from "next/image";
 import type { Wine, BlogPost, Rating } from "@/lib/blob";
 
@@ -83,10 +83,15 @@ export default function AdminPanel() {
 
   const [editWine, setEditWine] = useState<Partial<Wine> | null>(null);
   const [editBlog, setEditBlog] = useState<Partial<BlogPost> | null>(null);
+  const editFormRef = useRef<HTMLDivElement>(null);
 
   const [seeding, setSeeding] = useState(false);
 
   const flash = (m: string, t: "ok" | "err" = "ok") => { setMsg(m); setMsgType(t); setTimeout(() => setMsg(""), 3500); };
+
+  useEffect(() => {
+    if (editWine) editFormRef.current?.scrollIntoView({ behavior: "smooth", block: "start" });
+  }, [editWine]);
 
   const seed = async () => {
     if (!confirm("Migrera data/wines.json till Blob-storage? Befintlig data skrivs över.")) return;
@@ -196,7 +201,7 @@ export default function AdminPanel() {
             </div>
 
             {editWine && (
-              <div className="bg-white rounded-xl border border-black/10 p-6 mb-6 space-y-4">
+              <div ref={editFormRef} className="bg-white rounded-xl border border-black/10 p-6 mb-6 space-y-4">
                 <h3 className="font-semibold text-[var(--green-dark)]">{editWine.id ? "Redigera vin" : "Nytt vin"}</h3>
 
                 <div className="grid grid-cols-2 gap-4">
