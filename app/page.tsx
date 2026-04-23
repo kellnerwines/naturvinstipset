@@ -43,7 +43,6 @@ export default async function HomePage() {
           backgroundImage: "url('/vineyard-hero.webp')",
           backgroundSize: "cover",
           backgroundPosition: "center 40%",
-          backgroundAttachment: "fixed",
         }}>
         {/* Darkening overlay */}
         <div className="absolute inset-0" style={{ background: "rgba(13,13,13,0.62)" }} />
