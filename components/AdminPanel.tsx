@@ -315,7 +315,11 @@ export default function AdminPanel() {
               {wines.map((w) => {
                 const wineRatings = ratings.filter((r) => r.wineId === w.id);
                 return (
-                  <div key={w.id} className="bg-white rounded-xl border border-black/8 p-4 flex items-center gap-4">
+                  <div
+                    key={w.id}
+                    onClick={() => setEditWine(w)}
+                    className="bg-white rounded-xl border border-black/8 p-4 flex items-center gap-4 cursor-pointer hover:border-[var(--green)] hover:shadow-sm transition-all"
+                  >
                     <div className="w-10 h-12 bg-[var(--green-light)] rounded flex items-center justify-center shrink-0">
                       {w.primaryImageUrl
                         ? <Image src={w.primaryImageUrl} alt={w.name} width={40} height={48} className="object-cover w-full h-full rounded" unoptimized />
@@ -328,10 +332,12 @@ export default function AdminPanel() {
                     <span className={`text-xs px-2 py-1 rounded-full shrink-0 ${w.published ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>
                       {w.published ? "Publicerad" : "Utkast"}
                     </span>
-                    <div className="flex gap-2 shrink-0">
-                      <button onClick={() => setEditWine(w)} className="text-xs text-[var(--green)] hover:underline">Redigera</button>
-                      <button onClick={() => del("/api/wines", w.id, `Ta bort "${w.name}"?`)} className="text-xs text-red-400 hover:text-red-600">Ta bort</button>
-                    </div>
+                    <button
+                      onClick={(e) => { e.stopPropagation(); del("/api/wines", w.id, `Ta bort "${w.name}"?`); }}
+                      className="shrink-0 text-xs text-red-400 hover:text-red-600 px-2 py-1 rounded hover:bg-red-50 transition-colors"
+                    >
+                      Ta bort
+                    </button>
                   </div>
                 );
               })}
