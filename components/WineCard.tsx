@@ -56,7 +56,7 @@ export default function WineCard({ wine, rating, ratingCount, rank, wineOfMonth 
               src={wine.primaryImageUrl}
               alt={wine.name}
               fill
-              className="object-contain group-hover:scale-[1.03] transition-transform duration-500"
+              className="object-contain object-top group-hover:scale-[1.03] transition-transform duration-500"
               unoptimized
             />
           ) : (
