@@ -84,7 +84,23 @@ export default function AdminPanel() {
   const [editWine, setEditWine] = useState<Partial<Wine> | null>(null);
   const [editBlog, setEditBlog] = useState<Partial<BlogPost> | null>(null);
 
+  const [seeding, setSeeding] = useState(false);
+
   const flash = (m: string, t: "ok" | "err" = "ok") => { setMsg(m); setMsgType(t); setTimeout(() => setMsg(""), 3500); };
+
+  const seed = async () => {
+    if (!confirm("Migrera data/wines.json till Blob-storage? Befintlig data skrivs över.")) return;
+    setSeeding(true);
+    const res = await fetch("/api/seed", { method: "POST" });
+    if (res.ok) {
+      const d = await res.json();
+      flash(`Seed klar! ${d.wines} viner och ${d.ratings} betyg kopierade till Blob.`);
+      fetchAll();
+    } else {
+      flash("Seed misslyckades.", "err");
+    }
+    setSeeding(false);
+  };
 
   const fetchAll = useCallback(async () => {
     const [wRes, bRes, rRes] = await Promise.all([fetch("/api/wines"), fetch("/api/blogs"), fetch("/api/ratings")]);
@@ -146,7 +162,16 @@ export default function AdminPanel() {
       {/* Header */}
       <div className="bg-[var(--green-dark)] text-white px-6 py-4 flex items-center justify-between">
         <h1 className="font-bold">🍇 Admin – Naturvinstipset</h1>
-        <button onClick={async () => { await fetch("/api/logout", { method: "POST" }); setAuthed(false); }} className="text-sm text-white/60 hover:text-white">Logga ut</button>
+        <div className="flex items-center gap-4">
+          <button
+            onClick={seed}
+            disabled={seeding}
+            className="text-xs font-semibold bg-amber-500 hover:bg-amber-600 disabled:opacity-50 text-white px-3 py-1.5 rounded-lg transition-colors"
+          >
+            {seeding ? "Seeder..." : "⬆ Seed data → Blob"}
+          </button>
+          <button onClick={async () => { await fetch("/api/logout", { method: "POST" }); setAuthed(false); }} className="text-sm text-white/60 hover:text-white">Logga ut</button>
+        </div>
       </div>
 
       {/* Tabs */}
