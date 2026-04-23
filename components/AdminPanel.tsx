@@ -338,6 +338,12 @@ export default function AdminPanel() {
                       {w.published ? "Publicerad" : "Utkast"}
                     </span>
                     <button
+                      onClick={(e) => { e.stopPropagation(); setEditWine(w); }}
+                      className="shrink-0 text-xs font-semibold bg-[var(--green)] text-white px-3 py-1.5 rounded-lg hover:bg-[var(--green-dark)] transition-colors"
+                    >
+                      Redigera
+                    </button>
+                    <button
                       onClick={(e) => { e.stopPropagation(); del("/api/wines", w.id, `Ta bort "${w.name}"?`); }}
                       className="shrink-0 text-xs text-red-400 hover:text-red-600 px-2 py-1 rounded hover:bg-red-50 transition-colors"
                     >
