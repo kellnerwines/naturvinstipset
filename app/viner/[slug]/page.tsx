@@ -68,19 +68,31 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
     { label: "Pris", value: wine.price ? `${wine.price} kr` : undefined },
   ].filter((s) => s.value);
 
-  const jsonLd = {
+  const totalRatingCount = wineRatings.length + 1; // +1 for editorial rating
+  const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Product",
-    name: wine.name,
+    name: wine.year ? `${wine.name} ${wine.year}` : wine.name,
     description: wine.description,
+    url: `https://www.naturvinstipset.se/viner/${slug}`,
     brand: { "@type": "Brand", name: wine.producer },
+    ...(wine.primaryImageUrl ? { image: wine.primaryImageUrl } : {}),
     aggregateRating: {
       "@type": "AggregateRating",
-      ratingValue: score,
-      ratingCount: wineRatings.length + 3,
+      ratingValue: Math.round(score * 10) / 10,
+      ratingCount: totalRatingCount,
       bestRating: 5,
       worstRating: 1,
     },
+    ...(wine.systembolagetUrl ? {
+      offers: {
+        "@type": "Offer",
+        url: wine.systembolagetUrl,
+        priceCurrency: "SEK",
+        availability: "https://schema.org/InStock",
+        seller: { "@type": "Organization", name: "Systembolaget" },
+      },
+    } : {}),
   };
 
   return (
