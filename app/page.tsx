@@ -8,7 +8,12 @@ export const metadata: Metadata = {
   title: "De bästa naturvinerna på Systembolaget – Naturvinstipset",
   description:
     "Hitta ditt nästa naturvin med ärliga betyg och direktlänk till Systembolaget. Utvalda naturviner rankade av riktiga vinälskare — utan krångel.",
-  openGraph: { url: "https://naturvinstipset.se" },
+  openGraph: {
+    title: "De bästa naturvinerna på Systembolaget – Naturvinstipset",
+    description: "Hitta ditt nästa naturvin med ärliga betyg och direktlänk till Systembolaget. Utvalda naturviner rankade av riktiga vinälskare.",
+    url: "https://www.naturvinstipset.se",
+    images: [{ url: "/og-logo.png", width: 1200, height: 630, alt: "Naturvinstipset" }],
+  },
 };
 
 const jsonLd = {

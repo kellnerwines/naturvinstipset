@@ -4,7 +4,12 @@ export const metadata: Metadata = {
   title: "Vinprovning – Naturvinsupplevelser för grupper | Naturvinstipset",
   description:
     "Skräddarsydda vinprovningar med fokus på naturvin — anpassade helt efter er grupp. After work, nybörjarkvällar och privata middagar. Hör av dig!",
-  openGraph: { url: "https://naturvinstipset.se/vinprovning" },
+  openGraph: {
+    title: "Vinprovning – Naturvinsupplevelser för grupper | Naturvinstipset",
+    description: "Skräddarsydda vinprovningar med fokus på naturvin — anpassade helt efter er grupp. After work, nybörjarkvällar och privata middagar.",
+    url: "https://www.naturvinstipset.se/vinprovning",
+    images: [{ url: "/og-logo.png", width: 1200, height: 630, alt: "Vinprovning – Naturvinstipset" }],
+  },
 };
 
 export default function VinprovningPage() {

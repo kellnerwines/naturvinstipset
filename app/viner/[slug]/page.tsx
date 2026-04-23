@@ -17,10 +17,12 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title: `${wine.name}${wine.year ? ` ${wine.year}` : ""} – ${wine.producer}`,
     description: wine.description,
     openGraph: {
-      title: wine.name,
+      title: wine.year ? `${wine.name} ${wine.year} – ${wine.producer}` : `${wine.name} – ${wine.producer}`,
       description: wine.description,
-      url: `https://naturvinstipset.se/viner/${slug}`,
-      ...(wine.primaryImageUrl ? { images: [{ url: wine.primaryImageUrl }] } : {}),
+      url: `https://www.naturvinstipset.se/viner/${slug}`,
+      images: wine.primaryImageUrl
+        ? [{ url: wine.primaryImageUrl, alt: wine.name }]
+        : [{ url: "/og-logo.png", width: 1200, height: 630, alt: "Naturvinstipset" }],
     },
   };
 }

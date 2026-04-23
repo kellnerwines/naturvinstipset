@@ -16,7 +16,7 @@ const outfit = Outfit({
 });
 
 export const metadata: Metadata = {
-  metadataBase: new URL("https://naturvinstipset.se"),
+  metadataBase: new URL("https://www.naturvinstipset.se"),
   title: {
     default: "Naturvinstipset – 100 bästa naturvinerna på Systembolaget",
     template: "%s – Naturvinstipset",
@@ -37,7 +37,6 @@ export const metadata: Metadata = {
   openGraph: {
     type: "website",
     locale: "sv_SE",
-    url: "https://naturvinstipset.se",
     siteName: "Naturvinstipset",
     images: [{ url: "/og-image.png", width: 1200, height: 630 }],
   },

@@ -5,7 +5,12 @@ export const metadata: Metadata = {
   title: "Vad är naturvin? – 15 vanliga frågor besvarade | Naturvinstipset",
   description:
     "Varför är det grumligt? Blir man bakis? Vad är orange vin? Vi svarar på frågorna du googlar kl 22 — komplett guide till naturvin för nybörjare och nyfikna.",
-  openGraph: { url: "https://naturvinstipset.se/vad-ar-naturvin" },
+  openGraph: {
+    title: "Vad är naturvin? – 15 vanliga frågor besvarade",
+    description: "Varför är det grumligt? Blir man bakis? Vad är orange vin? Komplett guide till naturvin för nybörjare och nyfikna.",
+    url: "https://www.naturvinstipset.se/vad-ar-naturvin",
+    images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Guide till naturvin – Naturvinstipset" }],
+  },
 };
 
 const faqJsonLd = {

@@ -6,7 +6,12 @@ export const metadata: Metadata = {
   title: "Om oss – Naturvinstipset",
   description:
     "Vi gör det enklare att hitta naturvin du faktiskt gillar. Ärliga betyg, smart filtrering och en community för alla som älskar naturvin — nybörjare som experter.",
-  openGraph: { url: "https://naturvinstipset.se/om-oss" },
+  openGraph: {
+    title: "Om oss – Naturvinstipset",
+    description: "Vi gör det enklare att hitta naturvin du faktiskt gillar. Ärliga betyg, smart filtrering och en community för alla som älskar naturvin.",
+    url: "https://www.naturvinstipset.se/om-oss",
+    images: [{ url: "/og-logo.png", width: 1200, height: 630, alt: "Naturvinstipset" }],
+  },
 };
 
 export default function OmOssPage() {
