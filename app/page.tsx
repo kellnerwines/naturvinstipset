@@ -1,5 +1,4 @@
 import type { Metadata } from "next";
-import Image from "next/image";
 import { getWines, getRatings, combinedRating } from "@/lib/blob";
 import WineGrid from "@/components/WineGrid";
 
@@ -67,17 +66,6 @@ export default async function HomePage() {
           </div>
 
           {/* Illustration */}
-          <div className="shrink-0 flex items-center justify-center md:justify-end">
-            <Image
-              src="/logo.png"
-              alt="Naturvinstipset"
-              width={160}
-              height={241}
-              unoptimized
-              className="opacity-80 drop-shadow-2xl"
-              style={{ filter: "brightness(0) invert(1) opacity(0.55)" }}
-            />
-          </div>
         </div>
 
         {/* Wavy bottom — transitions to page background */}
