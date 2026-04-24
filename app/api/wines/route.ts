@@ -19,6 +19,12 @@ export async function POST(req: NextRequest) {
   if (body.id) {
     const idx = wines.findIndex((w) => w.id === body.id);
     if (idx === -1) return NextResponse.json({ error: "Not found" }, { status: 404 });
+    // If this wine is being set as wineOfMonth, clear the flag on all others
+    if (body.wineOfMonth) {
+      for (let i = 0; i < wines.length; i++) {
+        if (i !== idx) wines[i] = { ...wines[i], wineOfMonth: false };
+      }
+    }
     wines[idx] = { ...wines[idx], ...body };
     await saveWines(wines);
     revalidatePath("/", "layout");
