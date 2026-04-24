@@ -35,7 +35,25 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     year: "numeric", month: "long", day: "numeric",
   });
 
-  const paragraphs = post.content.split(/\n+/).filter(Boolean);
+  const blocks = post.content.split(/\n+/).filter(Boolean);
+
+  // Parse inline [text](url) markdown links into React nodes
+  function parseInline(text: string): React.ReactNode[] {
+    const parts: React.ReactNode[] = [];
+    const re = /\[([^\]]+)\]\((https?:\/\/[^)]+)\)/g;
+    let last = 0, m: RegExpExecArray | null;
+    while ((m = re.exec(text)) !== null) {
+      if (m.index > last) parts.push(text.slice(last, m.index));
+      parts.push(
+        <a key={m.index} href={m[2]} className="underline underline-offset-2 hover:opacity-60 transition-opacity">
+          {m[1]}
+        </a>
+      );
+      last = m.index + m[0].length;
+    }
+    if (last < text.length) parts.push(text.slice(last));
+    return parts;
+  }
 
   return (
     <article>
@@ -93,9 +111,16 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         )}
 
         <div className="space-y-6 text-[15px] text-black/70 leading-[1.85]">
-          {paragraphs.map((p, i) => (
-            <p key={i}>{p}</p>
-          ))}
+          {blocks.map((block, i) => {
+            if (block.startsWith("## ")) {
+              return (
+                <h2 key={i} className="text-base font-bold text-[var(--fg)] mt-10 mb-2 tracking-tight">
+                  {block.slice(3)}
+                </h2>
+              );
+            }
+            return <p key={i}>{parseInline(block)}</p>;
+          })}
         </div>
 
         {/* Footer */}
