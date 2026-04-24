@@ -13,26 +13,30 @@ export async function GET() {
 
 export async function POST(req: NextRequest) {
   const body = await req.json();
-  const { wineId, stars, comment, fingerprint } = body;
+  const { wineId, stars, liked, comment, fingerprint } = body;
 
-  if (!wineId || !stars || stars < 1 || stars > 5 || !fingerprint) {
+  if (!wineId || !fingerprint) {
+    return NextResponse.json({ error: "Ogiltig data" }, { status: 400 });
+  }
+  if (!liked && (!stars || stars < 1 || stars > 5)) {
     return NextResponse.json({ error: "Ogiltig data" }, { status: 400 });
   }
 
   const ratings = await getRatings();
 
-  // One rating per fingerprint per wine
+  // One vote per fingerprint per wine
   const already = ratings.find(
     (r) => r.wineId === wineId && r.fingerprint === fingerprint
   );
   if (already) {
-    return NextResponse.json({ error: "Du har redan betygsatt det här vinet." }, { status: 409 });
+    return NextResponse.json({ error: "Du har redan röstat på det här vinet." }, { status: 409 });
   }
 
   const newRating: Rating = {
     id: randomUUID(),
     wineId,
-    stars: Math.round(stars),
+    stars: liked ? 5 : Math.round(stars),
+    liked: liked ? true : undefined,
     comment: comment?.slice(0, 300) || undefined,
     fingerprint,
     createdAt: new Date().toISOString(),

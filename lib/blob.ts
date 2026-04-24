@@ -35,9 +35,10 @@ export type Wine = {
 export type Rating = {
   id: string;
   wineId: string;
-  stars: number;          // 1–5
+  stars: number;          // 1–5; for likes always 5
+  liked?: boolean;        // true when submitted via like button
   comment?: string;
-  fingerprint: string;    // cookie UUID to prevent double-rating
+  fingerprint: string;    // cookie UUID to prevent double-voting
   createdAt: string;
 };
 
@@ -115,12 +116,12 @@ export const saveBlogs  = (d: BlogPost[]) => writeJson(BLOGS_KEY, d);
 
 // ─── Rating helpers ───────────────────────────────────────────────────────────
 
-/** Combined score: admin rating counts as 3 votes so it anchors the score
- *  but gets diluted as real ratings come in. */
+/** Combined score: admin rating = 1 vote, each user rating/like = 1 vote.
+ *  Score floats as the community votes. */
 export function combinedRating(wine: Wine, ratings: Rating[]): number {
   const mine = ratings.filter((r) => r.wineId === wine.id);
-  const total = wine.adminRating * 3 + mine.reduce((s, r) => s + r.stars, 0);
-  const count = 3 + mine.length;
+  const total = wine.adminRating + mine.reduce((s, r) => s + r.stars, 0);
+  const count = 1 + mine.length;
   return Math.round((total / count) * 10) / 10;
 }
 

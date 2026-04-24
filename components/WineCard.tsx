@@ -4,9 +4,10 @@ import { useState } from "react";
 import Link from "next/link";
 import Image from "next/image";
 import { StarDisplay } from "./Stars";
+import LikeButton from "./LikeButton";
 import type { Wine } from "@/lib/blob";
 
-type Props = { wine: Wine; rating: number; ratingCount: number; rank?: number; wineOfMonth?: boolean };
+type Props = { wine: Wine; rating: number; ratingCount: number; likeCount: number; rank?: number; wineOfMonth?: boolean };
 
 // Muted type-based background when no image is supplied
 const typeBg: Record<string, string> = {
@@ -32,7 +33,7 @@ function Meter({ label, value }: { label: string; value: number }) {
   );
 }
 
-export default function WineCard({ wine, rating, ratingCount, rank, wineOfMonth }: Props) {
+export default function WineCard({ wine, rating, ratingCount, likeCount, rank, wineOfMonth }: Props) {
   const [open, setOpen] = useState(false);
 
   const hasProfile = wine.syra != null || wine.fyllighet != null || wine.funk != null || wine.stravhet != null;
@@ -97,6 +98,7 @@ export default function WineCard({ wine, rating, ratingCount, rank, wineOfMonth 
 
         {/* Actions row */}
         <div className="flex items-center gap-4 mt-auto">
+          <LikeButton wineId={wine.id} likeCount={likeCount} small />
           {wine.systembolagetUrl && (
             <a
               href={wine.systembolagetUrl}

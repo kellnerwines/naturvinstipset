@@ -32,7 +32,7 @@ export default async function HomePage() {
   const entries = published
     .map((w) => {
       const wineRatings = ratings.filter((r) => r.wineId === w.id);
-      return { wine: w, rating: combinedRating(w, ratings), count: wineRatings.length };
+      return { wine: w, rating: combinedRating(w, ratings), count: wineRatings.length, likeCount: wineRatings.filter((r) => r.liked).length };
     })
     .sort((a, b) => b.rating - a.rating)
     .slice(0, 100);

@@ -4,7 +4,7 @@ import { useState, useMemo } from "react";
 import WineCard from "./WineCard";
 import type { Wine } from "@/lib/blob";
 
-export type WineEntry = { wine: Wine; rating: number; count: number };
+export type WineEntry = { wine: Wine; rating: number; count: number; likeCount: number };
 
 /* ── Filter shape ──────────────────────────────────────────────────────────── */
 type Filters = {
@@ -298,8 +298,8 @@ export default function WineGrid({ entries }: { entries: WineEntry[] }) {
         </div>
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-12">
-          {ranked.map(({ wine, rating, count }, i) => (
-            <WineCard key={wine.id} wine={wine} rating={rating} ratingCount={count} rank={i + 1} wineOfMonth={wine.wineOfMonth} />
+          {ranked.map(({ wine, rating, count, likeCount }, i) => (
+            <WineCard key={wine.id} wine={wine} rating={rating} ratingCount={count} likeCount={likeCount} rank={i + 1} wineOfMonth={wine.wineOfMonth} />
           ))}
         </div>
       )}

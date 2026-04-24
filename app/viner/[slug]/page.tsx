@@ -5,6 +5,7 @@ import { notFound } from "next/navigation";
 import { getWines, getRatings, combinedRating } from "@/lib/blob";
 import { StarDisplay } from "@/components/Stars";
 import RatingForm from "@/components/RatingForm";
+import LikeButton from "@/components/LikeButton";
 
 export const dynamic = "force-dynamic";
 
@@ -58,6 +59,7 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
   if (!wine) notFound();
 
   const wineRatings = ratings.filter((r) => r.wineId === wine.id);
+  const likeCount = wineRatings.filter((r) => r.liked).length;
   const score = combinedRating(wine, ratings);
 
   const specs = [
@@ -70,7 +72,7 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
     { label: "Pris", value: wine.price ? `${wine.price} kr` : undefined },
   ].filter((s) => s.value);
 
-  const totalRatingCount = wineRatings.length + 1; // +1 for editorial rating
+  const totalRatingCount = wineRatings.length + 1; // +1 for admin vote
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -195,11 +197,15 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
       {/* Rating section */}
       <div className="border-t border-black/8 pt-12">
         <h2 className="text-lg font-bold text-[var(--green-dark)] mb-2">
-          Betygsätt vinet
+          Vad tycker du?
         </h2>
         <p className="text-sm text-black/50 mb-6">
-          Inget konto behövs. Ett betyg per person och vin.
+          Inget konto behövs. En röst per person och vin.
         </p>
+        <div className="flex items-center gap-3 mb-8">
+          <LikeButton wineId={wine.id} likeCount={likeCount} />
+          <span className="text-sm text-black/30">eller ge ett detaljerat betyg nedan</span>
+        </div>
         <RatingForm wineId={wine.id} />
       </div>
 
