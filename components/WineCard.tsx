@@ -97,21 +97,21 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
         </div>
 
         {/* Actions row */}
-        <div className="flex items-center gap-4 mt-auto">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 mt-auto">
           <LikeButton wineId={wine.id} likeCount={likeCount} small />
           {wine.systembolagetUrl && (
             <a
               href={wine.systembolagetUrl}
               target="_blank"
               rel="noopener noreferrer sponsored"
-              className="text-[10px] font-bold tracking-[0.2em] uppercase text-[var(--fg)] border-b border-[var(--fg)] hover:opacity-50 transition-opacity pb-px"
+              className="text-[10px] font-bold tracking-[0.2em] uppercase text-[var(--fg)] border-b border-[var(--fg)] hover:opacity-50 transition-opacity pb-px whitespace-nowrap"
             >
               Beställ
             </a>
           )}
           <button
             onClick={() => setOpen(!open)}
-            className="text-[10px] tracking-[0.15em] uppercase text-[var(--muted)] hover:text-[var(--fg)] transition-colors flex items-center gap-1"
+            className="text-[10px] tracking-[0.15em] uppercase text-[var(--muted)] hover:text-[var(--fg)] transition-colors flex items-center gap-1 whitespace-nowrap"
           >
             Smakprofil
             <svg className={`w-2.5 h-2.5 transition-transform duration-150 ${open ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">

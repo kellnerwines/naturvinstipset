@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import SiteShell from "@/components/SiteShell";
+import CookieBanner from "@/components/CookieBanner";
 
 /*
   Outfit — clean geometric sans, upright proportions (not wide like Syne).
@@ -47,6 +48,7 @@ export default function RootLayout({ children }: { children: React.ReactNode }) 
     <html lang="sv" className={`${outfit.variable} h-full`}>
       <body className="min-h-full flex flex-col antialiased">
         <SiteShell>{children}</SiteShell>
+        <CookieBanner />
       </body>
     </html>
   );

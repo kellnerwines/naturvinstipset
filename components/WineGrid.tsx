@@ -70,10 +70,20 @@ function FilterSection({ label, children }: { label: string; children: React.Rea
   );
 }
 
+type SortKey = "rating-desc" | "rating-asc" | "price-desc" | "price-asc";
+
+const SORT_OPTS: { key: SortKey; label: string }[] = [
+  { key: "rating-desc", label: "Betyg ↓" },
+  { key: "rating-asc",  label: "Betyg ↑" },
+  { key: "price-desc",  label: "Pris ↓" },
+  { key: "price-asc",   label: "Pris ↑" },
+];
+
 /* ── Main component ────────────────────────────────────────────────────────── */
 export default function WineGrid({ entries }: { entries: WineEntry[] }) {
   const [filters, setFilters] = useState<Filters>(empty);
   const [filtersOpen, setFiltersOpen] = useState(false);
+  const [sort, setSort] = useState<SortKey>("rating-desc");
 
   /* Derive option lists from data */
   const options = useMemo(() => {
@@ -122,14 +132,26 @@ export default function WineGrid({ entries }: { entries: WineEntry[] }) {
     });
   }, [entries, filters]);
 
-  /* Pin motm to #1 in filtered results */
+  /* Sort */
+  const sorted = useMemo(() => {
+    return [...filtered].sort((a, b) => {
+      switch (sort) {
+        case "rating-desc": return b.rating - a.rating;
+        case "rating-asc":  return a.rating - b.rating;
+        case "price-desc":  return Number(b.wine.price ?? 0) - Number(a.wine.price ?? 0);
+        case "price-asc":   return Number(a.wine.price ?? 0) - Number(b.wine.price ?? 0);
+      }
+    });
+  }, [filtered, sort]);
+
+  /* Pin motm to #1 */
   const ranked = useMemo(() => {
-    const motmIdx = filtered.findIndex(e => e.wine.wineOfMonth);
+    const motmIdx = sorted.findIndex(e => e.wine.wineOfMonth);
     if (motmIdx > 0) {
-      return [filtered[motmIdx], ...filtered.slice(0, motmIdx), ...filtered.slice(motmIdx + 1)];
+      return [sorted[motmIdx], ...sorted.slice(0, motmIdx), ...sorted.slice(motmIdx + 1)];
     }
-    return filtered;
-  }, [filtered]);
+    return sorted;
+  }, [sorted]);
 
   /* Toggle helpers */
   function toggleArr<T>(arr: T[], val: T): T[] {
@@ -150,27 +172,38 @@ export default function WineGrid({ entries }: { entries: WineEntry[] }) {
 
   return (
     <div>
-      {/* ── Filter toggle bar ──────────────────────────────────────────────── */}
-      <div className="flex items-center justify-between mb-8 pb-4 border-b border-[var(--rule)]">
-        <button
-          onClick={() => setFiltersOpen(o => !o)}
-          className="flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] uppercase text-[var(--muted)] hover:text-[var(--fg)] transition-colors"
-        >
-          <svg className={`w-3 h-3 transition-transform duration-200 ${filtersOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
-            <path strokeLinecap="round" strokeLinejoin="round" d="M3 4h18M7 12h10M11 20h2" />
-          </svg>
-          Filtrera
-          {hasFilters && (
-            <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-[var(--fg)] text-[var(--bg)] text-[8px] font-bold">
-              {activeCount}
-            </span>
-          )}
-        </button>
+      {/* ── Filter + sort bar ──────────────────────────────────────────────── */}
+      <div className="mb-8 pb-4 border-b border-[var(--rule)]">
+        <div className="flex items-center justify-between gap-4">
+          <button
+            onClick={() => setFiltersOpen(o => !o)}
+            className="flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] uppercase text-[var(--muted)] hover:text-[var(--fg)] transition-colors shrink-0"
+          >
+            <svg className={`w-3 h-3 transition-transform duration-200 ${filtersOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
+              <path strokeLinecap="round" strokeLinejoin="round" d="M3 4h18M7 12h10M11 20h2" />
+            </svg>
+            Filtrera
+            {hasFilters && (
+              <span className="inline-flex items-center justify-center w-4 h-4 rounded-full bg-[var(--fg)] text-[var(--bg)] text-[8px] font-bold">
+                {activeCount}
+              </span>
+            )}
+          </button>
+
+          {/* Sort pills */}
+          <div className="flex items-center gap-1.5 flex-wrap justify-end">
+            {SORT_OPTS.map(({ key, label }) => (
+              <Pill key={key} active={sort === key} onClick={() => setSort(key)}>
+                {label}
+              </Pill>
+            ))}
+          </div>
+        </div>
 
         {hasFilters && (
           <button
             onClick={() => setFilters(empty)}
-            className="text-[9px] tracking-[0.15em] uppercase text-[var(--faint)] hover:text-[var(--fg)] transition-colors border-b border-[var(--rule)] pb-px"
+            className="mt-2 text-[9px] tracking-[0.15em] uppercase text-[var(--faint)] hover:text-[var(--fg)] transition-colors border-b border-[var(--rule)] pb-px"
           >
             Rensa filter
           </button>
