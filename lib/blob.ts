@@ -53,6 +53,16 @@ export type BlogPost = {
   published: boolean;
 };
 
+export type BlogInteraction = {
+  id: string;
+  blogId: string;
+  type: "like" | "comment";
+  fingerprint: string;
+  name?: string;
+  comment?: string;
+  createdAt: string;
+};
+
 // ─── Storage backends ─────────────────────────────────────────────────────────
 
 const useBlob = !!process.env.BLOB_READ_WRITE_TOKEN;
@@ -101,9 +111,10 @@ function writeJson<T>(key: string, data: T[]): Promise<void> {
   return useBlob ? blobWrite<T>(key, data) : fsWrite<T>(path.basename(key), data);
 }
 
-const WINES_KEY   = "naturvin/wines.json";
-const RATINGS_KEY = "naturvin/ratings.json";
-const BLOGS_KEY   = "naturvin/blogs.json";
+const WINES_KEY             = "naturvin/wines.json";
+const RATINGS_KEY           = "naturvin/ratings.json";
+const BLOGS_KEY             = "naturvin/blogs.json";
+const BLOG_INTERACTIONS_KEY = "naturvin/blog-interactions.json";
 
 export const getWines   = () => readJson<Wine>(WINES_KEY);
 export const saveWines  = (d: Wine[]) => writeJson(WINES_KEY, d);
@@ -113,6 +124,9 @@ export const saveRatings = (d: Rating[]) => writeJson(RATINGS_KEY, d);
 
 export const getBlogs   = () => readJson<BlogPost>(BLOGS_KEY);
 export const saveBlogs  = (d: BlogPost[]) => writeJson(BLOGS_KEY, d);
+
+export const getBlogInteractions  = () => readJson<BlogInteraction>(BLOG_INTERACTIONS_KEY);
+export const saveBlogInteractions = (d: BlogInteraction[]) => writeJson(BLOG_INTERACTIONS_KEY, d);
 
 // ─── Rating helpers ───────────────────────────────────────────────────────────
 

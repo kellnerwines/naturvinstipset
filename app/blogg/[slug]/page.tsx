@@ -2,7 +2,9 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getBlogs } from "@/lib/blob";
+import { getBlogs, getBlogInteractions } from "@/lib/blob";
+import BlogLikeButton from "@/components/BlogLikeButton";
+import BlogComments from "@/components/BlogComments";
 
 export const dynamic = "force-dynamic";
 
@@ -27,9 +29,15 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const blogs = await getBlogs();
+  const [blogs, allInteractions] = await Promise.all([getBlogs(), getBlogInteractions()]);
   const post = blogs.find((b) => b.slug === slug && b.published);
   if (!post) notFound();
+
+  const postInteractions = allInteractions.filter((i) => i.blogId === post.id);
+  const likeCount = postInteractions.filter((i) => i.type === "like").length;
+  const comments = postInteractions
+    .filter((i) => i.type === "comment")
+    .map(({ id, name, comment, createdAt }) => ({ id, name, comment, createdAt }));
 
   const date = new Date(post.publishedAt).toLocaleDateString("sv-SE", {
     year: "numeric", month: "long", day: "numeric",
@@ -123,8 +131,14 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
           })}
         </div>
 
+        {/* Like + Comments */}
+        <div className="mt-14">
+          <BlogLikeButton blogId={post.id} initialCount={likeCount} />
+          <BlogComments blogId={post.id} initial={comments} />
+        </div>
+
         {/* Footer */}
-        <div className="mt-14 pt-8 border-t border-[var(--rule)]">
+        <div className="mt-10 pt-8 border-t border-[var(--rule)]">
           <Link
             href="/blogg"
             className="text-sm font-semibold text-[var(--fg)] hover:opacity-60 transition-opacity"

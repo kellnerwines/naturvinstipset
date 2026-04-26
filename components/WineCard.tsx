@@ -24,9 +24,9 @@ function Meter({ label, value }: { label: string; value: number }) {
   return (
     <div className="flex items-center gap-3">
       <span className="text-[11px] text-[var(--muted)] w-16 shrink-0">{label}</span>
-      <div className="flex gap-1">
+      <div className="flex gap-1 flex-1">
         {[1, 2, 3, 4, 5].map((n) => (
-          <div key={n} className={`h-1.5 w-5 rounded-full ${n <= filled ? "bg-[var(--fg)]" : "bg-[var(--fg)] opacity-10"}`} />
+          <div key={n} className={`h-1.5 flex-1 rounded-full ${n <= filled ? "bg-[var(--fg)]" : "bg-[var(--fg)] opacity-10"}`} />
         ))}
       </div>
     </div>
