@@ -73,30 +73,58 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
   ].filter((s) => s.value);
 
   const totalRatingCount = wineRatings.length + 1; // +1 for admin vote
+
+  const additionalProperties: Array<Record<string, string>> = [];
+  if (wine.country) additionalProperties.push({ "@type": "PropertyValue", name: "Land", value: wine.country });
+  if (wine.region) additionalProperties.push({ "@type": "PropertyValue", name: "Region", value: wine.region });
+  if (wine.grape) additionalProperties.push({ "@type": "PropertyValue", name: "Druvor", value: wine.grape });
+  if (wine.flavorTags?.length) additionalProperties.push({ "@type": "PropertyValue", name: "Smakprofil", value: wine.flavorTags.join(", ") });
+
   const jsonLd: Record<string, unknown> = {
     "@context": "https://schema.org",
     "@type": "Product",
     name: wine.year ? `${wine.name} ${wine.year}` : wine.name,
     description: wine.description,
     url: `https://www.naturvinstipset.se/viner/${slug}`,
-    brand: { "@type": "Brand", name: wine.producer },
+    category: `Wine/${wine.wineType}`,
+    manufacturer: { "@type": "Organization", name: wine.producer },
     ...(wine.primaryImageUrl ? { image: wine.primaryImageUrl } : {}),
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: Math.round(score * 10) / 10,
-      ratingCount: totalRatingCount,
-      bestRating: 5,
-      worstRating: 1,
-    },
-    ...(wine.systembolagetUrl ? {
+    ...(wine.price ? {
+      offers: {
+        "@type": "Offer",
+        price: wine.price,
+        priceCurrency: "SEK",
+        availability: "https://schema.org/InStock",
+        ...(wine.systembolagetUrl ? { url: wine.systembolagetUrl } : {}),
+      },
+    } : wine.systembolagetUrl ? {
       offers: {
         "@type": "Offer",
         url: wine.systembolagetUrl,
         priceCurrency: "SEK",
         availability: "https://schema.org/InStock",
-        seller: { "@type": "Organization", name: "Systembolaget" },
       },
     } : {}),
+    review: {
+      "@type": "Review",
+      reviewRating: {
+        "@type": "Rating",
+        ratingValue: wine.adminRating,
+        bestRating: "5",
+      },
+      author: {
+        "@type": "Organization",
+        name: "Naturvinstipset",
+      },
+    },
+    aggregateRating: {
+      "@type": "AggregateRating",
+      ratingValue: Math.round(score * 10) / 10,
+      reviewCount: totalRatingCount,
+      bestRating: 5,
+      worstRating: 1,
+    },
+    ...(additionalProperties.length > 0 ? { additionalProperty: additionalProperties } : {}),
   };
 
   return (
@@ -186,13 +214,25 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
         </div>
       )}
 
-      {/* Long description */}
-      {wine.longDescription && (
-        <div className="mb-14 max-w-2xl">
-          <h2 className="text-lg font-bold text-[var(--green-dark)] mb-4">Om vinet</h2>
+      {/* AEO intro + long description */}
+      <div className="mb-14 max-w-2xl">
+        <h2 className="text-lg font-bold text-[var(--green-dark)] mb-4">Om vinet</h2>
+        <p className="text-black/70 leading-relaxed mb-4">
+          {wine.year ? `${wine.name} ${wine.year}` : wine.name} är ett{" "}
+          {wine.wineType.toLowerCase()} naturvin
+          {wine.country ? ` från ${wine.country}` : ""}
+          {wine.region ? ` (${wine.region})` : ""}
+          {wine.producer ? `, producerat av ${wine.producer}` : ""}.
+          {wine.grape ? ` Vinet görs på ${wine.grape}.` : ""}
+          {wine.flavorTags && wine.flavorTags.length > 0
+            ? ` Smakprofil: ${wine.flavorTags.join(", ").toLowerCase()}.`
+            : ""}
+          {" "}Det finns på Systembolaget i Sverige.
+        </p>
+        {wine.longDescription && (
           <p className="text-black/70 leading-relaxed whitespace-pre-line">{wine.longDescription}</p>
-        </div>
-      )}
+        )}
+      </div>
 
       {/* Rating section */}
       <div className="border-t border-black/8 pt-12">
@@ -231,6 +271,84 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
           </div>
         </div>
       )}
+
+      {/* AEO FAQ */}
+      <script
+        type="application/ld+json"
+        dangerouslySetInnerHTML={{
+          __html: JSON.stringify({
+            "@context": "https://schema.org",
+            "@type": "FAQPage",
+            mainEntity: [
+              {
+                "@type": "Question",
+                name: `Vad smakar ${wine.name}?`,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: wine.flavorNotes
+                    ? wine.flavorNotes
+                    : `${wine.name} är ett ${wine.wineType.toLowerCase()} naturvin${wine.flavorTags?.length ? ` med smakprofil: ${wine.flavorTags.join(", ").toLowerCase()}` : ""}.${wine.syra != null ? ` Syra: ${wine.syra}/5.` : ""}${wine.fyllighet != null ? ` Fyllighet: ${wine.fyllighet}/5.` : ""}${wine.funk != null ? ` Funk: ${wine.funk}/5.` : ""}`,
+                },
+              },
+              ...(wine.grape ? [{
+                "@type": "Question",
+                name: `Vilka druvor ingår i ${wine.name}?`,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: `${wine.name} görs på ${wine.grape}${wine.country ? ` från ${wine.country}` : ""}.`,
+                },
+              }] : []),
+              {
+                "@type": "Question",
+                name: `Vad passar ${wine.name} till?`,
+                acceptedAnswer: {
+                  "@type": "Answer",
+                  text: wine.wineType === "Orange"
+                    ? `${wine.name} passar utmärkt till kryddiga rätter, ostar och grönsaker tack vare sin skalkontakt och komplexa smakprofil.`
+                    : wine.wineType === "Pét Nat" || wine.wineType === "Mousserande"
+                    ? `${wine.name} är ett mousserande vin som passar till aperitif, skaldjur och lättare rätter.`
+                    : wine.wineType === "Rött"
+                    ? `${wine.name} passar till kött och mörkare rätter.${wine.stravhet != null && wine.stravhet <= 2 ? " Med låg strävhet kan det serveras kylt och fungerar nästan som ett vitt." : ""}`
+                    : `${wine.name} passar till ljusare rätter och fungerar som ett klassiskt matvin.`,
+                },
+              },
+            ],
+          }),
+        }}
+      />
+      <div className="mt-14 max-w-2xl border-t border-black/8 pt-12">
+        <h2 className="text-lg font-bold text-[var(--green-dark)] mb-8">Vanliga frågor</h2>
+        <div className="space-y-8">
+          <div>
+            <h3 className="font-semibold text-[var(--green-dark)] mb-2">Vad smakar {wine.name}?</h3>
+            <p className="text-sm text-black/70 leading-relaxed">
+              {wine.flavorNotes
+                ? wine.flavorNotes
+                : `${wine.name} är ett ${wine.wineType.toLowerCase()} naturvin${wine.flavorTags?.length ? ` med smakprofil: ${wine.flavorTags.join(", ").toLowerCase()}` : ""}.${wine.syra != null ? ` Syra: ${wine.syra}/5.` : ""}${wine.fyllighet != null ? ` Fyllighet: ${wine.fyllighet}/5.` : ""}${wine.funk != null ? ` Funk: ${wine.funk}/5.` : ""}`}
+            </p>
+          </div>
+          {wine.grape && (
+            <div>
+              <h3 className="font-semibold text-[var(--green-dark)] mb-2">Vilka druvor ingår i {wine.name}?</h3>
+              <p className="text-sm text-black/70 leading-relaxed">
+                {wine.name} görs på {wine.grape}{wine.country ? ` från ${wine.country}` : ""}.
+              </p>
+            </div>
+          )}
+          <div>
+            <h3 className="font-semibold text-[var(--green-dark)] mb-2">Vad passar {wine.name} till?</h3>
+            <p className="text-sm text-black/70 leading-relaxed">
+              {wine.wineType === "Orange"
+                ? `${wine.name} passar utmärkt till kryddiga rätter, ostar och grönsaker tack vare sin skalkontakt och komplexa smakprofil.`
+                : wine.wineType === "Pét Nat" || wine.wineType === "Mousserande"
+                ? `${wine.name} är ett mousserande vin som passar till aperitif, skaldjur och lättare rätter.`
+                : wine.wineType === "Rött"
+                ? `${wine.name} passar till kött och mörkare rätter.${wine.stravhet != null && wine.stravhet <= 2 ? " Med låg strävhet kan det serveras kylt och fungerar nästan som ett vitt." : ""}`
+                : `${wine.name} passar till ljusare rätter och fungerar som ett klassiskt matvin.`}
+            </p>
+          </div>
+        </div>
+      </div>
     </div>
   );
 }

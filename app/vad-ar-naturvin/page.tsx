@@ -57,6 +57,21 @@ const faqJsonLd = {
       name: "Vad är pét-nat?",
       acceptedAnswer: { "@type": "Answer", text: "Pét-nat är kort för pétillant naturel — naturligt mousserande. Vinet buteljeras innan jäsningen är klar, vilket innebär att den naturliga kolsyran fastnar i flaskan. Ofta lite rustikt, pärligt och levande." },
     },
+    {
+      "@type": "Question",
+      name: "Vilket är det bästa naturvinet på Systembolaget?",
+      acceptedAnswer: { "@type": "Answer", text: "Det beror på vad du gillar. Det finns inget objektivt bästa naturvin, men det finns ett bästa naturvin för dig. Naturvinstipsets lista är sorterad efter redaktionellt betyg och kompletteras av community-betyg. Filtrera på smakprofil, vintyp och funk-nivå för att hitta ditt nästa favoritvin." },
+    },
+    {
+      "@type": "Question",
+      name: "Vilket naturvin passar en nybörjare?",
+      acceptedAnswer: { "@type": "Answer", text: "Börja med ett vin som matchar hur du redan dricker. Gillar du friska, lättdruckna viner? Välj ett med hög syra och låg funk. Föredrar du något med mer kropp? Filtrera på fyllighet. Alla viner på Naturvinstipsets lista håller hög kvalitet." },
+    },
+    {
+      "@type": "Question",
+      name: "Vilket naturvin passar till mat?",
+      acceptedAnswer: { "@type": "Answer", text: "Grundregeln: vitt och lätt till ljusare rätter, rött och fylligare till mörkare rätter. Pét nat fungerar till nästan allt. Orange vin passar till kryddiga rätter, ostar och grönsaker. Kolla fyllighet och strävhet i smakparametrarna på vinkortet för att välja rätt vin till mat." },
+    },
   ],
 };
 
@@ -128,7 +143,9 @@ Det vi vet är att alkohol, dehydrering och mängd är de största bovarna. Inte
 
 Kolla vår Topp 100-lista — en sammanställning av de mest intressanta och kvalitativa naturvinerna på Systembolaget, noggrant utvalda av Sveriges seriösaste naturvinsimportörer. Vi har direktlänkar så att du slipper leta själv.
 
-En sak att ha koll på: eftersom "naturvin" inte är ett skyddat begrepp finns det viner som marknadsförs som naturliga utan att egentligen vara det. Stora klisterlappar och "naturvin"-stämplar är inte alltid en garanti. Därför hjälper vi dig.`,
+En sak att ha koll på: eftersom "naturvin" inte är ett skyddat begrepp finns det viner som marknadsförs som naturliga utan att egentligen vara det. Stora klisterlappar och "naturvin"-stämplar är inte alltid en garanti. Därför hjälper vi dig.
+
+En sak många inte känner till: Systembolaget har ingen officiell definition av naturvin och inget sätt att verifiera att ett vin faktiskt är naturvin. Det som dyker upp när du söker på naturvin på Systembolaget är vad importören själv har valt att kalla det — utan krav på transparens eller dokumentation. Det betyder att du kan tro att du köper ett naturvin men i praktiken kan det vara konventionellt vin med alla tillsatser som naturvinsrörelsen tar avstånd från. Det är precis det problemet Naturvinstipset löser. Vi verifierar att vinerna på vår lista faktiskt är naturvin, i samarbete med importörer vi känner och litar på.`,
   },
   {
     id: "nybörjare",
@@ -230,6 +247,34 @@ Ekologisk eller biodynamisk odling kräver mer arbete och ger lägre skördar. H
 Och till skillnad från storskalig vinproduktion där man kan standardisera och effektivisera varje steg — är naturvin per definition det motsatta. Varje årgång är unik, varje flaska är ett resultat av ett helt års arbete i vingården.
 
 Det är inte ett premium för ett fancy varumärke. Det är priset för äkta hantverk.`,
+  },
+  {
+    id: "basta-naturvin-systembolaget",
+    question: "Vilket är det bästa naturvinet på Systembolaget?",
+    cta: { text: "Filtrera och hitta ditt vin →", href: "/#listan" },
+    answer: `Det beror på vad du gillar — och det är precis därför vi byggde Naturvinstipset. Det finns inget objektivt bästa naturvin, men det finns ett bästa naturvin för dig.
+
+Vår lista är sorterad efter redaktionellt betyg och kompletteras av community-betyg från riktiga drickare. Filtrera på smakprofil, vintyp och funk-nivå så hittar du ditt nästa favoritvin snabbare än du tror.`,
+  },
+  {
+    id: "naturvin-nyborjare",
+    question: "Vilket naturvin passar en nybörjare?",
+    cta: { text: "Utforska listan →", href: "/#listan" },
+    answer: `Börja med ett vin som matchar hur du redan dricker.
+
+Gillar du friska, lättdruckna viner? Välj ett med hög syra och låg funk. Föredrar du något med mer kropp? Filtrera på fyllighet.
+
+Alla viner vi presenterar håller hög kvalitet och ger en rättvis bild av vad naturvin kan vara. Du hittar tydliga smakparametrar på varje vinkort så att du vet vad du får innan du beställer.`,
+  },
+  {
+    id: "naturvin-till-mat",
+    question: "Vilket naturvin passar till mat?",
+    cta: { text: "Se viner med smakparametrar →", href: "/#listan" },
+    answer: `Grundregeln är enkel — vitt och lätt till ljusare rätter, rött och fylligare till mörkare rätter. Men naturvin är generöst.
+
+Pét nat fungerar till nästan allt. Orange vin är fantastiskt till kryddiga rätter, ostar och grönsaker. Ett lätt rött med låg strävhet kan serveras kylt och fungerar som ett vitt.
+
+Kolla smakparametrarna på vinkortet — fyllighet och strävhet är dina bästa guider när du väljer vin till mat.`,
   },
   {
     id: "biodynamiskt",
