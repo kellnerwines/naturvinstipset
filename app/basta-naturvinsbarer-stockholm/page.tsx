@@ -1,6 +1,14 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import dynamic from "next/dynamic";
 import { getBarsByCity } from "@/lib/bars";
+
+const BarMap = dynamic(() => import("@/components/BarMap"), {
+  ssr: false,
+  loading: () => (
+    <div className="w-full rounded-xl bg-[var(--green-light)] animate-pulse" style={{ height: 480 }} />
+  ),
+});
 
 export const metadata: Metadata = {
   title: "Bästa naturvinsbarerna i Stockholm 2026 | Naturvinstipset",
@@ -144,6 +152,15 @@ export default function BastaNaturvinsbarer() {
             utanför city.
           </p>
         </div>
+      </div>
+
+      {/* Map */}
+      <div className="max-w-2xl mx-auto px-6 pt-10 pb-2">
+        <p className="text-xs font-semibold tracking-[0.15em] uppercase text-[var(--muted)] mb-4">
+          Karta
+        </p>
+        <BarMap bars={stockholmBars} />
+        <p className="text-xs text-[var(--muted)] mt-2">Klicka på en plump för mer info.</p>
       </div>
 
       {/* Jump links by neighborhood */}
