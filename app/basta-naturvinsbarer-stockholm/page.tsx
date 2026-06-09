@@ -1,14 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import dynamic from "next/dynamic";
+import BarMap from "@/components/BarMap";
 import { getBarsByCity } from "@/lib/bars";
-
-const BarMap = dynamic(() => import("@/components/BarMap"), {
-  ssr: false,
-  loading: () => (
-    <div className="w-full rounded-xl bg-[var(--green-light)] animate-pulse" style={{ height: 480 }} />
-  ),
-});
 
 export const metadata: Metadata = {
   title: "Bästa naturvinsbarerna i Stockholm 2026 | Naturvinstipset",
