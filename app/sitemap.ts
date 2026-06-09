@@ -1,5 +1,6 @@
 import type { MetadataRoute } from "next";
 import { getWines, getBlogs } from "@/lib/blob";
+import { bars } from "@/lib/bars";
 
 const BASE = "https://naturvinstipset.se";
 
@@ -25,6 +26,17 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/om-oss`,         lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
   ];
 
+  const barCityRoutes: MetadataRoute.Sitemap = [
+    { url: `${BASE}/basta-naturvinsbarer-stockholm`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
+  ];
+
+  const barRoutes: MetadataRoute.Sitemap = bars.map((b) => ({
+    url: `${BASE}/naturvinsbarer/${b.slug}`,
+    lastModified: new Date(),
+    changeFrequency: "monthly" as const,
+    priority: 0.7,
+  }));
+
   const wineRoutes = wines
     .filter((w) => w.published)
     .map((w) => ({ url: `${BASE}/viner/${w.slug}`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 }));
@@ -33,5 +45,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .filter((b) => b.published)
     .map((b) => ({ url: `${BASE}/blogg/${b.slug}`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.7 }));
 
-  return [...staticRoutes, ...wineRoutes, ...blogRoutes];
+  return [...staticRoutes, ...barCityRoutes, ...barRoutes, ...wineRoutes, ...blogRoutes];
 }
