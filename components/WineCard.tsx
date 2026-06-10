@@ -114,6 +114,11 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
           </div>
         )}
 
+        {/* Flavor notes — always visible */}
+        {wine.flavorNotes && (
+          <p className="text-xs text-[var(--muted)] leading-relaxed italic mb-3">{wine.flavorNotes}</p>
+        )}
+
         {/* Rating + price row */}
         <div className="flex items-baseline justify-between mt-auto mb-2">
           <span className="text-base font-bold text-[var(--fg)]" style={{ fontFamily: "Georgia, serif" }}>
@@ -152,9 +157,6 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
         {open && (
           <div className="mt-3 pt-3 border-t border-[var(--rule-xs)] space-y-2">
             {wine.stravhet != null && <Meter label="Strävhet" value={wine.stravhet} color={color} />}
-            {wine.flavorNotes && (
-              <p className="text-xs text-[var(--muted)] leading-relaxed italic">{wine.flavorNotes}</p>
-            )}
             {wine.grape && (
               <p className="text-[10px] text-[var(--faint)] tracking-wide">{wine.grape}</p>
             )}
