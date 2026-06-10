@@ -54,21 +54,21 @@ export default async function HomePage() {
 
         <div className="relative flex flex-col md:flex-row min-h-[520px]">
           {/* Left: beige overlay + headline */}
-          <div className="flex-1 flex flex-col justify-center px-8 md:px-16 py-20" style={{ background: "rgba(240,235,226,0.90)" }}>
-            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--fg)] opacity-40 mb-5">
+          <div className="flex-1 flex flex-col justify-center px-8 md:px-16 py-20" style={{ background: "rgba(42,36,32,0.50)" }}>
+            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-white/40 mb-5">
               De bästa naturvinerna på Systembolaget
             </p>
-            <h1 className="text-4xl md:text-5xl font-extrabold leading-[1.1] tracking-tight text-[var(--fg)] mb-6">
+            <h1 className="text-4xl md:text-5xl font-extrabold leading-[1.1] tracking-tight text-white mb-6">
               Hitta vinet<br />
               du faktiskt{" "}
               <em style={{ fontFamily: "Georgia, serif", fontWeight: 700 }}>gillar</em>
             </h1>
-            <p className="text-base text-[var(--fg)] opacity-55 max-w-sm leading-relaxed mb-8">
+            <p className="text-base text-white/55 max-w-sm leading-relaxed mb-8">
               Ärliga betyg och direktlänk till Systembolaget — utan krångel.
             </p>
             <a
               href="#listan"
-              className="inline-flex items-center gap-2 text-sm font-semibold bg-[var(--fg)] text-[var(--bg)] px-5 py-3 hover:opacity-80 transition-opacity w-fit"
+              className="inline-flex items-center gap-2 text-sm font-semibold bg-white text-[var(--hero-dark)] px-5 py-3 hover:opacity-80 transition-opacity w-fit"
             >
               Se listan →
             </a>
