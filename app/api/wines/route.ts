@@ -25,7 +25,11 @@ export async function POST(req: NextRequest) {
         if (i !== idx) wines[i] = { ...wines[i], wineOfMonth: false };
       }
     }
-    wines[idx] = { ...wines[idx], ...body };
+    const update = { ...body };
+    // Never wipe an existing image with an empty value — require a non-empty URL to overwrite
+    if (!update.primaryImageUrl) delete update.primaryImageUrl;
+    if (!update.galleryImages?.length) delete update.galleryImages;
+    wines[idx] = { ...wines[idx], ...update };
     await saveWines(wines);
     revalidatePath("/", "layout");
     return NextResponse.json(wines[idx]);
