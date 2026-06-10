@@ -44,7 +44,33 @@ const PROFILE_LABELS: { key: keyof Filters["profile"]; label: string }[] = [
   { key: "stravhet",  label: "Strävhet" },
 ];
 
-/* ── Pill button ───────────────────────────────────────────────────────────── */
+/* ── Wine type colors ──────────────────────────────────────────────────────── */
+const TYPE_COLORS: Record<string, string> = {
+  Vitt:        "#d4b896",
+  Rött:        "#8a4a4a",
+  Rosé:        "#d4879a",
+  Orange:      "#d4886a",
+  "Pét Nat":   "#8aaa7a",
+  Mousserande: "#7a9ab4",
+};
+
+/* ── Type filter pill (rounded, color-coded) ───────────────────────────────── */
+function TypePill({ label, active, color, onClick }: { label: string; active: boolean; color?: string; onClick: () => void }) {
+  return (
+    <button
+      onClick={onClick}
+      className="text-[11px] font-semibold tracking-wide px-4 py-1.5 rounded-full border transition-all whitespace-nowrap"
+      style={active
+        ? { backgroundColor: color ?? "#0d0d0d", color: "#fff", borderColor: color ?? "#0d0d0d" }
+        : { backgroundColor: "#fff", color: "#0d0d0d", borderColor: "rgba(13,13,13,0.15)" }
+      }
+    >
+      {label}
+    </button>
+  );
+}
+
+/* ── Pill button (for advanced filter panel) ───────────────────────────────── */
 function Pill({ active, onClick, children }: { active: boolean; onClick: () => void; children: React.ReactNode }) {
   return (
     <button
@@ -172,6 +198,27 @@ export default function WineGrid({ entries }: { entries: WineEntry[] }) {
 
   return (
     <div>
+      {/* ── Prominent type filter pills ────────────────────────────────────── */}
+      <div className="flex flex-wrap gap-2 mb-8">
+        <TypePill
+          label="Alla viner"
+          active={filters.wineTypes.length === 0}
+          onClick={() => setFilters(f => ({ ...f, wineTypes: [] }))}
+        />
+        {options.types.map(t => (
+          <TypePill
+            key={t}
+            label={t}
+            active={filters.wineTypes.includes(t)}
+            color={TYPE_COLORS[t]}
+            onClick={() => setFilters(f => ({
+              ...f,
+              wineTypes: f.wineTypes.length === 1 && f.wineTypes[0] === t ? [] : [t],
+            }))}
+          />
+        ))}
+      </div>
+
       {/* ── Filter + sort bar ──────────────────────────────────────────────── */}
       <div className="mb-8 pb-4 border-b border-[var(--rule)]">
         <div className="flex items-center justify-between gap-4">
@@ -330,7 +377,7 @@ export default function WineGrid({ entries }: { entries: WineEntry[] }) {
           <p className="text-sm">Inga viner matchar filtret.</p>
         </div>
       ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 gap-x-6 gap-y-12">
+        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
           {ranked.map(({ wine, rating, count, likeCount }, i) => (
             <WineCard key={wine.id} wine={wine} rating={rating} ratingCount={count} likeCount={likeCount} rank={i + 1} wineOfMonth={wine.wineOfMonth} />
           ))}

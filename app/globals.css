@@ -7,13 +7,22 @@
 */
 
 :root {
-  --bg:      #faf8f4;
+  --bg:      #f0ebe2;
   --fg:      #0d0d0d;
   --muted:   rgba(13, 13, 13, 0.45);
   --faint:   rgba(13, 13, 13, 0.22);
   --rule:    rgba(13, 13, 13, 0.10);
   --rule-xs: rgba(13, 13, 13, 0.06);
   --card:    #ffffff;
+  --hero-dark: #2a2420;
+
+  /* Wine type colors */
+  --wine-vitt:        #d4b896;
+  --wine-rott:        #8a4a4a;
+  --wine-rose:        #d4879a;
+  --wine-orange:      #d4886a;
+  --wine-petnat:      #8aaa7a;
+  --wine-mousserande: #7a9ab4;
 
   /* Admin panel colors — not used on public pages */
   --green:       #3d7a52;
