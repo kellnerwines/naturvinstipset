@@ -48,7 +48,7 @@ export default async function HomePage() {
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
       <section className="relative overflow-hidden">
         {/* Background video */}
-        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover">
+        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover object-center">
           <source src="/hero-video.mp4" type="video/mp4" />
         </video>
 
