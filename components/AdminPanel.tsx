@@ -301,7 +301,7 @@ export default function AdminPanel() {
 
                 <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">
                   <input type="checkbox" id="motm-wine" checked={editWine.wineOfMonth ?? false} onChange={(e) => setEditWine({ ...editWine, wineOfMonth: e.target.checked })} className="accent-amber-500" />
-                  <label htmlFor="motm-wine" className="text-sm font-semibold text-amber-700">⭐ Månadens vin (visas på plats #1 med glödande ram)</label>
+                  <label htmlFor="motm-wine" className="text-sm font-semibold text-amber-700">⭐ Veckans vin (visas på plats #1 med glödande ram)</label>
                 </div>
 
                 <div className="flex gap-3">

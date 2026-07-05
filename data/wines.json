@@ -429,7 +429,7 @@
     "adminRating": 3,
     "createdAt": "2026-04-21T20:12:25.688166Z",
     "published": true,
-    "wineOfMonth": true
+    "wineOfMonth": false
   },
   {
     "id": "235326c9-7a6c-472c-95ac-4567438e8fa6",
@@ -1568,13 +1568,13 @@
     "producer": "Els Vinyerons",
     "country": "Spanien",
     "region": "Penedès, Katalonien",
-    "grape": "Xarel-lo",
+    "grape": "Xarel-lo från kalk- och fossilrika jordar",
     "wineType": "Vitt",
     "year": "2021",
-    "price": "167",
+    "price": "168",
     "systembolagetUrl": "https://www.systembolaget.se/produkt/vin/lluerna-5892001/",
     "description": "Mineraliskt vitt på inhemsk Xarel-lo från Penedès. Torrt, friskt och med stark identitet – ett av Kataloniens bästa naturviner.",
-    "longDescription": "Els Vinyerons gör Lluerna på 100% Xarel-lo, den traditionella druvan i Penedès. Vin med rötter – gjort på gamla stockar med naturlig jäsning och utan svavel. Utmärkt till skaldjur och grillad fisk.",
+    "longDescription": "Els Vinyerons gör Lluerna på 100% Xarel-lo, den traditionella druvan i Penedès. Vin med rötter – gjort på gamla stockar med naturlig jäsning och utan svavel. Utmärkt till skaldjur och grillad fisk.\n\nLluerna bygger alltid på en blend av två årgångar. 90% från 2021 lagras efter press på ståltank i ca 5 månader. 10% från föregående årgång blandas sedan in — varje år sparas lite vin undan och läggs på 300-liters fat för att ge mer djup och botten till det efterföljande yngre vinet. Blandningen lagras sedan ytterligare en period på tank innan buteljering.",
     "flavorTags": [
       "Mineraliskt",
       "Friskt",
@@ -1587,8 +1587,8 @@
     "flavorNotes": "Gröna äpplen, citrus och salt mineral. Frisk och levande med lång torr avslutning och god komplexitet.",
     "primaryImageUrl": "/uploads/lluerna-2021.png",
     "galleryImages": [],
-    "adminRating": 3,
-    "wineOfMonth": false,
+    "adminRating": 4,
+    "wineOfMonth": true,
     "createdAt": "2026-04-22T13:30:47.938905Z",
     "published": true
   },

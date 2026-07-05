@@ -72,7 +72,7 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
       <Link href={`/viner/${wine.slug}`} className="block relative group px-3">
         {wineOfMonth && (
           <span className="absolute -top-1 left-1/2 -translate-x-1/2 z-10 text-[9px] font-bold tracking-[0.2em] uppercase bg-amber-400 text-white px-3 py-0.5 whitespace-nowrap">
-            Månadens vin
+            Veckans vin
           </span>
         )}
         <div
@@ -82,7 +82,7 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
           {wine.primaryImageUrl ? (
             <Image
               src={wine.primaryImageUrl}
-              alt={wine.name}
+              alt={`${wine.name}${wine.year ? ` ${wine.year}` : ""}${wine.wineType ? ` ${wine.wineType.toLowerCase()} naturvin` : " naturvin"}${wine.country ? ` från ${wine.country}` : ""}`}
               fill
               className="object-contain object-top group-hover:scale-[1.03] transition-transform duration-500"
               unoptimized

@@ -77,12 +77,12 @@ export default async function HomePage() {
           {/* Right: dark featured wine panel */}
           {featured && (
             <div className="w-full md:w-72 flex-shrink-0 flex flex-col justify-center px-8 py-12" style={{ background: "var(--hero-dark)" }}>
-              <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/40 mb-6">Månadens vin</p>
+              <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/40 mb-6">Veckans vin</p>
               {featured.wine.primaryImageUrl && (
                 <div className="mb-5 flex justify-center">
                   <Image
                     src={featured.wine.primaryImageUrl}
-                    alt={featured.wine.name}
+                    alt={`${featured.wine.name}${featured.wine.year ? ` ${featured.wine.year}` : ""}${featured.wine.wineType ? ` ${featured.wine.wineType.toLowerCase()} naturvin` : " naturvin"}${featured.wine.country ? ` från ${featured.wine.country}` : ""}`}
                     width={80}
                     height={120}
                     className="object-contain"
