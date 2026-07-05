@@ -64,7 +64,7 @@ export default function Footer() {
           <p>Länkarna till Systembolaget kan vara affiliatelänkar. Naturvinstipset är en oberoende guide.</p>
           <div className="flex items-center gap-4">
             <a
-              href="https://www.instagram.com/naturvinstipset.se/"
+              href="https://www.instagram.com/naturvinstipset/"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Naturvinstipset på Instagram"
@@ -77,7 +77,7 @@ export default function Footer() {
               </svg>
             </a>
             <a
-              href="https://www.tiktok.com/@naturvinstipset.s"
+              href="https://www.tiktok.com/@naturvinstipset"
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Naturvinstipset på TikTok"
