@@ -14,15 +14,18 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   const wines = await getWines();
   const wine = wines.find((w) => w.slug === slug && w.published);
   if (!wine) return { title: "Vin" };
+  const pageTitle = `${wine.name}${wine.year ? ` ${wine.year}` : ""}`;
+  const ogTitle = `${pageTitle} – Naturvinstipset`;
+  const ogImageAlt = `${pageTitle}${wine.wineType ? ` ${wine.wineType.toLowerCase()} naturvin` : " naturvin"}${wine.country ? ` från ${wine.country}` : ""}`;
   return {
-    title: `${wine.name}${wine.year ? ` ${wine.year}` : ""} – ${wine.producer}`,
+    title: pageTitle,
     description: wine.description,
     openGraph: {
-      title: wine.year ? `${wine.name} ${wine.year} – ${wine.producer}` : `${wine.name} – ${wine.producer}`,
+      title: ogTitle,
       description: wine.description,
       url: `https://www.naturvinstipset.se/viner/${slug}`,
       images: wine.primaryImageUrl
-        ? [{ url: wine.primaryImageUrl, alt: wine.name }]
+        ? [{ url: wine.primaryImageUrl, alt: ogImageAlt }]
         : [{ url: "/og-logo.png", width: 1200, height: 630, alt: "Naturvinstipset" }],
     },
   };
@@ -74,6 +77,17 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
 
   const totalRatingCount = wineRatings.length + 1; // +1 for admin vote
 
+  const producerWines = wine.producer
+    ? wines.filter((w) => w.published && w.id !== wine.id && w.producer === wine.producer).slice(0, 4)
+    : [];
+
+  const regionalWines = (wine.region || wine.country)
+    ? wines
+        .filter((w) => w.published && w.id !== wine.id && !producerWines.some((p) => p.id === w.id))
+        .filter((w) => wine.region ? w.region === wine.region : w.country === wine.country)
+        .slice(0, 4)
+    : [];
+
   const additionalProperties: Array<Record<string, string>> = [];
   if (wine.country) additionalProperties.push({ "@type": "PropertyValue", name: "Land", value: wine.country });
   if (wine.region) additionalProperties.push({ "@type": "PropertyValue", name: "Region", value: wine.region });
@@ -88,6 +102,7 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
     url: `https://www.naturvinstipset.se/viner/${slug}`,
     category: `Wine/${wine.wineType}`,
     manufacturer: { "@type": "Organization", name: wine.producer },
+    ...(wine.producer ? { brand: { "@type": "Brand", name: wine.producer } } : {}),
     ...(wine.primaryImageUrl ? { image: wine.primaryImageUrl } : {}),
     ...(wine.price ? {
       offers: {
@@ -96,6 +111,21 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
         priceCurrency: "SEK",
         availability: "https://schema.org/InStock",
         ...(wine.systembolagetUrl ? { url: wine.systembolagetUrl } : {}),
+        shippingDetails: {
+          "@type": "OfferShippingDetails",
+          shippingDestination: {
+            "@type": "DefinedRegion",
+            addressCountry: "SE",
+          },
+          deliveryTime: {
+            "@type": "ShippingDeliveryTime",
+          },
+        },
+        hasMerchantReturnPolicy: {
+          "@type": "MerchantReturnPolicy",
+          applicableCountry: "SE",
+          returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
+        },
       },
     } : wine.systembolagetUrl ? {
       offers: {
@@ -103,6 +133,21 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
         url: wine.systembolagetUrl,
         priceCurrency: "SEK",
         availability: "https://schema.org/InStock",
+        shippingDetails: {
+          "@type": "OfferShippingDetails",
+          shippingDestination: {
+            "@type": "DefinedRegion",
+            addressCountry: "SE",
+          },
+          deliveryTime: {
+            "@type": "ShippingDeliveryTime",
+          },
+        },
+        hasMerchantReturnPolicy: {
+          "@type": "MerchantReturnPolicy",
+          applicableCountry: "SE",
+          returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
+        },
       },
     } : {}),
     review: {
@@ -140,7 +185,7 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
         {/* Image */}
         <div className="bg-[var(--green-light)] aspect-[3/4] rounded-xl overflow-hidden flex items-center justify-center">
           {wine.primaryImageUrl ? (
-            <Image src={wine.primaryImageUrl} alt={wine.name} width={400} height={530} className="object-cover w-full h-full" unoptimized />
+            <Image src={wine.primaryImageUrl} alt={`${wine.name}${wine.year ? ` ${wine.year}` : ""}${wine.wineType ? ` ${wine.wineType.toLowerCase()} naturvin` : " naturvin"}${wine.country ? ` från ${wine.country}` : ""}`} width={400} height={530} className="object-cover w-full h-full" unoptimized />
           ) : (
             <span className="text-6xl">🍷</span>
           )}
@@ -219,7 +264,8 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
         <h2 className="text-lg font-bold text-[var(--green-dark)] mb-4">Om vinet</h2>
         <p className="text-black/70 leading-relaxed mb-4">
           {wine.year ? `${wine.name} ${wine.year}` : wine.name} är ett{" "}
-          {wine.wineType.toLowerCase()} naturvin
+          {wine.wineType.toLowerCase()}{" "}
+          <Link href="/vad-ar-naturvin" className="underline underline-offset-2 hover:text-[var(--green)]">naturvin</Link>
           {wine.country ? ` från ${wine.country}` : ""}
           {wine.region ? ` (${wine.region})` : ""}
           {wine.producer ? `, producerat av ${wine.producer}` : ""}.
@@ -349,6 +395,52 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
           </div>
         </div>
       </div>
+
+      {/* Related: same producer */}
+      {producerWines.length > 0 && (
+        <div className="mt-14 max-w-2xl border-t border-black/8 pt-12">
+          <h2 className="text-lg font-bold text-[var(--green-dark)] mb-6">Fler viner från {wine.producer}</h2>
+          <ul className="space-y-3">
+            {producerWines.map((w) => (
+              <li key={w.id}>
+                <Link
+                  href={`/viner/${w.slug}`}
+                  className="flex items-center justify-between group py-2 border-b border-black/5 last:border-0"
+                >
+                  <span className="font-medium group-hover:text-[var(--green)] transition-colors">
+                    {w.name}{w.year ? ` ${w.year}` : ""}
+                  </span>
+                  <span className="text-xs text-black/40">{w.wineType}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
+
+      {/* Related: same region/country */}
+      {regionalWines.length > 0 && (
+        <div className="mt-14 max-w-2xl border-t border-black/8 pt-12">
+          <h2 className="text-lg font-bold text-[var(--green-dark)] mb-6">
+            Andra naturviner från {wine.region ?? wine.country}
+          </h2>
+          <ul className="space-y-3">
+            {regionalWines.map((w) => (
+              <li key={w.id}>
+                <Link
+                  href={`/viner/${w.slug}`}
+                  className="flex items-center justify-between group py-2 border-b border-black/5 last:border-0"
+                >
+                  <span className="font-medium group-hover:text-[var(--green)] transition-colors">
+                    {w.name}{w.year ? ` ${w.year}` : ""}
+                  </span>
+                  <span className="text-xs text-black/40">{w.producer}</span>
+                </Link>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }

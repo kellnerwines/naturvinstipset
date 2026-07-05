@@ -74,38 +74,38 @@ export default async function HomePage() {
             </a>
           </div>
 
-          {/* Right: dark featured wine panel */}
+          {/* Right: featured wine panel */}
           {featured && (
-            <div className="w-full md:w-72 flex-shrink-0 flex flex-col justify-center px-8 py-12" style={{ background: "var(--hero-dark)" }}>
-              <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/40 mb-6">Veckans vin</p>
+            <div className="w-full md:w-72 flex-shrink-0 flex flex-col" style={{ background: "#a8b3b6" }}>
               {featured.wine.primaryImageUrl && (
-                <div className="mb-5 flex justify-center">
-                  <Image
-                    src={featured.wine.primaryImageUrl}
-                    alt={`${featured.wine.name}${featured.wine.year ? ` ${featured.wine.year}` : ""}${featured.wine.wineType ? ` ${featured.wine.wineType.toLowerCase()} naturvin` : " naturvin"}${featured.wine.country ? ` från ${featured.wine.country}` : ""}`}
-                    width={140}
-                    height={210}
-                    className="object-contain drop-shadow-lg"
-                    unoptimized
-                  />
-                </div>
+                <Image
+                  src={featured.wine.primaryImageUrl}
+                  alt={`${featured.wine.name}${featured.wine.year ? ` ${featured.wine.year}` : ""}${featured.wine.wineType ? ` ${featured.wine.wineType.toLowerCase()} naturvin` : " naturvin"}${featured.wine.country ? ` från ${featured.wine.country}` : ""}`}
+                  width={288}
+                  height={380}
+                  className="w-full object-cover object-center"
+                  unoptimized
+                />
               )}
-              <p className="text-[10px] tracking-[0.15em] uppercase text-white/40 mb-1">{featured.wine.producer}</p>
-              <p className="text-sm font-bold text-white mb-3 leading-snug">{featured.wine.name}</p>
-              <div className="flex items-baseline gap-3">
-                <span className="text-2xl font-bold text-white" style={{ fontFamily: "Georgia, serif" }}>
-                  {featured.rating.toFixed(1)}
-                </span>
-                {featured.wine.price && (
-                  <span className="text-sm text-white/50">{featured.wine.price} kr</span>
-                )}
+              <div className="px-6 py-6 flex flex-col justify-end flex-1">
+                <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/60 mb-2">Veckans vin</p>
+                <p className="text-[10px] tracking-[0.15em] uppercase text-white/60 mb-1">{featured.wine.producer}</p>
+                <p className="text-sm font-bold text-white mb-2 leading-snug">{featured.wine.name}</p>
+                <div className="flex items-baseline gap-3 mb-4">
+                  <span className="text-2xl font-bold text-white" style={{ fontFamily: "Georgia, serif" }}>
+                    {featured.rating.toFixed(1)}
+                  </span>
+                  {featured.wine.price && (
+                    <span className="text-sm text-white/60">{featured.wine.price} kr</span>
+                  )}
+                </div>
+                <Link
+                  href={`/viner/${featured.wine.slug}`}
+                  className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/70 border-b border-white/30 pb-px hover:text-white transition-colors w-fit"
+                >
+                  Läs mer →
+                </Link>
               </div>
-              <Link
-                href={`/viner/${featured.wine.slug}`}
-                className="mt-6 text-[10px] font-bold tracking-[0.2em] uppercase text-white/60 border-b border-white/20 pb-px hover:text-white/90 transition-colors w-fit"
-              >
-                Läs mer →
-              </Link>
             </div>
           )}
         </div>
