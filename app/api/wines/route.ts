@@ -4,6 +4,8 @@ import { isAuthenticated } from "@/lib/auth";
 import { randomUUID } from "crypto";
 import { revalidatePath } from "next/cache";
 
+export const dynamic = "force-dynamic";
+
 export async function GET() {
   const wines = await getWines();
   return NextResponse.json(wines);

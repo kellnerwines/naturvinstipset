@@ -85,7 +85,7 @@ async function fsWrite<T>(filename: string, data: T[]) {
 async function blobRead<T>(key: string): Promise<T[]> {
   const { get: blobGet } = await import("@vercel/blob");
   try {
-    const result = await blobGet(key, { access: "private" });
+    const result = await blobGet(key, { access: "private", useCache: false });
     if (!result || result.statusCode !== 200) return [];
     const text = await new Response(result.stream).text();
     return JSON.parse(text);
