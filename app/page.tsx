@@ -83,9 +83,9 @@ export default async function HomePage() {
                   <Image
                     src={featured.wine.primaryImageUrl}
                     alt={`${featured.wine.name}${featured.wine.year ? ` ${featured.wine.year}` : ""}${featured.wine.wineType ? ` ${featured.wine.wineType.toLowerCase()} naturvin` : " naturvin"}${featured.wine.country ? ` från ${featured.wine.country}` : ""}`}
-                    width={80}
-                    height={120}
-                    className="object-contain"
+                    width={140}
+                    height={210}
+                    className="object-contain drop-shadow-lg"
                     unoptimized
                   />
                 </div>
