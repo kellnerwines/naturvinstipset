@@ -6,6 +6,7 @@ import { getWines, getRatings, combinedRating } from "@/lib/blob";
 import { StarDisplay } from "@/components/Stars";
 import RatingForm from "@/components/RatingForm";
 import LikeButton from "@/components/LikeButton";
+import { buildWineProductJsonLd, getArticleNumber } from "@/lib/wineJsonLd";
 
 export const dynamic = "force-dynamic";
 
@@ -65,6 +66,8 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
   const likeCount = wineRatings.filter((r) => r.liked).length;
   const score = combinedRating(wine, ratings);
 
+  const articleNumber = getArticleNumber(wine);
+
   const specs = [
     { label: "Producent", value: wine.producer },
     { label: "Land", value: wine.country },
@@ -73,9 +76,8 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
     { label: "Vintyp", value: wine.wineType },
     { label: "Årgång", value: wine.year },
     { label: "Pris", value: wine.price ? `${wine.price} kr` : undefined },
+    { label: "Systembolaget art.nr", value: articleNumber },
   ].filter((s) => s.value);
-
-  const totalRatingCount = wineRatings.length + 1; // +1 for admin vote
 
   const producerWines = wine.producer
     ? wines.filter((w) => w.published && w.id !== wine.id && w.producer === wine.producer).slice(0, 4)
@@ -88,89 +90,10 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
         .slice(0, 4)
     : [];
 
-  const additionalProperties: Array<Record<string, string>> = [];
-  if (wine.country) additionalProperties.push({ "@type": "PropertyValue", name: "Land", value: wine.country });
-  if (wine.region) additionalProperties.push({ "@type": "PropertyValue", name: "Region", value: wine.region });
-  if (wine.grape) additionalProperties.push({ "@type": "PropertyValue", name: "Druvor", value: wine.grape });
-  if (wine.flavorTags?.length) additionalProperties.push({ "@type": "PropertyValue", name: "Smakprofil", value: wine.flavorTags.join(", ") });
-
-  const jsonLd: Record<string, unknown> = {
-    "@context": "https://schema.org",
-    "@type": "Product",
-    name: wine.year ? `${wine.name} ${wine.year}` : wine.name,
-    description: wine.description,
-    url: `https://www.naturvinstipset.se/viner/${slug}`,
-    category: `Wine/${wine.wineType}`,
-    manufacturer: { "@type": "Organization", name: wine.producer },
-    ...(wine.producer ? { brand: { "@type": "Brand", name: wine.producer } } : {}),
-    ...(wine.primaryImageUrl ? { image: wine.primaryImageUrl } : {}),
-    ...(wine.price ? {
-      offers: {
-        "@type": "Offer",
-        price: wine.price,
-        priceCurrency: "SEK",
-        availability: "https://schema.org/InStock",
-        ...(wine.systembolagetUrl ? { url: wine.systembolagetUrl } : {}),
-        shippingDetails: {
-          "@type": "OfferShippingDetails",
-          shippingDestination: {
-            "@type": "DefinedRegion",
-            addressCountry: "SE",
-          },
-          deliveryTime: {
-            "@type": "ShippingDeliveryTime",
-          },
-        },
-        hasMerchantReturnPolicy: {
-          "@type": "MerchantReturnPolicy",
-          applicableCountry: "SE",
-          returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
-        },
-      },
-    } : wine.systembolagetUrl ? {
-      offers: {
-        "@type": "Offer",
-        url: wine.systembolagetUrl,
-        priceCurrency: "SEK",
-        availability: "https://schema.org/InStock",
-        shippingDetails: {
-          "@type": "OfferShippingDetails",
-          shippingDestination: {
-            "@type": "DefinedRegion",
-            addressCountry: "SE",
-          },
-          deliveryTime: {
-            "@type": "ShippingDeliveryTime",
-          },
-        },
-        hasMerchantReturnPolicy: {
-          "@type": "MerchantReturnPolicy",
-          applicableCountry: "SE",
-          returnPolicyCategory: "https://schema.org/MerchantReturnNotPermitted",
-        },
-      },
-    } : {}),
-    review: {
-      "@type": "Review",
-      reviewRating: {
-        "@type": "Rating",
-        ratingValue: wine.adminRating,
-        bestRating: "5",
-      },
-      author: {
-        "@type": "Organization",
-        name: "Naturvinstipset",
-      },
-    },
-    aggregateRating: {
-      "@type": "AggregateRating",
-      ratingValue: Math.round(score * 10) / 10,
-      reviewCount: totalRatingCount,
-      bestRating: 5,
-      worstRating: 1,
-    },
-    ...(additionalProperties.length > 0 ? { additionalProperty: additionalProperties } : {}),
-  };
+  const jsonLd = buildWineProductJsonLd(wine, {
+    combinedRating: score,
+    communityCount: wineRatings.length,
+  });
 
   return (
     <div className="max-w-3xl mx-auto px-5 py-12">

@@ -6,6 +6,12 @@ const nextConfig = {
       { protocol: "https", hostname: "**" },
     ],
   },
+  async redirects() {
+    return [
+      { source: "/basta-orangevin-systembolaget", destination: "/orange", permanent: true },
+      { source: "/basta-pet-nat-systembolaget", destination: "/pet-nat", permanent: true },
+    ];
+  },
 };
 
 export default nextConfig;

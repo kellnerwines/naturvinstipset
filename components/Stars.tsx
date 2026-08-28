@@ -8,8 +8,8 @@ export function StarDisplay({ rating, count }: { rating: number; count?: number 
   const empty = 5 - full - (half ? 1 : 0);
 
   return (
-    <span className="inline-flex items-center gap-1">
-      <span className="flex text-[var(--fg)]">
+    <span className="inline-flex items-center gap-1" role="img" aria-label={`Betyg: ${rating.toFixed(1)} av 5${count !== undefined ? ` (${count} röster)` : ""}`}>
+      <span className="flex text-[var(--fg)]" aria-hidden="true">
         {Array(full).fill(0).map((_, i) => <StarIcon key={`f${i}`} type="full" />)}
         {half && <StarIcon type="half" />}
         {Array(empty).fill(0).map((_, i) => <StarIcon key={`e${i}`} type="empty" />)}

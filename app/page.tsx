@@ -3,6 +3,7 @@ import Link from "next/link";
 import Image from "next/image";
 import { getWines, getRatings, combinedRating } from "@/lib/blob";
 import WineGrid from "@/components/WineGrid";
+import HomeFaq from "@/components/HomeFaq";
 
 export const dynamic = "force-dynamic";
 
@@ -148,6 +149,8 @@ export default async function HomePage() {
           </a>
         </div>
       </section>
+
+      <HomeFaq />
     </div>
   );
 }

@@ -6,6 +6,7 @@ import Image from "next/image";
 import { StarDisplay } from "./Stars";
 import LikeButton from "./LikeButton";
 import type { Wine } from "@/lib/blob";
+import { buildWineProductJsonLd, getArticleNumber } from "@/lib/wineJsonLd";
 
 type Props = { wine: Wine; rating: number; ratingCount: number; likeCount: number; rank?: number; wineOfMonth?: boolean };
 
@@ -53,8 +54,13 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
   const bg    = typeBg[wine.wineType] ?? "#d4d0c8";
   const hasProfile = wine.syra != null || wine.fyllighet != null || wine.funk != null;
 
+  const articleNumber = getArticleNumber(wine);
+  const jsonLd = buildWineProductJsonLd(wine, { combinedRating: rating, communityCount: ratingCount });
+
   return (
     <div className={`flex flex-col bg-white${wineOfMonth ? " motm-card" : ""}`}>
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+
       {/* ── Top bar: rank + type pill ───────────────────────────────────── */}
       <div className="flex items-center justify-between px-3 pt-3 pb-2">
         {rank ? (
@@ -120,14 +126,30 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
         )}
 
         {/* Rating + price row */}
-        <div className="flex items-baseline justify-between mt-auto mb-2">
-          <span className="text-base font-bold text-[var(--fg)]" style={{ fontFamily: "Georgia, serif" }}>
-            ★ {rating.toFixed(1)}
+        <div className="flex items-baseline justify-between mt-auto mb-1">
+          <span
+            className="text-base font-bold text-[var(--fg)]"
+            style={{ fontFamily: "Georgia, serif" }}
+            role="img"
+            aria-label={`Betyg: ${rating.toFixed(1)} av 5${ratingCount > 0 ? ` (${ratingCount} röster)` : ""}`}
+          >
+            <span aria-hidden="true">★</span> {rating.toFixed(1)}
           </span>
           {wine.price && (
             <span className="text-[11px] text-[var(--muted)]">{wine.price} kr</span>
           )}
         </div>
+
+        {/* Plain-text spec line — for AI/assistive parsing, not just icons */}
+        <p className="text-[10px] text-[var(--faint)] leading-snug mb-2">
+          {[
+            wine.country && `Land: ${wine.country}`,
+            wine.wineType && `Vintyp: ${wine.wineType}`,
+            wine.grape && `Druva: ${wine.grape}`,
+            articleNumber && `Systembolaget art.nr: ${articleNumber}`,
+            wine.price && `Pris: ca ${wine.price} kr`,
+          ].filter(Boolean).join(" · ")}
+        </p>
 
         {/* Actions row */}
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-[var(--rule-xs)] pt-2">

@@ -75,8 +75,10 @@ export default async function BastaNaturvinUnder200Page() {
           </p>
           <div className="flex flex-wrap gap-2">
             <Link href="/basta-naturvin-for-nyborjare" className="text-sm border border-black/10 px-4 py-2 rounded-full hover:border-[var(--green)] transition-colors">För nybörjare</Link>
-            <Link href="/basta-orangevin-systembolaget" className="text-sm border border-black/10 px-4 py-2 rounded-full hover:border-[var(--green)] transition-colors">Bästa orangevinet</Link>
-            <Link href="/basta-pet-nat-systembolaget" className="text-sm border border-black/10 px-4 py-2 rounded-full hover:border-[var(--green)] transition-colors">Bästa pét nat</Link>
+            <Link href="/rott" className="text-sm border border-black/10 px-4 py-2 rounded-full hover:border-[var(--green)] transition-colors">Bästa röda naturvinet</Link>
+            <Link href="/vitt" className="text-sm border border-black/10 px-4 py-2 rounded-full hover:border-[var(--green)] transition-colors">Bästa vita naturvinet</Link>
+            <Link href="/orange" className="text-sm border border-black/10 px-4 py-2 rounded-full hover:border-[var(--green)] transition-colors">Bästa orangevinet</Link>
+            <Link href="/pet-nat" className="text-sm border border-black/10 px-4 py-2 rounded-full hover:border-[var(--green)] transition-colors">Bästa pét nat</Link>
             <Link href="/basta-naturvin-till-mat" className="text-sm border border-black/10 px-4 py-2 rounded-full hover:border-[var(--green)] transition-colors">Till mat</Link>
           </div>
         </div>
