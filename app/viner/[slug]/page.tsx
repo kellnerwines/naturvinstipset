@@ -7,6 +7,7 @@ import { StarDisplay } from "@/components/Stars";
 import RatingForm from "@/components/RatingForm";
 import LikeButton from "@/components/LikeButton";
 import { buildWineProductJsonLd, getArticleNumber } from "@/lib/wineJsonLd";
+import { kellnerProducerUrl } from "@/lib/kellnerLinks";
 
 export const dynamic = "force-dynamic";
 
@@ -67,6 +68,7 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
   const score = combinedRating(wine, ratings);
 
   const articleNumber = getArticleNumber(wine);
+  const importerUrl = kellnerProducerUrl(wine.producer);
 
   const specs = [
     { label: "Producent", value: wine.producer },
@@ -161,6 +163,17 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
               className="block text-center bg-[var(--green)] text-white font-semibold px-6 py-3 rounded-lg hover:bg-[var(--green-dark)] transition-colors"
             >
               Köp på Systembolaget →
+            </a>
+          )}
+
+          {importerUrl && (
+            <a
+              href={importerUrl}
+              target="_blank"
+              rel="noopener noreferrer"
+              className="block text-center text-sm text-black/40 hover:text-[var(--green)] mt-3 underline underline-offset-2"
+            >
+              Importeras av Kellner & Kellner →
             </a>
           )}
         </div>
