@@ -3,17 +3,27 @@ import { readFile } from "fs/promises";
 import path from "path";
 import { getWines, saveWines, getRatings, saveRatings, getBlogs, saveBlogs, Wine, Rating, BlogPost } from "@/lib/blob";
 import { isAuthenticated } from "@/lib/auth";
+import { buildCatalog, type FoodEntry } from "@/lib/wineData";
 import { revalidatePath } from "next/cache";
 
-// Merges data/*.json into Blob — only adds missing entries (matched by id).
-// Never overwrites existing entries so uploaded images are preserved.
+// Merges data/*.json into Blob. Ratings and blogs: only adds missing entries (matched by id).
+// Wines: migrates existing wines to the Vinkompassen model (offers, shop, food, ownImport),
+// adds missing Systembolaget wines and merges in the web-shop imports. Existing values and
+// lockedFields are never overwritten, so uploaded images and admin edits are preserved.
 export async function POST() {
   if (!(await isAuthenticated()))
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const dataDir = path.join(process.cwd(), "data");
 
-  const seedWines: Wine[] = JSON.parse(await readFile(path.join(dataDir, "wines.json"), "utf-8"));
+  const readData = async <T,>(file: string): Promise<T> =>
+    JSON.parse(await readFile(path.join(dataDir, file), "utf-8"));
+  const [seedWines, food, vinnatur, flaskvis] = await Promise.all([
+    readData<Wine[]>("wines.json"),
+    readData<Record<string, FoodEntry>>("food-systembolaget.json"),
+    readData<Wine[]>("wines-vinnatur.json"),
+    readData<Wine[]>("wines-flaskvis.json"),
+  ]);
 
   let seedRatings: Rating[] = [];
   try { seedRatings = JSON.parse(await readFile(path.join(dataDir, "ratings.json"), "utf-8")); } catch { /* ok */ }
@@ -25,16 +35,26 @@ export async function POST() {
     getWines(), getRatings(), getBlogs(),
   ]);
 
-  const existingWineIds    = new Set(existingWines.map((w) => w.id));
   const existingRatingIds  = new Set(existingRatings.map((r) => r.id));
   const existingBlogIds    = new Set(existingBlogs.map((b) => b.id));
 
-  const newWines   = seedWines.filter((w) => !existingWineIds.has(w.id));
+  const catalog = buildCatalog({
+    existing: existingWines,
+    systembolaget: seedWines,
+    food,
+    imports: [
+      { wines: vinnatur, source: { source: "vinnatur.shop", autoProfile: true } },
+      { wines: flaskvis, source: { source: "flaskvis.se", autoProfile: false } },
+    ],
+    now: new Date().toISOString(),
+  });
+  const winesChanged = catalog.report.added.length > 0 || catalog.report.updated.length > 0
+    || JSON.stringify(catalog.wines) !== JSON.stringify(existingWines);
   const newRatings = seedRatings.filter((r) => !existingRatingIds.has(r.id));
   const newBlogs   = seedBlogs.filter((b) => !existingBlogIds.has(b.id));
 
   await Promise.all([
-    newWines.length   > 0 && saveWines([...existingWines, ...newWines]),
+    winesChanged      && saveWines(catalog.wines),
     newRatings.length > 0 && saveRatings([...existingRatings, ...newRatings]),
     newBlogs.length   > 0 && saveBlogs([...existingBlogs, ...newBlogs]),
   ]);
@@ -42,7 +62,12 @@ export async function POST() {
   revalidatePath("/", "layout");
   return NextResponse.json({
     ok: true,
-    added:   { wines: newWines.length, ratings: newRatings.length, blogs: newBlogs.length },
-    skipped: { wines: existingWineIds.size, ratings: existingRatingIds.size, blogs: existingBlogIds.size },
+    added:   { wines: catalog.report.added.length, ratings: newRatings.length, blogs: newBlogs.length },
+    skipped: { wines: catalog.report.unchanged, ratings: existingRatingIds.size, blogs: existingBlogIds.size },
+    wines: {
+      total: catalog.wines.length,
+      updated: catalog.report.updated.length,
+      merged: catalog.report.merged,
+    },
   });
 }

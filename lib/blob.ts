@@ -30,6 +30,31 @@ export type Wine = {
   wineOfMonth?: boolean;     // pinned to #1 with glowy border
   createdAt: string;
   published: boolean;
+
+  // ── Vinkompassen (BRIEF-KOMPASSEN.md, avsnitt 5) ──
+  offers?: Offer[];              // alla säljställen; ersätter på sikt systembolagetUrl/price
+  shop?: Shop;                   // primärt säljställe (för enkel filtrering)
+  shopUrl?: string;
+  ownImport?: boolean;           // Kellner & Kellner-import → "Egen import"-märkning
+  foodPairing?: string;          // regional mattext, se 5.4
+  foodCategories?: FoodCategory[];
+  source?: string;               // t.ex. "vinnatur.shop", "flaskvis.se", "manual"
+  sourceId?: string;             // butikens handle/slug
+  autoProfile?: boolean;         // smakprofil uppskattad automatiskt
+  lockedFields?: string[];       // fält som admin ändrat – importen får inte skriva över dem
+};
+
+export type Shop = "Systembolaget" | "Vin & Natur" | "Flaskvis" | (string & {});
+
+export type FoodCategory =
+  | "fisk" | "fagel" | "kott" | "flask" | "vego" | "kryddigt" | "ost" | "aperitif";
+
+export type Offer = {
+  shop: Shop;
+  url: string;          // butikens produktsida (rå URL, länkas via /go)
+  price: number;        // SEK inkl. moms och svensk alkoholskatt
+  inStock: boolean;
+  lastSyncedAt: string; // ISO
 };
 
 export type Rating = {
