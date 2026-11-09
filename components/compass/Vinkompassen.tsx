@@ -107,7 +107,7 @@ const skipCls = `${chipBase} border-dashed border-[var(--faint)] text-[var(--mut
 
 // ─── Komponenten ──────────────────────────────────────────────────────────────
 
-export default function Vinkompassen({ wines }: { wines: CompassWine[] }) {
+export default function Vinkompassen({ wines, compensation = false }: { wines: CompassWine[]; compensation?: boolean }) {
   const W = wines;
   const [S, setS] = useState<CompassState>(emptyState);
   const [answered, setAnswered] = useState<QuestionKey[]>([]);
@@ -353,6 +353,7 @@ export default function Vinkompassen({ wines }: { wines: CompassWine[] }) {
   const result = useMemo(() => pick(S, W), [S, W]);
   const initialCount = W.length;
   const top = result.list[0];
+  const stateQs = useMemo(() => stateToParams(S, answered).toString(), [S, answered]);
   const targets = { s: S.ax.s || undefined, f: S.ax.f || undefined, st: S.ax.st || undefined, fu: S.ax.fu || (S.adv ? ADV_TARGET[S.adv] : undefined) };
   const countries = useMemo(() => [...new Set(W.map((w) => w.c).filter(Boolean))].sort((a, b) => a.localeCompare(b, "sv")), [W]);
   const sortedWines = useMemo(() => [...W].sort((a, b) => a.n.localeCompare(b.n, "sv")), [W]);
@@ -438,7 +439,7 @@ export default function Vinkompassen({ wines }: { wines: CompassWine[] }) {
             </p>
           ) : null}
           {result.list.slice(0, shownN).map((sc, i) => (
-            <CompassCard key={sc.w.id} scored={sc} first={i === 0} targets={targets} />
+            <CompassCard key={sc.w.id} scored={sc} first={i === 0} targets={targets} stateQs={stateQs} compensation={compensation} />
           ))}
           {result.list.length > shownN ? (
             <button type="button" className={`${chipCls(false)} w-full justify-center`} onClick={() => setShownN((n) => n + 7)}>

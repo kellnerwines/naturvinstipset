@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import SiteShell from "@/components/SiteShell";
+import { getSettings } from "@/lib/blob";
 import CookieBanner from "@/components/CookieBanner";
 
 /*
@@ -47,11 +48,12 @@ export const metadata: Metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const settings = await getSettings().catch(() => ({ retailerCompensation: false }));
   return (
     <html lang="sv" className={`${outfit.variable} h-full`}>
       <body className="min-h-full flex flex-col antialiased">
-        <SiteShell>{children}</SiteShell>
+        <SiteShell retailerCompensation={settings.retailerCompensation}>{children}</SiteShell>
         <CookieBanner />
       </body>
     </html>

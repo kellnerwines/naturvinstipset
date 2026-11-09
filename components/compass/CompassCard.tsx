@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useState } from "react";
 import { COLOR_VAR, FOOD, typeOf, type Color, type Scored } from "@/lib/compass/engine";
 import { buyHref, track } from "@/lib/compass/links";
+import { buyRel } from "@/lib/clicks/util";
 
 /** Enkel flask-SVG i vinets typfärg, reserv när bild saknas. */
 export function BottleSvg({ type, className }: { type: string; className?: string }) {
@@ -38,10 +39,13 @@ function Axis({ name, value, target }: { name: string; value: number; target?: n
 }
 
 export default function CompassCard({
-  scored, first, targets,
+  scored, first, targets, stateQs, compensation,
 }: {
   scored: Scored;
   first: boolean;
+  /** Kompassens val som URL-parametrar, följer med klicket till /go. */
+  stateQs: string;
+  compensation: boolean;
   targets: { s?: number; f?: number; st?: number; fu?: number };
 }) {
   const { w, sc, hits, fh } = scored;
@@ -124,9 +128,9 @@ export default function CompassCard({
         </p>
         <div className="flex flex-col items-end gap-1">
           <a
-            href={buyHref(w.slug, w.shop, w.url)}
+            href={buyHref(w.slug, w.shop, { source: "kompassen", path: "/", state: stateQs })}
             target="_blank"
-            rel="noopener nofollow"
+            rel={buyRel(w.shop, compensation)}
             onClick={() => track({ type: "buy", wineId: w.id, shop: w.shop, price: w.pr })}
             className="text-sm font-semibold underline underline-offset-4 decoration-[var(--faint)] hover:decoration-[var(--fg)]"
           >
@@ -134,9 +138,9 @@ export default function CompassCard({
           </a>
           {w.alt ? (
             <a
-              href={buyHref(w.slug, w.alt.shop, w.alt.url)}
+              href={buyHref(w.slug, w.alt.shop, { source: "kompassen", path: "/", state: stateQs })}
               target="_blank"
-              rel="noopener nofollow"
+              rel={buyRel(w.alt.shop, compensation)}
               onClick={() => track({ type: "buy", wineId: w.id, shop: w.alt!.shop, price: w.alt!.pr })}
               className="text-xs text-[var(--muted)] underline underline-offset-4 decoration-[var(--faint)] hover:text-[var(--fg)]"
             >

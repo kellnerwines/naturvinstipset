@@ -56,7 +56,7 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
   const hasProfile = wine.syra != null || wine.fyllighet != null || wine.funk != null;
 
   const articleNumber = getArticleNumber(wine);
-  const buy = buyLinks(wine)[0];
+  const buy = buyLinks(wine, { source: "topplistan", path: "/topp-100" })[0];
   const jsonLd = buildWineProductJsonLd(wine, { combinedRating: rating, communityCount: ratingCount });
 
   return (
@@ -161,7 +161,7 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
             <a
               href={buy.href}
               target="_blank"
-              rel="noopener noreferrer nofollow"
+              rel={buy.rel}
               title={`${buy.label} – ${buy.how.toLowerCase()}`}
               className="text-[10px] font-bold tracking-[0.2em] uppercase text-[var(--fg)] border-b border-[var(--fg)] hover:opacity-50 transition-opacity pb-px whitespace-nowrap"
             >

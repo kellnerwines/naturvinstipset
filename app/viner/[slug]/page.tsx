@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getWines, getRatings, combinedRating } from "@/lib/blob";
+import { getWines, getRatings, combinedRating, getSettings } from "@/lib/blob";
 import { StarDisplay } from "@/components/Stars";
 import RatingForm from "@/components/RatingForm";
 import LikeButton from "@/components/LikeButton";
@@ -60,7 +60,7 @@ const typeColor: Record<string, string> = {
 
 export default async function WinePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
-  const [wines, ratings] = await Promise.all([getWines(), getRatings()]);
+  const [wines, ratings, settings] = await Promise.all([getWines(), getRatings(), getSettings()]);
   const wine = wines.find((w) => w.slug === slug && w.published);
   if (!wine) notFound();
 
@@ -70,7 +70,7 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
 
   const articleNumber = getArticleNumber(wine);
   const importerUrl = kellnerProducerUrl(wine.producer);
-  const links = buyLinks(wine);
+  const links = buyLinks(wine, { source: "vinsida", path: `/viner/${wine.slug}` }, settings.retailerCompensation);
   const inTopList = !!wine.systembolagetUrl || (wine.offers ?? []).some((o) => o.shop === "Systembolaget");
 
   const specs = [
@@ -163,7 +163,7 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
               <a
                 href={l.href}
                 target="_blank"
-                rel="noopener noreferrer nofollow"
+                rel={l.rel}
                 className={i === 0
                   ? "block text-center bg-[var(--green)] text-white font-semibold px-6 py-3 rounded-lg hover:bg-[var(--green-dark)] transition-colors"
                   : "block text-center border border-[var(--green)] text-[var(--green-dark)] font-semibold px-6 py-3 rounded-lg hover:bg-[var(--green-light)] transition-colors"}

@@ -172,3 +172,19 @@ export function toSlug(s: string): string {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
 }
+
+// ─── Inställningar (BRIEF-KOMPASSEN.md, 7.1) ──────────────────────────────────
+
+export type SiteSettings = {
+  /** Ersättning från webbutiker: slår på rel="sponsored nofollow" och ersättningsmeningen. */
+  retailerCompensation: boolean;
+};
+
+const SETTINGS_KEY = "naturvin/settings.json";
+const DEFAULT_SETTINGS: SiteSettings = { retailerCompensation: false };
+
+export async function getSettings(): Promise<SiteSettings> {
+  const rows = await readJson<SiteSettings>(SETTINGS_KEY);
+  return { ...DEFAULT_SETTINGS, ...(rows[0] ?? {}) };
+}
+export const saveSettings = (s: SiteSettings) => writeJson(SETTINGS_KEY, [s]);

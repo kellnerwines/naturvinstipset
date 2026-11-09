@@ -1,6 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getWines, getRatings, combinedRating, type Wine } from "@/lib/blob";
+import { getWines, getRatings, combinedRating, getSettings, type Wine } from "@/lib/blob";
 import { toCompassWine, type CompassWine } from "@/lib/compass/engine";
 import Vinkompassen from "@/components/compass/Vinkompassen";
 import HomeFaq from "@/components/HomeFaq";
@@ -36,7 +36,7 @@ const atSystembolaget = (w: Wine) =>
   !!w.systembolagetUrl || (w.offers ?? []).some((o) => o.shop === "Systembolaget");
 
 export default async function HomePage() {
-  const [wines, ratings] = await Promise.all([getWines(), getRatings()]);
+  const [wines, ratings, settings] = await Promise.all([getWines(), getRatings(), getSettings()]);
   const compassWines = wines.map(toCompassWine).filter((w): w is CompassWine => !!w);
   const shops = new Set(compassWines.map((w) => w.shop));
   const count = compassWines.length;
@@ -61,7 +61,7 @@ export default async function HomePage() {
           Bland {count} naturviner på Systembolaget eller från webbutiker med hemleverans. Tryck på dina svar eller skriv fritt.
           Efter fyra frågor får du ett förslag. Sedan kan du finjustera tills det sitter.
         </p>
-        <Vinkompassen wines={compassWines} />
+        <Vinkompassen wines={compassWines} compensation={settings.retailerCompensation} />
       </section>
 
       {/* ── SEO-text ─────────────────────────────────────────────────────── */}

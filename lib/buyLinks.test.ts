@@ -28,6 +28,6 @@ describe("buyLinks", () => {
   it("gamla viner utan offers använder systembolagetUrl", () => {
     const l = buyLinks({ ...base, systembolagetUrl: "https://sb/y", price: "199" });
     expect(l).toHaveLength(1);
-    expect(l[0]).toMatchObject({ isSb: true, href: "https://sb/y", price: 199 });
+    expect(l[0]).toMatchObject({ isSb: true, href: "/go/systembolaget/x?src=okand", price: 199, rel: "noopener nofollow" });
   });
 });

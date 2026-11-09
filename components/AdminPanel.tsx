@@ -175,6 +175,7 @@ export default function AdminPanel() {
           >
             {seeding ? "Seeder..." : "⬆ Seed data → Blob"}
           </button>
+          <a href="/admin/klick" className="text-sm text-white/80 hover:text-white">Klickstatistik →</a>
           <button onClick={async () => { await fetch("/api/logout", { method: "POST" }); setAuthed(false); }} className="text-sm text-white/60 hover:text-white">Logga ut</button>
         </div>
       </div>

@@ -4,6 +4,7 @@
 
 import type { Wine } from "./blob";
 import { buyHref } from "./compass/links";
+import { buyRel, type BuyContext } from "./clicks/util";
 
 export const SB = "Systembolaget";
 
@@ -16,10 +17,11 @@ export type BuyLink = {
   label: string;
   /** "Hämta på Systembolaget" / "Hemleverans från webbutik, svensk skatt ingår" */
   how: string;
+  rel: string;
 };
 
 /** Säljställen med vinet i lager, Systembolaget först. */
-export function buyLinks(w: Wine): BuyLink[] {
+export function buyLinks(w: Wine, ctx: BuyContext = { source: "okand" }, compensation = false): BuyLink[] {
   const offers = (w.offers ?? []).filter((o) => o.inStock && o.url);
   if (!w.offers?.length && w.systembolagetUrl) {
     offers.push({ shop: SB, url: w.systembolagetUrl, price: Number(w.price) || 0, inStock: true, lastSyncedAt: "" });
@@ -30,7 +32,8 @@ export function buyLinks(w: Wine): BuyLink[] {
       const isSb = o.shop === SB;
       return {
         shop: o.shop,
-        href: buyHref(w.slug, o.shop, o.url),
+        href: buyHref(w.slug, o.shop, ctx),
+        rel: buyRel(o.shop, compensation),
         price: o.price || undefined,
         isSb,
         label: isSb ? "Köp på Systembolaget" : `Köp hos ${o.shop}`,
