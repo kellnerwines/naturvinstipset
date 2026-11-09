@@ -61,7 +61,7 @@ export default function Footer() {
 
         {/* Bottom */}
         <div className="border-t border-[var(--rule-xs)] pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-[10px] text-[var(--faint)]">
-          <p>Länkarna till Systembolaget kan vara affiliatelänkar. Naturvinstipset är en oberoende guide.</p>
+          <p>Naturvinstipset drivs av grundaren av vinimportören Kellner &amp; Kellner. Viner från egen import är märkta och får ingen fördel i rankningen.</p>
           <div className="flex items-center gap-4">
             <a
               href="https://www.instagram.com/naturvinstipset/"

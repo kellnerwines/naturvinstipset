@@ -158,7 +158,7 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
             <a
               href={wine.systembolagetUrl}
               target="_blank"
-              rel="noopener noreferrer sponsored"
+              rel="noopener noreferrer nofollow"
               className="text-[10px] font-bold tracking-[0.2em] uppercase text-[var(--fg)] border-b border-[var(--fg)] hover:opacity-50 transition-opacity pb-px whitespace-nowrap"
             >
               Beställ

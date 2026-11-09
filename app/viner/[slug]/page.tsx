@@ -159,7 +159,7 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
             <a
               href={wine.systembolagetUrl}
               target="_blank"
-              rel="noopener noreferrer sponsored"
+              rel="noopener noreferrer nofollow"
               className="block text-center bg-[var(--green)] text-white font-semibold px-6 py-3 rounded-lg hover:bg-[var(--green-dark)] transition-colors"
             >
               Köp på Systembolaget →
