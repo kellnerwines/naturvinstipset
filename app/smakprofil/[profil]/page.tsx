@@ -126,7 +126,7 @@ export default async function SmakprofilPage({
         {matchingWines.length === 0 ? (
           <p className="text-[var(--muted)]">
             Inga viner hittades för denna smakprofil just nu.{" "}
-            <Link href="/" className="underline">
+            <Link href="/topp-100" className="underline">
               Se hela listan
             </Link>
             .

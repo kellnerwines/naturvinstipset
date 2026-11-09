@@ -330,7 +330,7 @@ export default function BastaNaturvinsbarer() {
             </p>
           </div>
           <Link
-            href="/"
+            href="/topp-100"
             className="shrink-0 inline-flex items-center gap-2 text-sm font-semibold text-[var(--fg)] border border-[var(--fg)] px-5 py-3 hover:bg-[var(--fg)] hover:text-[var(--bg)] transition-colors"
           >
             Se Topp 100 →

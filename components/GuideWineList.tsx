@@ -12,7 +12,7 @@ export default function GuideWineList({ wines, ratings }: Props) {
     return (
       <p className="text-[var(--muted)]">
         Inga viner hittades just nu.{" "}
-        <Link href="/" className="underline">
+        <Link href="/topp-100" className="underline">
           Se hela listan
         </Link>
         .

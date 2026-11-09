@@ -30,7 +30,8 @@ export default function Footer() {
             <div>
               <p className="text-[10px] font-semibold tracking-[0.18em] uppercase text-[var(--faint)] mb-3">Utforska</p>
               <nav className="flex flex-col gap-2 text-xs text-[var(--muted)]">
-                <Link href="/" className="hover:text-[var(--fg)] transition-colors">Topp 100</Link>
+                <Link href="/" className="hover:text-[var(--fg)] transition-colors">Vinkompassen</Link>
+                <Link href="/topp-100" className="hover:text-[var(--fg)] transition-colors">Topp 100</Link>
                 <Link href="/vad-ar-naturvin" className="hover:text-[var(--fg)] transition-colors">Vad är naturvin?</Link>
                 <Link href="/blogg" className="hover:text-[var(--fg)] transition-colors">Blogg</Link>
               </nav>

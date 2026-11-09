@@ -101,7 +101,7 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
     <div className="max-w-3xl mx-auto px-5 py-12">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <Link href="/" className="text-sm text-black/40 hover:text-[var(--green)] mb-8 inline-block">
+      <Link href="/topp-100" className="text-sm text-black/40 hover:text-[var(--green)] mb-8 inline-block">
         ← Tillbaka till listan
       </Link>
 

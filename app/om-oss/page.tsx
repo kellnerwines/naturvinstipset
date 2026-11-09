@@ -89,7 +89,7 @@ export default function OmOssPage() {
         <div className="max-w-2xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <h2 className="text-xl font-bold text-[var(--fg)]">Redo att hitta ditt nästa naturvin?</h2>
           <Link
-            href="/"
+            href="/topp-100"
             className="shrink-0 inline-flex items-center gap-2 text-sm font-semibold text-[var(--fg)] border border-[var(--fg)] px-5 py-3 hover:bg-[var(--fg)] hover:text-[var(--bg)] transition-colors"
           >
             Se Topp 100 →

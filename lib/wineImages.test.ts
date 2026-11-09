@@ -4,7 +4,7 @@ import type { Wine } from "./blob";
 import { blobImageSrc, imageKey, mapLimit, needsImageMigration, processBottleImage } from "./wineImages";
 
 /** En "flaska" (rektangel) mitt på en bakgrund. */
-async function bottle(opts: { w: number; h: number; bw: number; bh: number; bg: sharp.RGBA }) {
+async function bottle(opts: { w: number; h: number; bw: number; bh: number; bg: { r: number; g: number; b: number; alpha: number } }) {
   const { w, h, bw, bh, bg } = opts;
   const fg = await sharp({ create: { width: bw, height: bh, channels: 4, background: { r: 120, g: 20, b: 40, alpha: 1 } } }).png().toBuffer();
   return sharp({ create: { width: w, height: h, channels: 4, background: bg } })
