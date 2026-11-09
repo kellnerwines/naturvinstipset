@@ -113,14 +113,14 @@ export default function CompassCard({
           <span key={`f-${f}`} className="text-[11px] px-2 py-0.5 rounded-full bg-[var(--fg)] text-[var(--bg)]">{FOOD[f]}</span>
         ))}
         {w.tags.filter((t) => !hitSet.has(t)).map((t) => (
-          <span key={`t-${t}`} className="text-[11px] px-2 py-0.5 rounded-full border border-[var(--rule)] text-[var(--muted)]">{t}</span>
+          <span key={`t-${t}`} className="text-[11px] px-2 py-0.5 rounded-full bg-[var(--surface)] text-[var(--fg)]">{t}</span>
         ))}
       </div>
 
       <div className="col-span-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 pt-3 border-t border-[var(--rule)]">
         <p className="text-sm">
           <span className="font-semibold">ca {w.pr} kr</span>
-          {!isSb ? <span className="text-xs text-[var(--muted)]"> · hemleverans, svensk skatt ingår</span> : null}
+          {!isSb ? <span className="text-xs text-[var(--muted)]"> · webbutik, hemleverans, svensk skatt ingår</span> : null}
         </p>
         <div className="flex flex-col items-end gap-1">
           <a

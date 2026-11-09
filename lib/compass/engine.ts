@@ -76,7 +76,8 @@ export const QUESTIONS: Question[] = [
   { k: "color", h: "Vilken färg är du sugen på?", s: "Välj en eller flera.", multi: true,
     o: (["Rött", "Vitt", "Orange", "Rosé", "Bubbel"] as Color[]).map((c) => [c, c, COLOR_VAR[c]]) },
   { k: "budget", h: "Hur mycket vill du lägga?", o: [["150", "Under 150 kr"], ["250", "Upp till 250 kr"], ["400", "Upp till 400 kr"]] },
-  { k: "adv", h: "Hur äventyrlig är du?", o: [["1", "Som vanligt vin"], ["2", "Lite annorlunda"], ["3", "Ge mig funk"]] },
+  { k: "adv", h: "Hur vilt får det smaka?", s: "Naturvin kan smaka precis som vanligt vin eller vara riktigt funky.",
+    o: [["1", "Som ett vanligt vin"], ["2", "Överraska mig lite"], ["3", "Ge mig något funky"]] },
   { k: "food", h: "Ska vinet passa till mat?", s: "Välj en eller flera.", multi: true, none: "none",
     o: [["none", "Nej, bara dricka"], ...(Object.entries(FOOD) as [FoodCategory, string][]).filter(([k]) => k !== "aperitif")] },
 ];

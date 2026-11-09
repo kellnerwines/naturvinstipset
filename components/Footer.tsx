@@ -28,7 +28,7 @@ export default function Footer() {
           {/* Nav columns */}
           <div className="flex flex-wrap gap-x-16 gap-y-8 text-sm">
             <div>
-              <p className="text-[10px] font-semibold tracking-[0.18em] uppercase text-[var(--faint)] mb-3">Utforska</p>
+              <p className="text-[10px] font-semibold tracking-[0.18em] uppercase text-[var(--muted)] mb-3">Utforska</p>
               <nav className="flex flex-col gap-2 text-xs text-[var(--muted)]">
                 <Link href="/" className="hover:text-[var(--fg)] transition-colors">Vinkompassen</Link>
                 <Link href="/topp-100" className="hover:text-[var(--fg)] transition-colors">Topp 100</Link>
@@ -37,7 +37,7 @@ export default function Footer() {
               </nav>
             </div>
             <div>
-              <p className="text-[10px] font-semibold tracking-[0.18em] uppercase text-[var(--faint)] mb-3">Kontakt</p>
+              <p className="text-[10px] font-semibold tracking-[0.18em] uppercase text-[var(--muted)] mb-3">Kontakt</p>
               <nav className="flex flex-col gap-2 text-xs text-[var(--muted)]">
                 <Link href="/om-oss" className="hover:text-[var(--fg)] transition-colors">Om oss</Link>
                 <a href="mailto:hej@naturvinstipset.se" className="hover:text-[var(--fg)] transition-colors">hej@naturvinstipset.se</a>
@@ -61,7 +61,7 @@ export default function Footer() {
         </div>
 
         {/* Bottom */}
-        <div className="border-t border-[var(--rule-xs)] pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-[10px] text-[var(--faint)]">
+        <div className="border-t border-[var(--rule-xs)] pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-[10px] text-[var(--muted)]">
           <p>Naturvinstipset drivs av grundaren av vinimportören Kellner &amp; Kellner. Viner från egen import är märkta och får ingen fördel i rankningen.</p>
           <div className="flex items-center gap-4">
             <a
@@ -69,7 +69,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Naturvinstipset på Instagram"
-              className="text-[var(--faint)] hover:text-[var(--fg)] transition-colors"
+              className="text-[var(--muted)] hover:text-[var(--fg)] transition-colors"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
                 <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
@@ -82,7 +82,7 @@ export default function Footer() {
               target="_blank"
               rel="noopener noreferrer"
               aria-label="Naturvinstipset på TikTok"
-              className="text-[var(--faint)] hover:text-[var(--fg)] transition-colors"
+              className="text-[var(--muted)] hover:text-[var(--fg)] transition-colors"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
                 <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.33 6.33 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.78 1.52V6.76a4.85 4.85 0 0 1-1.01-.07z"/>

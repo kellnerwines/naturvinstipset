@@ -140,7 +140,7 @@ export default function AdminPanel() {
   if (!authed) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[var(--green-light)] px-6">
-        <div className="bg-white p-8 w-full max-w-sm rounded-xl shadow-sm">
+        <div className="bg-white p-8 w-full max-w-sm rounded-xl border border-[var(--rule)]">
           <div className="text-center mb-6">
             <span className="text-3xl">🍇</span>
             <h1 className="text-lg font-bold text-[var(--green-dark)] mt-2">Admin – Naturvinstipset</h1>

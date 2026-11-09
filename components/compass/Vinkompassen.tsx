@@ -27,7 +27,7 @@ type NewItem = Item extends infer T ? (T extends Item ? Omit<T, "id"> : never) :
 
 type PanelKey = "shop" | "prof" | "tags" | "dfood" | "country" | "grape" | "like";
 const PANELS: [PanelKey, string][] = [
-  ["shop", "Var jag köper"], ["prof", "Smakprofil"], ["tags", "Smak"], ["dfood", "Mat"],
+  ["shop", "Hur vill du få vinet?"], ["prof", "Smakprofil"], ["tags", "Smak"], ["dfood", "Mat"],
   ["country", "Land"], ["grape", "Druva"], ["like", "Liknar ett vin jag gillar"],
 ];
 const S0 = ["Något kryddigt till solnedgången på balkongen", "Ett vitt till skaldjur under 250 kr", "Något funkigt och orange", "Ett rött till lammgryta", "Bubbel till mingel", "Från Portugal"];
@@ -178,8 +178,8 @@ export default function Vinkompassen({ wines }: { wines: CompassWine[] }) {
     const colors = St.color.length ? St.color.join(", ").toLowerCase() : "alla färger";
     const fs = foodsSel(St);
     const plan: [string, string][] = [
-      [`Går igenom ${W.length} naturviner från Systembolaget och webbutiker`, `${colors}, ${St.budget && St.budget !== "9999" ? "upp till " + St.budget + " kr" : "alla prisnivåer"}`],
-      ["Matchar funk-nivå mot hur äventyrlig du är", St.adv ? label("adv", St.adv) : "Ingen preferens"],
+      [`Går igenom ${W.length} naturviner på Systembolaget eller från webbutiker med hemleverans`, `${colors}, ${St.budget && St.budget !== "9999" ? "upp till " + St.budget + " kr" : "alla prisnivåer"}`],
+      ["Matchar funk-nivån mot hur vilt det får smaka", St.adv ? label("adv", St.adv) : "Ingen preferens"],
       ["Kollar matförslagen", fs.length ? fs.map((f) => FOOD[f].toLowerCase()).join(", ") : "Vinet ska vara gott på egen hand"],
       ["Rangordnar efter smakprofil", `${list.length} viner kvar${relax.length ? ", släppte " + relaxLabel(relax) : ""}`],
     ];
@@ -456,9 +456,9 @@ export default function Vinkompassen({ wines }: { wines: CompassWine[] }) {
     switch (k) {
       case "shop":
         return (
-          <div key={k} className={box}>{h("Var vill du köpa?")}
+          <div key={k} className={box}>{h("Hur vill du få vinet?")}
             <div className="flex flex-wrap gap-2">
-              {([["", "Spelar ingen roll"], ["sb", "Systembolaget"], ["web", "Hemleverans från webbutik"]] as const).map(([v, l]) => (
+              {([["", "Spelar ingen roll"], ["sb", "Hämta på Systembolaget"], ["web", "Hemleverans från webbutik"]] as const).map(([v, l]) => (
                 <button key={v} type="button" className={chipCls(S.shop === v)} aria-pressed={S.shop === v} onClick={() => change({ ...S, shop: v })}>{l}</button>
               ))}
             </div>
@@ -536,7 +536,7 @@ export default function Vinkompassen({ wines }: { wines: CompassWine[] }) {
   const renderDeep = (item: Extract<Item, { kind: "deep" }>) => (
     <AgentRow key={item.id}>
       <p className="text-base leading-relaxed">
-        <TypeText text="Vill du borra djupare? Välj vad du vill styra, så uppdateras förslagen direkt. Du kan också ändra dina svar ovanför." animate />
+        <TypeText text="Vill du finjustera? Välj vad du vill ändra, så uppdateras förslagen direkt." animate />
       </p>
       <div className="flex flex-wrap gap-2 mt-3">
         {PANELS.map(([k, l]) => (

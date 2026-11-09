@@ -70,7 +70,7 @@ export default function AgeGate() {
               </button>
             </div>
 
-            <p className="text-[9px] text-[var(--faint)] mt-6 leading-relaxed">
+            <p className="text-[9px] text-[var(--muted)] mt-6 leading-relaxed">
               Genom att klicka Ja bekräftar du att du är 20 år eller äldre.
             </p>
           </>

@@ -119,7 +119,7 @@ export default async function Topp100Page() {
         {/* Wavy bottom */}
         <div className="absolute bottom-0 left-0 right-0 leading-[0]">
           <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" className="w-full block" style={{ height: "60px" }}>
-            <path d="M0,60 L0,35 C60,25 130,15 240,22 C340,28 390,42 490,36 C590,30 640,18 760,23 C870,28 920,38 1020,34 C1110,30 1170,20 1280,26 C1360,30 1410,38 1440,34 L1440,60 Z" fill="#f0ebe2" />
+            <path d="M0,60 L0,35 C60,25 130,15 240,22 C340,28 390,42 490,36 C590,30 640,18 760,23 C870,28 920,38 1020,34 C1110,30 1170,20 1280,26 C1360,30 1410,38 1440,34 L1440,60 Z" fill="#ffffff" />
           </svg>
         </div>
       </section>

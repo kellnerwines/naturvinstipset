@@ -183,17 +183,17 @@ export function reflect(o: Parsed, raw: string, W: CompassWine[]): string {
   if (o.ax.f === 4 && o.mood !== "cozy") p.push("med kropp");
   if (o.alone) p.push("gott att dricka på egen hand");
   if (o.budget) p.push(o.budget === "9999" ? "utan prisgräns" : label("budget", o.budget).toLowerCase());
-  if (o.adv) p.push({ "1": "inte för vilt", "2": "gärna lite annorlunda", "3": "med ordentligt med funk" }[o.adv]);
-  if (o.shop) p.push(o.shop === "sb" ? "att hämta på Systembolaget" : "med hemleverans");
+  if (o.adv) p.push({ "1": "som smakar som ett vanligt vin", "2": "som överraskar lite", "3": "som får vara riktigt funky" }[o.adv]);
+  if (o.shop) p.push(o.shop === "sb" ? "att hämta på Systembolaget" : "med hemleverans från en webbutik");
   if (o.country) p.push("från " + o.country);
   if (o.grape) p.push("gärna " + o.grape);
   if (o.like) { const L = W.find((w) => w.id === o.like); if (L) p.push("i stil med " + L.n); }
   return open + (p.length ? " Jag tänker " + (o.color ? "" : "något ") + p.join(", ") + "." : "");
 }
 
-const MISSING_LABEL: Record<QuestionKey, string> = { color: "färg", budget: "budget", adv: "hur äventyrlig du är", food: "mat" };
+const MISSING_LABEL: Record<QuestionKey, string> = { color: "färg", budget: "budget", adv: "hur vilt det får smaka", food: "mat" };
 
-/** "Det jag inte vet än är budget och hur äventyrlig du är, …" */
+/** "Det jag inte vet än är budget och hur vilt det får smaka, …" */
 export function missingTail(missing: QuestionKey[], done: boolean): string {
   if (done) return " Jag har uppdaterat förslagen.";
   if (!missing.length) return " Då har jag allt jag behöver.";
@@ -220,7 +220,7 @@ export function applyParsed(S: CompassState, o: Parsed, W: CompassWine[]): { sta
   if (o.ax.s) pick.push("Hög syra");
   if (o.ax.f === 4) pick.push("Fylligt");
   if (o.ax.st === 2) pick.push("Mjukt");
-  if (o.shop) { s.shop = o.shop; pick.push(o.shop === "sb" ? "Systembolaget" : "Hemleverans"); }
+  if (o.shop) { s.shop = o.shop; pick.push(o.shop === "sb" ? "Hämta på Systembolaget" : "Hemleverans från webbutik"); }
   if (o.country) { s.country = o.country; pick.push(o.country); }
   if (o.grape) { s.grape = o.grape; pick.push(o.grape); }
   if (o.like) { s.like = o.like; const L = W.find((w) => w.id === o.like); if (L) pick.push("Likt " + L.n); }

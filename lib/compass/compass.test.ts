@@ -132,7 +132,7 @@ describe("fritext", () => {
     expect(missing).toEqual(["budget", "adv"]);
     const reply = reflect(o, text, W) + missingTail(missing, false);
     expect(reply).toMatch(/^Solnedgång på balkongen, det låter som en fin kväll\. Jag tänker ett vitt, och eftersom du nämner skalkontakt tar jag med orangeviner också/);
-    expect(reply).toContain("Det jag inte vet än är budget och hur äventyrlig du är, några tryck till så har du ditt förslag.");
+    expect(reply).toContain("Det jag inte vet än är budget och hur vilt det får smaka, några tryck till så har du ditt förslag.");
   });
 
   it("förstår budget, funk, mat och land", () => {

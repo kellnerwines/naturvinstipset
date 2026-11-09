@@ -26,4 +26,4 @@ export function track(event: CompassEvent): void {
 /* eslint-enable @typescript-eslint/no-unused-vars */
 
 export const RETAILER_DISCLAIMER =
-  "Köp och avhämtning sker hos Systembolaget eller hos webbutiker som säljer till Sverige med svensk alkoholskatt inräknad. Ingen av dem står bakom innehållet.";
+  "Vinerna köps och hämtas på Systembolaget eller köps från webbutiker med hemleverans, som säljer till Sverige med svensk alkoholskatt inräknad. Varken Systembolaget eller webbutikerna står bakom innehållet.";

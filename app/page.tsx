@@ -7,9 +7,9 @@ import HomeFaq from "@/components/HomeFaq";
 
 export const dynamic = "force-dynamic";
 
-const TITLE = "Naturvinstipset – hitta rätt naturvin på Systembolaget och i svenska webbutiker";
+const TITLE = "Naturvinstipset – hitta rätt naturvin på Systembolaget eller från webbutiker med hemleverans";
 const DESCRIPTION =
-  "Svara på fyra snabba frågor och få naturvin som passar din smak, din budget och din mat. Viner från Systembolaget och svenska webbutiker, med smakprofiler, matförslag och köptips.";
+  "Svara på fyra snabba frågor och få naturvin som passar din smak, din budget och din mat. På Systembolaget eller från webbutiker med hemleverans, med smakprofiler, matförslag och köptips.";
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
@@ -28,7 +28,7 @@ const jsonLd = {
   "@type": "WebSite",
   name: "Naturvinstipset",
   url: "https://naturvinstipset.se",
-  description: "Hitta rätt naturvin på Systembolaget och i svenska webbutiker, med smakprofiler, matförslag och köptips.",
+  description: "Hitta rätt naturvin på Systembolaget eller från webbutiker med hemleverans, med smakprofiler, matförslag och köptips.",
   inLanguage: "sv",
 };
 
@@ -39,7 +39,7 @@ export default async function HomePage() {
   const [wines, ratings] = await Promise.all([getWines(), getRatings()]);
   const compassWines = wines.map(toCompassWine).filter((w): w is CompassWine => !!w);
   const shops = new Set(compassWines.map((w) => w.shop));
-  const count = Math.floor(compassWines.length / 50) * 50;
+  const count = compassWines.length;
 
   const top3 = wines
     .filter((w) => w.published && atSystembolaget(w))
@@ -58,20 +58,20 @@ export default async function HomePage() {
           Vilket naturvin passar dig?
         </h1>
         <p className="text-base text-[var(--muted)] leading-relaxed mb-10 max-w-xl">
-          Bland över {count} naturviner på Systembolaget och i svenska webbutiker. Tryck på dina svar eller skriv fritt.
-          Efter fyra frågor får du ett förslag, sedan kan du borra så djupt du vill.
+          Bland {count} naturviner på Systembolaget eller från webbutiker med hemleverans. Tryck på dina svar eller skriv fritt.
+          Efter fyra frågor får du ett förslag. Sedan kan du finjustera tills det sitter.
         </p>
         <Vinkompassen wines={compassWines} />
       </section>
 
       {/* ── SEO-text ─────────────────────────────────────────────────────── */}
       <section className="max-w-2xl mx-auto px-4 pt-20 pb-6">
-        <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">Naturvin på Systembolaget och i svenska webbutiker</h2>
+        <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-4">Naturvin på Systembolaget eller från webbutiker med hemleverans</h2>
         <div className="space-y-4 text-[15px] leading-relaxed text-[var(--fg)] opacity-80">
           <p>
             Naturvinstipset hjälper dig hitta ett naturvin som passar din smak, din budget och maten du ska äta.
-            Vi går igenom naturviner från Systembolaget och från {shops.size > 1 ? `${shops.size - 1} svenska webbutiker` : "svenska webbutiker"} som
-            säljer till svenska konsumenter med svensk alkoholskatt inräknad i priset.
+            Vi går igenom naturviner som du hämtar på Systembolaget eller får hem från {shops.size > 1 ? `${shops.size - 1} webbutiker` : "webbutiker"} med
+            hemleverans. Webbutikerna säljer till svenska konsumenter med svensk alkoholskatt inräknad i priset.
           </p>
           <p>
             Varje vin har en smakprofil för syra, fyllighet, strävhet och funk, och ett matförslag skrivet utifrån

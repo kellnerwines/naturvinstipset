@@ -58,7 +58,7 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
   const jsonLd = buildWineProductJsonLd(wine, { combinedRating: rating, communityCount: ratingCount });
 
   return (
-    <div className={`flex flex-col bg-white${wineOfMonth ? " motm-card" : ""}`}>
+    <div className={`flex flex-col bg-[var(--card)] border border-[var(--rule)]${wineOfMonth ? " motm-card" : ""}`}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* ── Top bar: rank + type pill ───────────────────────────────────── */}
