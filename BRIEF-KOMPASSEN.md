@@ -13,20 +13,20 @@ Skriven 2026-11-09 inför bygget i Claude Code. Läs hela innan du börjar. Den 
 
 ## 0. Målbild och ny positionering
 
-Naturvinstipset breddas från "100 bästa naturvinerna på Systembolaget" till **en guide som hjälper dig hitta rätt naturvin, på Systembolaget och i svenska webbutiker**.
+Naturvinstipset breddas från "100 bästa naturvinerna på Systembolaget" till **en guide som hjälper dig hitta rätt naturvin, på Systembolaget eller från webbutiker med hemleverans**.
 
-- Startsidan möter besökaren med **Vinkompassen**, ett chattflöde där fyra tryck ger ett första förslag. Därefter kan besökaren borra djupare.
+- Startsidan möter besökaren med **Vinkompassen**, ett chattflöde där fyra tryck ger ett första förslag. Därefter kan besökaren finjustera tills det sitter.
 - Den nuvarande topplistan blir flik nummer 2.
 - Vinerna kommer från Systembolaget och från webbutiker som säljer till svenska konsumenter **med svensk alkoholskatt inräknad**.
 - Sajten ska vara transparent med att den drivs av grundaren av vinimportören Kellner & Kellner.
 
 ### Ny metadata (`app/layout.tsx`)
 
-- `title.default`: **"Naturvinstipset – hitta rätt naturvin på Systembolaget och i svenska webbutiker"**
-- `description`: **"Svara på fyra snabba frågor och få naturvin som passar din smak, din budget och din mat. Viner från Systembolaget och svenska webbutiker, med smakprofiler, matförslag och köptips."**
+- `title.default`: **"Naturvinstipset – hitta rätt naturvin på Systembolaget eller från webbutiker med hemleverans"**
+- `description`: **"Svara på fyra snabba frågor och få naturvin som passar din smak, din budget och din mat. På Systembolaget eller från webbutiker med hemleverans, med smakprofiler, matförslag och köptips."**
 - `keywords`: lägg till "naturvin online", "köpa naturvin", "naturvin hemleverans", "orange vin", "vinkompass" och "vilket vin passar".
 - OpenGraph-texter ska uppdateras på samma sätt.
-- Gå igenom alla texter som säger "på Systembolaget" som avgränsning: startsidan, `om-listan`, `om-oss`, kategorisidorna och FAQ (`HomeFaq.tsx`). Formulera om dem till "på Systembolaget och i svenska webbutiker" där det gäller hela sajten. Topplistan får fortsatt heta "Topp 100 på Systembolaget" om den bara innehåller viner från Systembolaget.
+- Gå igenom alla texter som säger "på Systembolaget" som avgränsning: startsidan, `om-listan`, `om-oss`, kategorisidorna och FAQ (`HomeFaq.tsx`). Formulera om dem till "på Systembolaget eller från webbutiker med hemleverans" där det gäller hela sajten. Det måste alltid framgå att hemleveransen sker från en webbutik, så att ingen tror att Systembolaget levererar. Använd inte "svenska webbutiker", som inte är ett ord konsumenter använder. Topplistan får fortsatt heta "Topp 100 på Systembolaget" om den bara innehåller viner från Systembolaget.
 
 ---
 
@@ -84,14 +84,14 @@ Naturvinstipset breddas från "100 bästa naturvinerna på Systembolaget" till *
 
 ### 4.1 Flödet
 
-1. **Hälsning:** rubriken "Vilket naturvin passar dig?" och en rad om att det finns över 300 naturviner på Systembolaget och i svenska webbutiker.
+1. **Hälsning:** rubriken "Vilket naturvin passar dig?" och raden "Bland 305 naturviner på Systembolaget eller från webbutiker med hemleverans. Tryck på dina svar eller skriv fritt. Efter fyra frågor får du ett förslag. Sedan kan du finjustera tills det sitter."
 2. **Fyra frågor** ställs i chatten, en i taget, i den här ordningen:
 
 | # | Fråga | Typ | Svar |
 |---|---|---|---|
 | 1 | Vilken färg är du sugen på? | flerval | Rött, Vitt, Orange, Rosé, Bubbel (Pét Nat + Mousserande) |
 | 2 | Hur mycket vill du lägga? | ett val | Under 150 kr, Upp till 250 kr, Upp till 400 kr |
-| 3 | Hur äventyrlig är du? | ett val | Som vanligt vin, Lite annorlunda, Ge mig funk |
+| 3 | Hur vilt får det smaka? (undertext: "Naturvin kan smaka precis som vanligt vin eller vara riktigt funky.") | ett val | Som ett vanligt vin, Överraska mig lite, Ge mig något funky |
 | 4 | Ska vinet passa till mat? | flerval | Nej, bara dricka · Fisk och skaldjur · Fågel · Rött kött och vilt · Fläsk och chark · Vegetariskt · Kryddigt · Ost |
 
    - Varje fråga har dessutom valet **"Spelar ingen roll"**, en streckad knapp som hoppar över frågan.
@@ -104,8 +104,8 @@ Naturvinstipset breddas från "100 bästa naturvinerna på Systembolaget" till *
    - **Tidigare svar går alltid att ändra.** Man trycker om i en tidigare fråga, och då uppdateras bubblan och förslagen utan att flödet börjar om.
 3. **Tänker-block:** fyra steg med spinner som blir en bock, ungefär 0,5 s per steg. Stegen är urval, funk-matchning, matförslag och rangordning, med en kort sammanfattning under varje. Blocket fälls sedan ihop till "Tänkte i X s".
 4. **Förslag:** "Mitt bästa förslag är {vin} från {producent}. Här är de som passar dig bäst." Under det kommer de 5 bästa vinkorten och knappen "Visa 7 till ({N} passar)". Inledningsmeningen uppdateras när urvalet ändras.
-5. **"Vill du borra djupare?"** visas med knappar som öppnar paneler i chatten. Förslagen uppdateras live, med en kort markering och raden "Förslagen uppdaterade, N viner passar. Visa ↑". Panelerna är:
-   - **Var jag köper:** Spelar ingen roll / Systembolaget / Hemleverans från webbutik
+5. **"Vill du finjustera? Välj vad du vill ändra, så uppdateras förslagen direkt."** visas med knappar som öppnar paneler i chatten. Förslagen uppdateras live, med en kort markering och raden "Förslagen uppdaterade, N viner passar. Visa ↑". Panelerna är:
+   - **Hur vill du få vinet?** Spelar ingen roll / Hämta på Systembolaget / Hemleverans från webbutik
    - **Smakprofil:** fyra reglage för syra, fyllighet, strävhet och funk, 0–5 där 0 betyder "Spelar ingen roll"
    - **Smak:** smaktaggar (Fruktig, Mineralisk, Komplex, Krispig, Lättsam, Jordig, Frisk, Blommig, Tanninrik, Aromatisk, Kryddig, Citrus, Örtig)
    - **Mat:** matkategorier
@@ -134,7 +134,7 @@ Fritexten tolkas med ordmatchning (se `parse()` och `reflect()` i prototypen). I
 - **Var man köper.** "Systembolaget" respektive "hemleverans".
 
 **Svaret ska spegla tolkningen, inte bara lista den.** Exempel:
-> "Solnedgång på balkongen, det låter som en fin kväll. Jag tänker ett vitt, och eftersom du nämner skalkontakt tar jag med orangeviner också … Det jag inte vet än är budget och hur äventyrlig du är, några tryck till så har du ditt förslag."
+> "Solnedgång på balkongen, det låter som en fin kväll. Jag tänker ett vitt, och eftersom du nämner skalkontakt tar jag med orangeviner också … Det jag inte vet än är budget och hur vilt det får smaka, några tryck till så har du ditt förslag."
 
 - Under svaret visas taggar för "Jag plockade upp", och motsvarande val markeras i frågorna ovanför.
 - Därefter frågar kompassen bara det som saknas.
@@ -435,7 +435,7 @@ Ingen kaka eller personuppgift behövs för klickloggningen. Om en analys-kaka l
 - **Fritexttest.** "Jag vill ha ett vitt som är lite kryddigt som man kan dricka i solnedgången på en balkong, gärna med lite maceration" ska ge följande:
   - Valen Vitt + Orange, Gott på egen hand och smaktaggen Kryddig.
   - Ett speglande svar.
-  - Att kompassen därefter bara frågar budget och äventyr.
+  - Att kompassen därefter bara frågar budget och hur vilt det får smaka.
 - **Egen import.** Ett test visar att egen import inte påverkar poängen.
 - **Klick loggas.** Alla köplänkar går via `/go`, och klick syns i `/admin/klick` inom en minut.
 - **Synken.** Den kan köras två gånger utan dubbletter och skriver inte över låsta fält.

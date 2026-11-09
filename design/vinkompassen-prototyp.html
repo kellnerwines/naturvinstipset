@@ -125,12 +125,12 @@ select,input[type=search]{font:inherit;color:var(--ink);background:var(--bg);bor
 
 <div class="wrap">
   <div class="top"><div class="brand">Naturvins<i>tipset</i></div><span class="badge">Prototyp · Vinkompassen</span></div>
-  <div class="hello"><h1>Vilket naturvin passar <i>dig</i>?</h1><p>Bland 305 naturviner på Systembolaget och i svenska webbutiker. Tryck på dina svar eller skriv fritt. Efter fyra frågor får du ett förslag, sedan kan du borra så djupt du vill.</p></div>
+  <div class="hello"><h1>Vilket naturvin passar <i>dig</i>?</h1><p>Bland 305 naturviner på Systembolaget eller från webbutiker med hemleverans. Tryck på dina svar eller skriv fritt. Efter fyra frågor får du ett förslag. Sedan kan du finjustera tills det sitter.</p></div>
   <div id="stream" aria-live="polite"></div>
   <div class="composer">
     <form class="box" id="form"><textarea id="ta" rows="1" placeholder="Skriv fritt, t.ex. ”ett vitt till skaldjur under 250 kr”" aria-label="Skriv till kompassen"></textarea><button class="send" id="send" aria-label="Skicka" disabled><svg width="16" height="16" viewBox="0 0 16 16" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M8 13V3M3.5 7.5 8 3l4.5 4.5"/></svg></button></form>
     <div class="sugg" id="sugg"></div>
-    <div class="foot">Viner köps hos Systembolaget eller hos webbutiker som säljer till Sverige med svensk alkoholskatt inräknad. Ingen av dem står bakom innehållet. För dig som är 25 år eller äldre. Naturvinstipset drivs av grundaren av vinimportören Kellner & Kellner. Viner från egen import är märkta och får ingen fördel i rankningen.</div>
+    <div class="foot">Vinerna köps på Systembolaget eller från webbutiker med hemleverans, där svensk alkoholskatt ingår i priset. Ingen av dem står bakom innehållet. För dig som är 25 år eller äldre. Naturvinstipset drivs av grundaren av vinimportören Kellner & Kellner. Viner från egen import är märkta och får ingen fördel i rankningen.</div>
   </div>
 </div>
 
@@ -141,7 +141,7 @@ const typeOf=w=>(w.t==="Pét Nat"||w.t==="Mousserande")?"Bubbel":w.t;
 const Q=[
  {k:"color",h:"Vilken färg är du sugen på?",s:"Välj en eller flera.",multi:true,o:[["Rött","Rött","--red"],["Vitt","Vitt","--white"],["Orange","Orange","--orange"],["Rosé","Rosé","--rose"],["Bubbel","Bubbel","--bubbel"]]},
  {k:"budget",h:"Hur mycket vill du lägga?",o:[["150","Under 150 kr"],["250","Upp till 250 kr"],["400","Upp till 400 kr"]]},
- {k:"adv",h:"Hur äventyrlig är du?",o:[["1","Som vanligt vin"],["2","Lite annorlunda"],["3","Ge mig funk"]]},
+ {k:"adv",h:"Hur vilt får det smaka?",s:"Naturvin kan smaka precis som vanligt vin eller vara riktigt funky.",o:[["1","Som ett vanligt vin"],["2","Överraska mig lite"],["3","Ge mig något funky"]]},
  {k:"food",h:"Ska vinet passa till mat?",s:"Välj en eller flera.",multi:true,none:"none",o:[["none","Nej, bara dricka"],...Object.entries(FOOD).filter(([k])=>k!=="aperitif")]}
 ];
 const S={color:[],budget:null,adv:null,food:[],ax:{s:0,f:0,st:0,fu:0},tags:[],dfood:[],country:"",grape:"",like:"",shop:""};
@@ -247,8 +247,8 @@ async function finish(){
   const ol=bd.querySelector(".steps"),sum=bd.querySelector("summary span"),t0=performance.now();
   const colors=S.color.length?S.color.join(", ").toLowerCase():"alla färger";
   const steps=[
-    [`Går igenom ${W.length} naturviner från Systembolaget och webbutiker`,`${colors}, ${S.budget&&S.budget!=="9999"?"upp till "+S.budget+" kr":"alla prisnivåer"}`],
-    ["Matchar funk-nivå mot hur äventyrlig du är",S.adv?lab("adv",S.adv):"Ingen preferens"],
+    [`Går igenom ${W.length} naturviner på Systembolaget och från webbutiker`,`${colors}, ${S.budget&&S.budget!=="9999"?"upp till "+S.budget+" kr":"alla prisnivåer"}`],
+    ["Matchar hur vilt det får smaka",S.adv?lab("adv",S.adv):"Ingen preferens"],
     ["Kollar matförslagen",foodsSel().length?foodsSel().map(f=>FOOD[f].toLowerCase()).join(", "):"Vinet ska vara gott på egen hand"],
     ["Rangordnar efter smakprofil",`${list.length} viner kvar${relax.size?", släppte "+[...relax].map(k=>RELAX.find(r=>r[0]===k)[1]).join(" och "):""}`]
   ];
@@ -260,7 +260,7 @@ async function finish(){
   const rb=await agent(top?`Mitt bästa förslag är ${top.w.n} från ${top.w.p}. Här är de som passar dig bäst.`:"Jag hittade inget som passar, prova att ändra ett svar.",`<div id="res"></div>`);
   resEl=rb.querySelector("#res");draw();
   await sleep(250);
-  const deep=await agent("Vill du borra djupare? Välj vad du vill styra, så uppdateras förslagen direkt. Du kan också ändra dina svar ovanför.",`<div class="chips" id="deepchips">${[["shop","Var jag köper"],["prof","Smakprofil"],["tags","Smak"],["dfood","Mat"],["country","Land"],["grape","Druva"],["like","Liknar ett vin jag gillar"]].map(([k,l])=>`<button type="button" class="chip" data-p="${k}">${l}</button>`).join("")}<button type="button" class="chip ghost" data-reset>Börja om</button></div><div id="panels"></div><div class="upd" id="upd"></div>`);
+  const deep=await agent("Vill du finjustera? Välj vad du vill ändra, så uppdateras förslagen direkt. Du kan också ändra dina svar ovanför.",`<div class="chips" id="deepchips">${[["shop","Hur jag får vinet"],["prof","Smakprofil"],["tags","Smak"],["dfood","Mat"],["country","Land"],["grape","Druva"],["like","Liknar ett vin jag gillar"]].map(([k,l])=>`<button type="button" class="chip" data-p="${k}">${l}</button>`).join("")}<button type="button" class="chip ghost" data-reset>Börja om</button></div><div id="panels"></div><div class="upd" id="upd"></div>`);
   deep.querySelectorAll("[data-p]").forEach(b=>b.onclick=()=>togglePanel(b));
   deep.querySelector("[data-reset]").onclick=reset;
   busy=false;setSugg();
@@ -278,7 +278,7 @@ function draw(flash){
    <div class="prof">${axis("Syra",w.s,S.ax.s)}${axis("Fyllighet",w.f,S.ax.f)}${axis("Strävhet",w.st,S.ax.st)}${axis("Funk",w.fu,S.ax.fu||advT)}</div>
    <div class="food"><b>Passar till:</b> ${w.foodText}</div>${w.auto?`<div class="autoflag">Smakprofilen är uppskattad automatiskt från butikens beskrivning</div>`:""}
    <div class="why">${[...new Set(hits)].map(h=>`<span class="tag hit">${h}</span>`).join("")}${fh.map(f=>`<span class="tag hit">${FOOD[f]}</span>`).join("")}${w.tags.filter(t=>!hits.includes(t)).map(t=>`<span class="tag">${t}</span>`).join("")}</div>
-   <div class="acts"><span class="price">ca ${w.pr} kr${w.shop!=="Systembolaget"?` <small class="via">· hemleverans, svensk skatt ingår</small>`:""}</span><a href="${w.url}" target="_blank" rel="noopener nofollow">${w.shop==="Systembolaget"?"Se vinet hos Systembolaget":"Köp hos "+w.shop} →</a>${w.alt?`<a href="${w.alt.url}" target="_blank" rel="noopener nofollow">Eller hemleverans hos ${w.alt.shop}, ${w.alt.pr} kr →</a>`:""}</div></article>`).join("")}</div>`+
+   <div class="acts"><span class="price">ca ${w.pr} kr${w.shop!=="Systembolaget"?` <small class="via">· webbutik, hemleverans, svensk skatt ingår</small>`:""}</span><a href="${w.url}" target="_blank" rel="noopener nofollow">${w.shop==="Systembolaget"?"Se vinet hos Systembolaget":"Köp hos "+w.shop} →</a>${w.alt?`<a href="${w.alt.url}" target="_blank" rel="noopener nofollow">Eller hemleverans hos ${w.alt.shop}, ${w.alt.pr} kr →</a>`:""}</div></article>`).join("")}</div>`+
   (list.length>shownN?`<button class="more" type="button" id="moreBtn">Visa ${Math.min(list.length-shownN,7)} till (${list.length} passar)</button>`:"");
   const mb=resEl.querySelector("#moreBtn");if(mb)mb.onclick=()=>{shownN+=7;draw()};
   if(flash){resEl.classList.remove("flash");void resEl.offsetWidth;resEl.classList.add("flash")}
@@ -297,7 +297,7 @@ function togglePanel(b){
   if(k==="tags"||k==="dfood"){const items=k==="tags"?TAGS.map(t=>[t,t]):Object.entries(FOOD);const arr=S[k];
     p=el(`<div class="panel" data-panel="${k}"><h4>${k==="tags"?"Smak":"Mat"}</h4><div class="chips">${items.map(([v,l])=>`<button type="button" class="chip ${arr.includes(v)?"sel":""}" data-v="${v}">${l}</button>`).join("")}</div></div>`);
     p.querySelectorAll("[data-v]").forEach(c=>c.onclick=()=>{const i=arr.indexOf(c.dataset.v);i<0?arr.push(c.dataset.v):arr.splice(i,1);c.classList.toggle("sel");refresh()})}
-  if(k==="shop"){p=el(`<div class="panel" data-panel="shop"><h4>Var vill du köpa?</h4><div class="chips">${[["","Spelar ingen roll"],["sb","Systembolaget"],["web","Hemleverans från webbutik"]].map(([v,l])=>`<button type="button" class="chip ${S.shop===v?"sel":""}" data-v="${v}">${l}</button>`).join("")}</div></div>`);p.querySelectorAll("[data-v]").forEach(c=>c.onclick=()=>{S.shop=c.dataset.v;p.querySelectorAll("[data-v]").forEach(x=>x.classList.toggle("sel",x===c));refresh()})}
+  if(k==="shop"){p=el(`<div class="panel" data-panel="shop"><h4>Hur vill du få vinet?</h4><div class="chips">${[["","Spelar ingen roll"],["sb","Hämta på Systembolaget"],["web","Hemleverans från webbutik"]].map(([v,l])=>`<button type="button" class="chip ${S.shop===v?"sel":""}" data-v="${v}">${l}</button>`).join("")}</div></div>`);p.querySelectorAll("[data-v]").forEach(c=>c.onclick=()=>{S.shop=c.dataset.v;p.querySelectorAll("[data-v]").forEach(x=>x.classList.toggle("sel",x===c));refresh()})}
   if(k==="country"){p=el(`<div class="panel" data-panel="country"><h4>Land</h4><select id="country"><option value="">Alla länder</option>${[...new Set(W.map(w=>w.c))].sort().map(c=>`<option ${S.country===c?"selected":""}>${c}</option>`).join("")}</select></div>`);p.querySelector("select").onchange=e=>{S.country=e.target.value;refresh()}}
   if(k==="grape"){p=el(`<div class="panel" data-panel="grape"><h4>Druva</h4><input type="search" id="grape" placeholder="t.ex. Chenin, Areni, Baga" value="${S.grape}"></div>`);p.querySelector("input").oninput=e=>{S.grape=e.target.value.trim();refresh()}}
   if(k==="like"){p=el(`<div class="panel" data-panel="like"><h4>Liknar ett vin jag gillar</h4><select id="like"><option value="">Välj ett vin</option>${[...W].sort((a,b)=>a.n.localeCompare(b.n,"sv")).map(w=>`<option value="${w.id}" ${S.like===w.id?"selected":""}>${w.n} (${w.p})</option>`).join("")}</select></div>`);p.querySelector("select").onchange=e=>{S.like=e.target.value;refresh()}}
@@ -384,8 +384,8 @@ function reflect(o,raw){
   if(o.ax.st===2)p.push("mjukt i munnen");if(o.ax.st===4)p.push("med lite grepp");if(o.ax.f===4&&o.mood!=="cozy")p.push("med kropp");
   if(o.alone)p.push("gott att dricka på egen hand");
   if(o.budget)p.push(lab("budget",o.budget).toLowerCase());
-  if(o.adv)p.push({1:"inte för vilt",2:"gärna lite annorlunda",3:"med ordentligt med funk"}[o.adv]);
-  if(o.shop)p.push(o.shop==="sb"?"att hämta på Systembolaget":"med hemleverans");
+  if(o.adv)p.push({1:"som smakar som ett vanligt vin",2:"som överraskar lite",3:"som får vara riktigt funky"}[o.adv]);
+  if(o.shop)p.push(o.shop==="sb"?"att hämta på Systembolaget":"med hemleverans från en webbutik");
   if(o.country)p.push("från "+o.country);if(o.grape)p.push("gärna "+o.grape);
   if(o.like)p.push("i stil med "+W.find(w=>w.id===o.like).n);
   return open+(p.length?" Jag tänker "+(o.color?"":"något ")+p.join(", ")+".":"");
@@ -404,13 +404,13 @@ async function freeText(t){
   S.tags=[...new Set([...S.tags,...o.tags])];pick.push(...o.pick);
   for(const k in o.ax)S.ax[k]=o.ax[k];
   if(o.ax.s)pick.push("Hög syra");if(o.ax.f===4)pick.push("Fylligt");if(o.ax.st===2)pick.push("Mjukt");
-  if(o.shop){S.shop=o.shop;pick.push(o.shop==="sb"?"Systembolaget":"Hemleverans")}
+  if(o.shop){S.shop=o.shop;pick.push(o.shop==="sb"?"Hämta på Systembolaget":"Hemleverans från webbutik")}
   if(o.country){S.country=o.country;pick.push(o.country)}
   if(o.grape){S.grape=o.grape;pick.push(o.grape)}
   if(o.like){S.like=o.like;pick.push("Likt "+W.find(w=>w.id===o.like).n)}
   for(const q of Q){if(bubbles[q.k])bubbles[q.k].textContent=ansText(q);(syncers[q.k]||[]).forEach(f=>f())}
   const left=Q.filter(q=>!answered.has(q.k));
-  const tail=done?" Jag har uppdaterat förslagen.":left.length?` Det jag inte vet än är ${left.map(q=>({color:"färg",budget:"budget",adv:"hur äventyrlig du är",food:"mat"})[q.k]).join(left.length>1?" och ":"").replace(/ och (?=.* och )/g,", ")}, ${left.length===1?"ett tryck":"några tryck"} till så har du ditt förslag.`:" Då har jag allt jag behöver.";
+  const tail=done?" Jag har uppdaterat förslagen.":left.length?` Det jag inte vet än är ${left.map(q=>({color:"färg",budget:"budget",adv:"hur vilt det får smaka",food:"mat"})[q.k]).join(left.length>1?" och ":"").replace(/ och (?=.* och )/g,", ")}, ${left.length===1?"ett tryck":"några tryck"} till så har du ditt förslag.`:" Då har jag allt jag behöver.";
   busy=true;clearTimeout(autoT);
   await agent(reflect(o,t)+tail,`<div class="picked"><span>Jag plockade upp</span>${[...new Set(pick)].map(x=>`<span class="tag hit">${x}</span>`).join("")}</div>`);
   busy=false;
