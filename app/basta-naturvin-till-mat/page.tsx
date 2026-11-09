@@ -6,13 +6,13 @@ import GuideWineList from "@/components/GuideWineList";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Bästa naturvinet till mat på Systembolaget | Naturvinstipset",
+  title: "Bästa naturvinet till mat på Systembolaget eller från webbutiker med hemleverans",
   description:
-    "Vilket naturvin passar till mat? Vi har samlat de bästa matvinerna bland naturviner på Systembolaget — med smakparametrar och direktlänkar.",
+    "Vilket naturvin passar till mat? Vi har samlat de bästa matvinerna bland naturviner på Systembolaget eller från webbutiker med hemleverans — med smakparametrar och direktlänkar.",
   openGraph: {
-    title: "Bästa naturvinet till mat på Systembolaget",
+    title: "Bästa naturvinet till mat på Systembolaget eller från webbutiker med hemleverans",
     description:
-      "De bästa naturvinerna till mat på Systembolaget. Handplockade av Naturvinstipset.",
+      "De bästa naturvinerna till mat på Systembolaget eller från webbutiker med hemleverans. Handplockade av Naturvinstipset.",
     url: "https://www.naturvinstipset.se/basta-naturvin-till-mat",
   },
 };
@@ -20,9 +20,9 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  name: "Bästa naturvinet till mat på Systembolaget",
+  name: "Bästa naturvinet till mat på Systembolaget eller från webbutiker med hemleverans",
   description:
-    "De bästa naturvinerna till mat på Systembolaget. Handplockade av Naturvinstipset.",
+    "De bästa naturvinerna till mat på Systembolaget eller från webbutiker med hemleverans. Handplockade av Naturvinstipset.",
   url: "https://www.naturvinstipset.se/basta-naturvin-till-mat",
   publisher: { "@type": "Organization", name: "Naturvinstipset" },
 };

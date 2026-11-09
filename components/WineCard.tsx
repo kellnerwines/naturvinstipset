@@ -7,6 +7,7 @@ import { StarDisplay } from "./Stars";
 import LikeButton from "./LikeButton";
 import type { Wine } from "@/lib/blob";
 import { buildWineProductJsonLd, getArticleNumber } from "@/lib/wineJsonLd";
+import { buyLinks } from "@/lib/buyLinks";
 
 type Props = { wine: Wine; rating: number; ratingCount: number; likeCount: number; rank?: number; wineOfMonth?: boolean };
 
@@ -55,6 +56,7 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
   const hasProfile = wine.syra != null || wine.fyllighet != null || wine.funk != null;
 
   const articleNumber = getArticleNumber(wine);
+  const buy = buyLinks(wine)[0];
   const jsonLd = buildWineProductJsonLd(wine, { combinedRating: rating, communityCount: ratingCount });
 
   return (
@@ -148,20 +150,22 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
             wine.grape && `Druva: ${wine.grape}`,
             articleNumber && `Systembolaget art.nr: ${articleNumber}`,
             wine.price && `Pris: ca ${wine.price} kr`,
+            buy && !buy.isSb && `Hemleverans från webbutiken ${buy.shop}`,
           ].filter(Boolean).join(" · ")}
         </p>
 
         {/* Actions row */}
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-[var(--rule-xs)] pt-2">
           <LikeButton wineId={wine.id} likeCount={likeCount} small />
-          {wine.systembolagetUrl && (
+          {buy && (
             <a
-              href={wine.systembolagetUrl}
+              href={buy.href}
               target="_blank"
               rel="noopener noreferrer nofollow"
+              title={`${buy.label} – ${buy.how.toLowerCase()}`}
               className="text-[10px] font-bold tracking-[0.2em] uppercase text-[var(--fg)] border-b border-[var(--fg)] hover:opacity-50 transition-opacity pb-px whitespace-nowrap"
             >
-              Beställ
+              {buy.isSb ? "Beställ" : "Hemleverans"}
             </a>
           )}
           <button

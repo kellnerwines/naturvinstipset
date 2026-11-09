@@ -22,7 +22,7 @@ export async function generateMetadata({
   const bar = getBarBySlug(slug);
   if (!bar) return { title: "Vinbar" };
   return {
-    title: `${bar.name} – Naturvinsbar i ${bar.city} | Naturvinstipset`,
+    title: `${bar.name} – Naturvinsbar i ${bar.city}`,
     description: bar.description,
     openGraph: {
       title: `${bar.name} – Naturvinsbar i ${bar.city}`,

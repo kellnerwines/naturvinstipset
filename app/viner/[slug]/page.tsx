@@ -8,6 +8,7 @@ import RatingForm from "@/components/RatingForm";
 import LikeButton from "@/components/LikeButton";
 import { buildWineProductJsonLd, getArticleNumber } from "@/lib/wineJsonLd";
 import { kellnerProducerUrl } from "@/lib/kellnerLinks";
+import { buyLinks, hasAnyOffer, retailerNote, whereSentence } from "@/lib/buyLinks";
 
 export const dynamic = "force-dynamic";
 
@@ -69,6 +70,8 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
 
   const articleNumber = getArticleNumber(wine);
   const importerUrl = kellnerProducerUrl(wine.producer);
+  const links = buyLinks(wine);
+  const inTopList = !!wine.systembolagetUrl || (wine.offers ?? []).some((o) => o.shop === "Systembolaget");
 
   const specs = [
     { label: "Producent", value: wine.producer },
@@ -101,8 +104,8 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
     <div className="max-w-3xl mx-auto px-5 py-12">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <Link href="/topp-100" className="text-sm text-black/40 hover:text-[var(--green)] mb-8 inline-block">
-        ← Tillbaka till listan
+      <Link href={inTopList ? "/topp-100" : "/"} className="text-sm text-black/40 hover:text-[var(--green)] mb-8 inline-block">
+        {inTopList ? "← Tillbaka till listan" : "← Till Vinkompassen"}
       </Link>
 
       {/* Top section */}
@@ -154,17 +157,28 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
             ))}
           </div>
 
-          {/* CTA */}
-          {wine.systembolagetUrl && (
-            <a
-              href={wine.systembolagetUrl}
-              target="_blank"
-              rel="noopener noreferrer nofollow"
-              className="block text-center bg-[var(--green)] text-white font-semibold px-6 py-3 rounded-lg hover:bg-[var(--green-dark)] transition-colors"
-            >
-              Köp på Systembolaget →
-            </a>
-          )}
+          {/* CTA – ett per säljställe med vinet i lager */}
+          {links.map((l, i) => (
+            <div key={l.shop} className={i > 0 ? "mt-3" : ""}>
+              <a
+                href={l.href}
+                target="_blank"
+                rel="noopener noreferrer nofollow"
+                className={i === 0
+                  ? "block text-center bg-[var(--green)] text-white font-semibold px-6 py-3 rounded-lg hover:bg-[var(--green-dark)] transition-colors"
+                  : "block text-center border border-[var(--green)] text-[var(--green-dark)] font-semibold px-6 py-3 rounded-lg hover:bg-[var(--green-light)] transition-colors"}
+              >
+                {l.label}{l.price ? `, ${l.price} kr` : ""} →
+              </a>
+              <p className="text-center text-xs text-[var(--muted)] mt-1.5">{l.how}</p>
+            </div>
+          ))}
+          {!links.length && hasAnyOffer(wine) ? (
+            <p className="text-center text-sm font-semibold border border-[var(--rule)] rounded-lg px-6 py-3">Tillfälligt slut</p>
+          ) : null}
+          {links.length ? (
+            <p className="text-[11px] text-[var(--muted)] leading-snug mt-4">{retailerNote(links)}</p>
+          ) : null}
 
           {importerUrl && (
             <a
@@ -209,7 +223,7 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
           {wine.flavorTags && wine.flavorTags.length > 0
             ? ` Smakprofil: ${wine.flavorTags.join(", ").toLowerCase()}.`
             : ""}
-          {" "}Det finns på Systembolaget i Sverige.
+          {whereSentence(wine) ? ` ${whereSentence(wine)}` : ""}
         </p>
         {wine.longDescription && (
           <p className="text-black/70 leading-relaxed whitespace-pre-line">{wine.longDescription}</p>

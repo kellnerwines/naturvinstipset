@@ -20,7 +20,7 @@ export default function Footer() {
             <div>
               <p className="text-sm font-bold text-[var(--fg)] mb-1">Naturvinstipset</p>
               <p className="text-xs text-[var(--muted)] max-w-[200px] leading-relaxed">
-                Din guide till naturvin på Systembolaget — enkelt, ärligt, utan krångel.
+                Din guide till naturvin på Systembolaget eller från webbutiker med hemleverans — enkelt, ärligt, utan krångel.
               </p>
             </div>
           </div>

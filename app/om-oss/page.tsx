@@ -32,13 +32,13 @@ export default function OmOssPage() {
         <div className="flex flex-col md:flex-row gap-12 items-start">
           <div className="flex-1 space-y-6 text-[var(--muted)] leading-relaxed text-[15px]">
             <p>
-              Naturvin är fantastiskt — men det kan vara svårt att veta var man ska börja. Vilket vin passar din smak? Vad är egentligen bra? Och hur hittar man det på Systembolaget?
+              Naturvin är fantastiskt — men det kan vara svårt att veta var man ska börja. Vilket vin passar din smak? Vad är egentligen bra? Och var hittar man det, på Systembolaget eller från en webbutik med hemleverans?
             </p>
             <p>
               Det är de frågorna vi startade Naturvinstipset för att svara på.
             </p>
             <p>
-              Vi samlar de bästa naturvinerna på Systembolaget, betygsätter dem och låter dig filtrera efter din smakprofil. Inga gissningar, inga pretentioner — bara ärliga betyg som hjälper dig hitta rätt.
+              Vi samlar naturviner på Systembolaget eller från webbutiker med hemleverans, betygsätter dem och hjälper dig hitta dem som passar din smak, din budget och din mat. Webbutikerna vi listar säljer till Sverige med svensk alkoholskatt inräknad i priset. Inga gissningar, inga pretentioner — bara ärliga betyg som hjälper dig hitta rätt.
             </p>
             <p>
               Men lika viktigt som våra egna betyg är dina. Vi bygger en community där naturvinsälskare på alla nivåer kan betygsätta, dela och tipsa varandra. Nybörjare som precis testat sitt första naturvin är lika välkomna som den som druckit det i tio år.

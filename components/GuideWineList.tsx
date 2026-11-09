@@ -1,6 +1,7 @@
 import Link from "next/link";
 import type { Wine, Rating } from "@/lib/blob";
 import { combinedRating } from "@/lib/blob";
+import { buyLinks } from "@/lib/buyLinks";
 
 interface Props {
   wines: Wine[];
@@ -61,9 +62,9 @@ export default function GuideWineList({ wines, ratings }: Props) {
                     )}
                   </div>
                 </div>
-                {wine.systembolagetUrl && (
+                {buyLinks(wine)[0] && (
                   <span className="inline-block mt-3 text-xs text-[var(--green)] font-medium">
-                    Köp på Systembolaget →
+                    {buyLinks(wine)[0].isSb ? "Köp på Systembolaget" : `Hemleverans från webbutiken ${buyLinks(wine)[0].shop}`} →
                   </span>
                 )}
               </div>

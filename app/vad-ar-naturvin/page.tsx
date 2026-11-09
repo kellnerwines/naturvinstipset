@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  title: "Vad är naturvin? – 15 vanliga frågor besvarade | Naturvinstipset",
+  title: "Vad är naturvin? – 15 vanliga frågor besvarade",
   description:
     "Varför är det grumligt? Blir man bakis? Vad är orange vin? Vi svarar på frågorna du googlar kl 22 — komplett guide till naturvin för nybörjare och nyfikna.",
   openGraph: {
@@ -40,7 +40,7 @@ const faqJsonLd = {
     {
       "@type": "Question",
       name: "Var köper man naturvin?",
-      acceptedAnswer: { "@type": "Answer", text: "Systembolaget är det självklara stället. Kolla vår Topp 100-lista — en sammanställning av de mest intressanta naturvinerna på Systembolaget, med direktlänkar så att du slipper leta själv." },
+      acceptedAnswer: { "@type": "Answer", text: "På Systembolaget eller från webbutiker med hemleverans. Kolla vår Topp 100-lista — en sammanställning av de mest intressanta naturvinerna på Systembolaget, med direktlänkar så att du slipper leta själv. Vill du ha vinet hemlevererat visar Vinkompassen på startsidan även viner från webbutiker som säljer till Sverige med svensk alkoholskatt inräknad i priset." },
     },
     {
       "@type": "Question",
@@ -142,6 +142,8 @@ Det vi vet är att alkohol, dehydrering och mängd är de största bovarna. Inte
     answer: `Systembolaget är det självklara stället för de flesta i Sverige — och sortimentet växer hela tiden. Men det kan vara lite knepigt att hitta rätt eftersom det inte finns något officiellt "naturvin"-filter.
 
 Kolla vår Topp 100-lista — en sammanställning av de mest intressanta och kvalitativa naturvinerna på Systembolaget, noggrant utvalda av Sveriges seriösaste naturvinsimportörer. Vi har direktlänkar så att du slipper leta själv.
+
+Vill du hellre ha vinet hemlevererat finns det också webbutiker med hemleverans. Vinkompassen på startsidan visar viner både på Systembolaget och från webbutiker som säljer till Sverige med svensk alkoholskatt inräknad i priset.
 
 En sak att ha koll på: eftersom "naturvin" inte är ett skyddat begrepp finns det viner som marknadsförs som naturliga utan att egentligen vara det. Stora klisterlappar och "naturvin"-stämplar är inte alltid en garanti. Därför hjälper vi dig.
 

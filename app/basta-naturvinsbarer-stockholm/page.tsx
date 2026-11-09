@@ -4,7 +4,7 @@ import BarMap from "@/components/BarMap";
 import { getBarsByCity } from "@/lib/bars";
 
 export const metadata: Metadata = {
-  title: "Bästa naturvinsbarerna i Stockholm 2026 | Naturvinstipset",
+  title: "Bästa naturvinsbarerna i Stockholm 2026",
   description:
     "Naturvinstipsets guide till de 15 bästa ställena att dricka naturvin i Stockholm — från Södermalms mysiga vinbarer till Östermalms avskalade alternativ. Med adresser, priser och omdömen.",
   openGraph: {
