@@ -41,6 +41,7 @@ export type Wine = {
   source?: string;               // t.ex. "vinnatur.shop", "flaskvis.se", "manual"
   sourceId?: string;             // butikens handle/slug
   autoProfile?: boolean;         // smakprofil uppskattad automatiskt
+  sourceImageUrl?: string;       // butikens originalbild, innan den flyttats till Blob (5.1)
   lockedFields?: string[];       // fält som admin ändrat – importen får inte skriva över dem
 };
 

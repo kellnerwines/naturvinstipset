@@ -110,7 +110,7 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
         {/* Image */}
         <div className="bg-[var(--green-light)] aspect-[3/4] rounded-xl overflow-hidden flex items-center justify-center">
           {wine.primaryImageUrl ? (
-            <Image src={wine.primaryImageUrl} alt={`${wine.name}${wine.year ? ` ${wine.year}` : ""}${wine.wineType ? ` ${wine.wineType.toLowerCase()} naturvin` : " naturvin"}${wine.country ? ` från ${wine.country}` : ""}`} width={400} height={530} className="object-cover w-full h-full" unoptimized />
+            <Image src={wine.primaryImageUrl} alt={`${wine.name}${wine.year ? ` ${wine.year}` : ""}${wine.wineType ? ` ${wine.wineType.toLowerCase()} naturvin` : " naturvin"}${wine.country ? ` från ${wine.country}` : ""}`} width={400} height={530} className={wine.sourceImageUrl ? "object-contain w-full h-full p-8" : "object-cover w-full h-full"} unoptimized />
           ) : (
             <span className="text-6xl">🍷</span>
           )}
