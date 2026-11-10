@@ -34,6 +34,7 @@ export default function Footer({ retailerCompensation = false }: { retailerCompe
                 <Link href="/topp-100" className="hover:text-[var(--fg)] transition-colors">Topp 100</Link>
                 <Link href="/vad-ar-naturvin" className="hover:text-[var(--fg)] transition-colors">Vad är naturvin?</Link>
                 <Link href="/blogg" className="hover:text-[var(--fg)] transition-colors">Blogg</Link>
+                <Link href="/svar" className="hover:text-[var(--fg)] transition-colors">Vanliga frågor om naturvin</Link>
               </nav>
             </div>
             <div>

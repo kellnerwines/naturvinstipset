@@ -1,6 +1,7 @@
 import type { MetadataRoute } from "next";
 import { getWines, getBlogs } from "@/lib/blob";
 import { bars } from "@/lib/bars";
+import { ANSWER_PAGES } from "@/lib/answers";
 
 const BASE = "https://www.naturvinstipset.se";
 
@@ -55,5 +56,10 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     .filter((b) => b.published)
     .map((b) => ({ url: `${BASE}/blogg/${b.slug}`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.7 }));
 
-  return [...staticRoutes, ...barCityRoutes, ...barRoutes, ...wineRoutes, ...blogRoutes];
+  const answerRoutes: MetadataRoute.Sitemap = [
+    { url: `${BASE}/svar`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
+    ...ANSWER_PAGES.map((p) => ({ url: `${BASE}/svar/${p.slug}`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 })),
+  ];
+
+  return [...staticRoutes, ...answerRoutes, ...barCityRoutes, ...barRoutes, ...wineRoutes, ...blogRoutes];
 }
