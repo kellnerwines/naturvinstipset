@@ -139,12 +139,33 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
     requestAnimationFrame(() => endRef.current?.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "end" }));
   }, []);
 
+  // Scroll som följer användaren: väntar en stund så att man hinner trycka fler val,
+  // och avbryts om användaren själv scrollar eller skriver under tiden.
+  const cancelScroll = useRef<(() => void) | null>(null);
+  const scheduleScroll = useCallback((target: () => Element | null | undefined, delay: number) => {
+    if (!R.current.interacted) return;
+    cancelScroll.current?.();
+    const evs = ["wheel", "touchmove", "keydown"] as const;
+    const onUser = () => cancelScroll.current?.();
+    evs.forEach((e) => window.addEventListener(e, onUser, { passive: true }));
+    const t = setTimeout(() => {
+      cancelScroll.current?.();
+      target()?.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
+    }, prefersReducedMotion() ? Math.min(delay, 100) : delay);
+    cancelScroll.current = () => {
+      clearTimeout(t);
+      evs.forEach((e) => window.removeEventListener(e, onUser));
+      cancelScroll.current = null;
+    };
+  }, []);
+
   const push = useCallback((item: NewItem) => {
     const id = R.current.nextId++;
     const full = { ...item, id } as Item;
     R.current.items = [...R.current.items, full];
     setItems(R.current.items);
-    scrollDown();
+    // Frågor och förslag scrollas till sin början (se ask och finish); övrigt följer chatten nedåt.
+    if (item.kind !== "q" && item.kind !== "results" && item.kind !== "deep") scrollDown();
     return id;
   }, [scrollDown]);
 
@@ -161,15 +182,19 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
   }), [push]);
 
   // ── Frågor ──
-  const ask = useCallback((i: number) => {
+  /** Visar fråga i och scrollar dit efter `delay` ms, så att man hinner se sitt svar först. */
+  const ask = useCallback((i: number, delay = 900) => {
     R.current.cur = i;
-    push({ kind: "q", k: QUESTIONS[i].k, left: matching(R.current.S, W).length });
-  }, [push, W]);
+    const id = push({ kind: "q", k: QUESTIONS[i].k, left: matching(R.current.S, W).length });
+    scheduleScroll(() => document.getElementById(`compass-item-${id}`), delay);
+  }, [push, W, scheduleScroll]);
 
-  const refresh = useCallback(() => {
+  /** Förslagen har ändrats efter första rekommendationen: scrolla tillbaka till dem när användaren slutat ändra. */
+  const refresh = useCallback((delay = 1100) => {
     setFlashKey((k) => k + 1);
     setUpdated(true);
-  }, []);
+    scheduleScroll(() => resultsRef.current, delay);
+  }, [scheduleScroll]);
 
   const finish = useCallback(async () => {
     R.current.done = true; setDone(true); setBusyB(true);
@@ -198,18 +223,19 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
     await sleep(200);
     update(`Tänkte i ${((performance.now() - t0) / 1000).toLocaleString("sv-SE", { maximumFractionDigits: 1 })} s`);
     push({ kind: "results" });
+    scheduleScroll(() => resultsRef.current, 150);
     track({ type: "result", count: list.length });
     await sleep(250);
     push({ kind: "deep" });
     setBusyB(false);
-  }, [W, push, scrollDown]);
+  }, [W, push, scrollDown, scheduleScroll]);
 
-  const nextQ = useCallback(() => {
+  const nextQ = useCallback((delay?: number) => {
     const a = R.current.answered;
     const n = QUESTIONS.findIndex((q, j) => j > R.current.cur && !a.includes(q.k));
-    if (n >= 0) return ask(n);
+    if (n >= 0) return ask(n, delay);
     const first = QUESTIONS.findIndex((q) => !a.includes(q.k));
-    if (first >= 0) return ask(first);
+    if (first >= 0) return ask(first, delay);
     void finish();
   }, [ask, finish]);
 
@@ -222,16 +248,17 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
     if (R.current.done) refresh();
 
     const qIndex = QUESTIONS.indexOf(q);
-    const go = () => {
+    // Efter nedräkningen (flerval) har man redan väntat, så då scrollas nästa fråga fram direkt.
+    const go = (delay?: number) => {
       if (autoT.current) clearTimeout(autoT.current);
       setCountdown(null);
-      if (R.current.cur === qIndex && !R.current.done && isLatest(itemId)) nextQ();
+      if (R.current.cur === qIndex && !R.current.done && isLatest(itemId)) nextQ(delay);
     };
     if (advance === "now") go();
     else if (advance === "countdown" && R.current.cur === qIndex && !R.current.done) {
       if (autoT.current) clearTimeout(autoT.current);
       setCountdown((c) => ({ item: itemId, run: (c?.run ?? 0) + 1 }));
-      autoT.current = setTimeout(go, 1200);
+      autoT.current = setTimeout(() => go(150), 1200);
     } else if (advance === "none") {
       if (autoT.current) clearTimeout(autoT.current);
       setCountdown(null);
@@ -297,9 +324,10 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
     setBusyB(true);
     await say(reflect(o, text, W) + missingTail(missing, R.current.done), picked);
     setBusyB(false);
-    if (R.current.done) { refresh(); return; }
+    // Efter fritext får man läsa svaret en stund innan sidan scrollar vidare.
+    if (R.current.done) { refresh(1400); return; }
     const first = QUESTIONS.findIndex((q) => !ans.includes(q.k));
-    if (first >= 0) ask(first); else void finish();
+    if (first >= 0) ask(first, 1200); else void finish();
   }, [W, ask, finish, push, refresh, reset, say]);
 
   const onSuggestion = async (s: string) => {
@@ -347,7 +375,7 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
     window.history.replaceState(null, "", qs ? `${window.location.pathname}?${qs}` : window.location.pathname);
   }, [S, answered]);
 
-  useEffect(() => () => { if (autoT.current) clearTimeout(autoT.current); }, []);
+  useEffect(() => () => { if (autoT.current) clearTimeout(autoT.current); cancelScroll.current?.(); }, []);
 
   // ── Härledda värden ──
   const result = useMemo(() => pick(S, W), [S, W]);
@@ -363,7 +391,8 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
     setPanels((p) => (p.includes(k) ? p.filter((x) => x !== k) : [...p, k]));
     if (!panels.includes(k)) track({ type: "panel", panel: k });
   };
-  const change = (next: CompassState) => { setState(next); refresh(); };
+  // Finjustering: längre paus, så att man hinner ändra flera saker innan sidan visar förslagen igen.
+  const change = (next: CompassState) => { setState(next); refresh(1800); };
 
   // ── Rendering ──
   const renderQuestion = (item: Extract<Item, { kind: "q" }>) => {
@@ -374,7 +403,7 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
     const cd = countdown?.item === item.id ? countdown : null;
     const showBubble = owners[q.k] === item.id && answered.includes(q.k);
     return (
-      <div key={item.id} className="space-y-4">
+      <div key={item.id} id={`compass-item-${item.id}`} className="space-y-4 scroll-mt-20">
         <AgentRow>
           <p className="text-base font-semibold leading-snug">{q.h}</p>
           {q.s ? <p className="text-xs text-[var(--muted)] mt-0.5">{q.s}</p> : null}
