@@ -2,7 +2,7 @@
 // Vercel Cron en gång per månad och av "Synka nu" i admin. Vanlig kod utan AI.
 
 import { backupWines, getSyncLog, getWines, putWineImage, saveSyncLog, saveWines, type Wine } from "../blob";
-import { downloadImage, imageKey, processBottleImage } from "../wineImages";
+import { downloadImage, imageKey, mapLimit, needsImageMigration, processBottleImage } from "../wineImages";
 import { applySync, type ShopReport } from "./apply";
 import { flaskvisFeed, philipsonFeed, vinNaturFeed } from "./feeds";
 import { fillFoodCategories } from "./food";
@@ -41,22 +41,28 @@ export async function runSync(opts: { trigger: "cron" | "admin"; dryRun?: boolea
   const foodFilled = fillFoodCategories(wines);
   if (foodFilled.length) alerts.push(`${foodFilled.length} viner fick matkategorier automatiskt (vintyp, druva och land)`);
 
-  // Nya vins flaskbilder flyttas till Blob (5.1). Misslyckas det står butikens bild kvar tills vidare.
+  // Flaskbilder som fortfarande ligger hos butiken flyttas till Blob (5.1), nya viner först.
+  // Det som inte hinns med inom tidsgränsen tas vid nästa körning; tills dess visas butikens bild.
   const added = new Set(reports.flatMap((r) => r.added));
+  let imagesMoved = 0;
   if (!opts.dryRun) {
-    for (const w of wines) {
-      if (!added.has(w.slug) || !w.primaryImageUrl?.startsWith("http") || Date.now() > deadline + 40_000) continue;
+    const todo = wines.filter(needsImageMigration).sort((a, b) => Number(added.has(b.slug)) - Number(added.has(a.slug)));
+    const imageDeadline = deadline + 40_000;
+    await mapLimit(todo, 4, async (w) => {
+      if (Date.now() > imageDeadline) return;
       try {
-        const img = await processBottleImage(await downloadImage(w.primaryImageUrl));
+        const img = await processBottleImage(await downloadImage(w.primaryImageUrl!));
         const src = await putWineImage(imageKey(w), img.data);
-        if (src) { w.sourceImageUrl = w.primaryImageUrl; w.primaryImageUrl = src; }
+        if (src) { w.sourceImageUrl = w.primaryImageUrl; w.primaryImageUrl = src; imagesMoved++; }
       } catch (e) {
         alerts.push(`${w.name}: bilden kunde inte flyttas till Blob (${(e as Error).message})`);
       }
-    }
+    });
+    const left = wines.filter(needsImageMigration).length;
+    if (imagesMoved || left) alerts.push(`${imagesMoved} flaskbilder flyttades till Blob${left ? `, ${left} kvar till nästa körning` : ""}`);
   }
 
-  const changed = foodFilled.length > 0 || reports.some((r) => r.added.length || r.changed.length || r.unpublished.length || r.republished.length);
+  const changed = imagesMoved > 0 || foodFilled.length > 0 || reports.some((r) => r.added.length || r.changed.length || r.unpublished.length || r.republished.length);
   let backup: string | null | undefined;
   if (!opts.dryRun && changed) {
     backup = await backupWines("synk");
