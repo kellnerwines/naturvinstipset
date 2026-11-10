@@ -593,7 +593,7 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
         <div ref={endRef} />
       </div>
 
-      <div className="sticky bottom-0 z-20 -mx-4 px-4 pt-3 pb-4 bg-white/80 backdrop-blur-md border-t border-[var(--rule)] rounded-b-xl">
+      <div className="sticky bottom-0 z-20 -mx-4 px-4 pt-3 pb-4 bg-white/60 backdrop-blur-sm border-t border-[var(--rule)] rounded-b-xl">
         <form onSubmit={submit} className="flex items-end gap-2 bg-[var(--card)] border border-[var(--rule)] rounded-2xl pl-4 pr-1.5 py-1.5 focus-within:border-[var(--fg)]">
           <label htmlFor="compass-input" className="sr-only">Skriv till kompassen</label>
           <textarea

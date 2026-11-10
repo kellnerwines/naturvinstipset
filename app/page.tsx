@@ -69,7 +69,11 @@ export default async function HomePage() {
               Efter fyra frågor får du ett förslag. Sedan kan du finjustera tills det sitter.
             </p>
           </div>
-          <div className="bg-white/80 backdrop-blur-md border border-white/50 rounded-xl px-4 pt-6 md:pt-8">
+          {/* Halvgenomskinlig över videon; den grå texten görs mörkare här så att kontrasten räcker. */}
+          <div
+            className="bg-white/55 backdrop-blur-sm border border-white/40 rounded-xl px-4 pt-6 md:pt-8"
+            style={{ "--muted": "rgba(13, 13, 13, 0.8)", "--faint": "rgba(13, 13, 13, 0.6)" } as React.CSSProperties}
+          >
             <Vinkompassen wines={compassWines} compensation={settings.retailerCompensation} />
           </div>
         </div>
