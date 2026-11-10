@@ -5,7 +5,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  ADV_TARGET, AXES, FOOD, QUESTIONS, TAGS, answerText, emptyState, foodsSel, label, matching, pick, relaxLabel,
+  ADV_TARGET, AXES, FOOD, QUESTIONS, TAGS, answerText, emptyState, foodsSel, label, matching, pick, relaxLabel, relaxMessage,
   type AxisKey, type CompassState, type CompassWine, type Question, type QuestionKey,
 } from "@/lib/compass/engine";
 import { applyParsed, missingTail, reflect, regexInterpreter, understood } from "@/lib/compass/parse";
@@ -174,14 +174,14 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
   const finish = useCallback(async () => {
     R.current.done = true; setDone(true); setBusyB(true);
     const St = R.current.S;
-    const { list, relax } = pick(St, W);
+    const { list, relax, budget: raised } = pick(St, W);
     const colors = St.color.length ? St.color.join(", ").toLowerCase() : "alla färger";
     const fs = foodsSel(St);
     const plan: [string, string][] = [
       [`Går igenom ${W.length} naturviner på Systembolaget eller från webbutiker med hemleverans`, `${colors}, ${St.budget && St.budget !== "9999" ? "upp till " + St.budget + " kr" : "alla prisnivåer"}`],
       ["Matchar funk-nivån mot hur vilt det får smaka", St.adv ? label("adv", St.adv) : "Ingen preferens"],
       ["Kollar matförslagen", fs.length ? fs.map((f) => FOOD[f].toLowerCase()).join(", ") : "Vinet ska vara gott på egen hand"],
-      ["Rangordnar efter smakprofil", `${list.length} viner kvar${relax.length ? ", släppte " + relaxLabel(relax) : ""}`],
+      ["Rangordnar efter smakprofil", `${list.length} viner kvar${relax.length ? ", släppte " + relaxLabel(relax) : ""}${raised ? `, höjde budgeten till ${raised} kr` : ""}`],
     ];
     const t0 = performance.now();
     const thinkId = push({ kind: "think", steps: [], summary: null });
@@ -433,9 +433,9 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
           {top ? `Mitt bästa förslag är ${top.w.n} från ${top.w.p}. Här är de som passar dig bäst.` : "Jag hittade inget som passar, prova att ändra ett svar."}
         </p>
         <div key={flashKey} className={`mt-4 space-y-3 ${flashKey ? css.flash : ""}`}>
-          {result.relax.length ? (
+          {result.relax.length || result.budget ? (
             <p className="text-sm border border-[var(--rule)] rounded-md px-3 py-2 text-[var(--muted)]">
-              För få viner matchade alla dina val, så jag bortsåg från {relaxLabel(result.relax)}.
+              {relaxMessage(result.relax, result.budget)}
             </p>
           ) : null}
           {result.list.slice(0, shownN).map((sc, i) => (

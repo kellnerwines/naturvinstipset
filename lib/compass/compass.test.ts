@@ -4,7 +4,7 @@ import path from "path";
 import type { Wine } from "../blob";
 import { buildCatalog, type FoodEntry } from "../wineData";
 import {
-  emptyState, pick, score, toCompassWine, QUESTIONS,
+  emptyState, pick, relaxMessage, score, toCompassWine, QUESTIONS,
   type CompassState, type CompassWine, type QuestionKey,
 } from "./engine";
 import { applyParsed, missingTail, parse, reflect, understood } from "./parse";
@@ -107,6 +107,25 @@ describe("poängmotorn", () => {
     expect(b.relax).toEqual(["country"]);
     const c = pick(state({ color: ["Rosé"] }), X);
     expect(c.relax).toEqual(["color"]);
+  });
+
+  it("budgeten höjs stegvis och vinerna inom budget visas först", () => {
+    const X = [
+      cw({ id: "a", pr: 129, rt: 1 }),
+      cw({ id: "b", pr: 149, rt: 1 }),
+      cw({ id: "c", pr: 229, rt: 5 }),
+      cw({ id: "d", pr: 239, rt: 5 }),
+      cw({ id: "e", pr: 599, rt: 5 }),
+    ];
+    const r = pick(state({ budget: "150" }), X);
+    expect(r.relax).toEqual([]);
+    expect(r.budget).toBe("250");
+    expect(r.list.map(({ w }) => w.id)).toEqual(["a", "b", "c", "d"]);
+    expect(relaxMessage(r.relax, r.budget)).toBe("För få viner matchade alla dina val, så jag tog med viner upp till 250 kr.");
+    // räcker inget steg släpps budgeten helt
+    const only = pick(state({ budget: "150" }), [cw({ id: "x", pr: 900 })]);
+    expect(only.relax).toEqual(["budget"]);
+    expect(only.budget).toBeUndefined();
   });
 
   it("butiksfiltret", () => {

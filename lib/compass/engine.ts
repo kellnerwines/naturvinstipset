@@ -217,31 +217,53 @@ export function matching(S: CompassState, W: CompassWine[], relax: Set<RelaxKey>
   return W.filter((w) => F.every((f) => f(w)));
 }
 
+const BUDGET_STEPS: Budget[] = ["150", "250", "400"];
+const nextBudget = (b: Budget | null): Budget | null =>
+  b ? BUDGET_STEPS[BUDGET_STEPS.indexOf(b) + 1] ?? null : null;
+
 /**
  * Hårda filter, och om färre än 3 viner matchar släpps ett filter i taget i
  * RELAX-ordning – bara om det ger fler träffar. Färg släpps bara vid 0 träffar.
+ * Budgeten höjs ett steg i taget (150 → 250 → 400) innan den släpps helt, och
+ * viner som uppfyller alla val visas alltid före de som kom med när ett filter släpptes.
  */
-export function pick(S: CompassState, W: CompassWine[]): { list: Scored[]; relax: RelaxKey[] } {
+export function pick(S: CompassState, W: CompassWine[]): { list: Scored[]; relax: RelaxKey[]; budget?: Budget } {
   const relax = new Set<RelaxKey>();
-  let list = matching(S, W, relax);
+  let cur = S;
+  let list = matching(cur, W, relax);
   while (list.length < 3) {
     const useful = RELAX.find(([k]) => {
-      if (relax.has(k) || !isActive(S, k)) return false;
+      if (relax.has(k) || !isActive(cur, k)) return false;
       const t = new Set(relax); t.add(k);
-      return matching(S, W, t).length > list.length && (k !== "color" || list.length === 0);
+      return matching(cur, W, t).length > list.length && (k !== "color" || list.length === 0);
     });
     if (!useful) break;
+    if (useful[0] === "budget") {
+      let up = nextBudget(cur.budget);
+      while (up && matching({ ...cur, budget: up }, W, relax).length <= list.length) up = nextBudget(up);
+      if (up) { cur = { ...cur, budget: up }; list = matching(cur, W, relax); continue; }
+    }
     relax.add(useful[0]);
-    list = matching(S, W, relax);
+    list = matching(cur, W, relax);
   }
+  const strict = new Set(matching(S, W).map((w) => w.id));
   return {
-    list: list.map((w) => score(w, S, W)).sort((a, b) => b.sc - a.sc),
+    list: list.map((w) => score(w, S, W)).sort((a, b) => Number(strict.has(b.w.id)) - Number(strict.has(a.w.id)) || b.sc - a.sc),
     relax: RELAX.map(([k]) => k).filter((k) => relax.has(k)),
+    ...(cur.budget !== S.budget && !relax.has("budget") ? { budget: cur.budget! } : {}),
   };
 }
 
 export const relaxLabel = (keys: RelaxKey[]) =>
   keys.map((k) => RELAX.find((r) => r[0] === k)![1]).join(" och ");
+
+/** "För få viner matchade alla dina val, så jag bortsåg från mat och tog med viner upp till 250 kr." */
+export function relaxMessage(keys: RelaxKey[], budget?: Budget): string {
+  const parts: string[] = [];
+  if (keys.length) parts.push(`bortsåg från ${relaxLabel(keys)}`);
+  if (budget) parts.push(`tog med viner upp till ${budget} kr`);
+  return parts.length ? `För få viner matchade alla dina val, så jag ${parts.join(" och ")}.` : "";
+}
 
 // ─── Etiketter ────────────────────────────────────────────────────────────────
 
