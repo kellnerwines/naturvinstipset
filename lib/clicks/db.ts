@@ -8,7 +8,9 @@ import { createHash } from "crypto";
 let client: NeonQueryFunction<false, false> | null | undefined;
 export function db(): NeonQueryFunction<false, false> | null {
   if (client === undefined) {
-    const url = process.env.DATABASE_URL || process.env.POSTGRES_URL;
+    // Vercels Neon-koppling lägger variablerna med projektets prefix (NATURVINSTIPSET_…).
+    const url = process.env.DATABASE_URL || process.env.NATURVINSTIPSET_DATABASE_URL
+      || process.env.POSTGRES_URL || process.env.NATURVINSTIPSET_POSTGRES_URL;
     client = url ? neon(url) : null;
   }
   return client;
