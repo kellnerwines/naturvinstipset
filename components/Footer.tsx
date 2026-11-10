@@ -63,7 +63,7 @@ export default function Footer({ retailerCompensation = false }: { retailerCompe
         {/* Bottom */}
         <div className="border-t border-[var(--rule-xs)] pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-[10px] text-[var(--muted)]">
           <p>
-            Naturvinstipset drivs av grundaren av vinimportören Kellner &amp; Kellner. Viner från egen import är märkta och får ingen fördel i rankningen.
+            Naturvinstipset drivs av grundaren av vinimportören Kellner &amp; Kellner. Viner från egen import är märkta och får ingen fördel i Vinkompassen.
             {retailerCompensation ? " Naturvinstipset kan få ersättning från webbutiker när du köper via våra länkar. Det påverkar inte rankningen." : ""}
           </p>
           <div className="flex items-center gap-4">

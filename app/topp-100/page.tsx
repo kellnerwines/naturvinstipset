@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { getWines, getRatings, combinedRating, type Wine } from "@/lib/blob";
+import { getWines, getRatings } from "@/lib/blob";
+import { FILL_IMPORTERS, FILL_SHOP, topHundred } from "@/lib/topList";
 import WineGrid from "@/components/WineGrid";
 import HomeFaq from "@/components/HomeFaq";
 import { OWN_IMPORT_HREF } from "@/components/OwnImportBadge";
@@ -10,13 +11,13 @@ import { retailerNote } from "@/lib/buyLinks";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: { absolute: "Topp 100 – de bästa naturvinerna på Systembolaget – Naturvinstipset" },
+  title: { absolute: "Topp 100 – naturviner på Systembolaget och med hemleverans – Naturvinstipset" },
   alternates: { canonical: "/topp-100" },
   description:
-    "Hitta ditt nästa naturvin med ärliga betyg och direktlänk till Systembolaget. Utvalda naturviner rankade av riktiga vinälskare — utan krångel.",
+    "Topp 100 naturviner: de bäst betygsatta på Systembolaget, kompletterade med naturviner med hemleverans från Flaskvis.",
   openGraph: {
-    title: "Topp 100 – de bästa naturvinerna på Systembolaget",
-    description: "Hitta ditt nästa naturvin med ärliga betyg och direktlänk till Systembolaget. Utvalda naturviner rankade av riktiga vinälskare.",
+    title: "Topp 100 – naturviner på Systembolaget och med hemleverans",
+    description: "De bäst betygsatta naturvinerna på Systembolaget, kompletterade med naturviner med hemleverans.",
     url: "https://www.naturvinstipset.se/topp-100",
     images: [{ url: "/og-logo.png", width: 1200, height: 630, alt: "Naturvinstipset" }],
   },
@@ -25,27 +26,16 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  name: "Topp 100 – de bästa naturvinerna på Systembolaget",
-  url: "https://naturvinstipset.se/topp-100",
-  description: "De bästa naturvinerna på Systembolaget – rankade och betygsatta.",
+  name: "Topp 100 – naturviner på Systembolaget och med hemleverans",
+  url: "https://www.naturvinstipset.se/topp-100",
+  description: "De bäst betygsatta naturvinerna på Systembolaget, kompletterade med naturviner med hemleverans.",
   inLanguage: "sv",
 };
 
-/** Topplistan innehåller bara viner från Systembolaget (beslut 3, 2026-11-09). */
-const atSystembolaget = (w: Wine) =>
-  !!w.systembolagetUrl || (w.offers ?? []).some((o) => o.shop === "Systembolaget");
-
 export default async function Topp100Page() {
   const [wines, ratings] = await Promise.all([getWines(), getRatings()]);
-
-  const published = wines.filter((w) => w.published && atSystembolaget(w));
-  const entries = published
-    .map((w) => {
-      const wineRatings = ratings.filter((r) => r.wineId === w.id);
-      return { wine: w, rating: combinedRating(w, ratings), count: wineRatings.length, likeCount: wineRatings.filter((r) => r.liked).length };
-    })
-    .sort((a, b) => b.rating - a.rating)
-    .slice(0, 100);
+  const entries = topHundred(wines, ratings);
+  const sbCount = entries.filter((e) => !e.filler).length;
 
   const featured = entries.find(e => e.wine.wineOfMonth) ?? entries[0] ?? null;
 
@@ -128,13 +118,15 @@ export default async function Topp100Page() {
         <div className="max-w-6xl mx-auto px-6 py-16">
           <div className="flex items-baseline justify-between mb-8">
             <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-[var(--fg)]" style={{ fontFamily: "Georgia, serif" }}>
-              Topp 100 på Systembolaget
+              Topp 100
             </h2>
-            <p className="text-xs text-[var(--faint)] tracking-widest uppercase">{published.length} viner</p>
+            <p className="text-xs text-[var(--faint)] tracking-widest uppercase">{entries.length} viner</p>
           </div>
           <WineGrid entries={entries} />
           <p className="text-[11px] text-[var(--muted)] leading-snug mt-10 max-w-2xl">
-            {retailerNote([{ isSb: true }])} Viner märkta &quot;Egen import&quot; importeras av Kellner &amp; Kellner, som drivs av sajtens grundare, och får ingen fördel i rankningen.{" "}
+            Listan börjar med de {sbCount} bäst betygsatta naturvinerna på Systembolaget.
+            {entries.length > sbCount ? ` Resten av platserna fylls med naturviner med hemleverans från ${FILL_SHOP}, i importörsordningen ${FILL_IMPORTERS.join(", ").replace(/, ([^,]*)$/, " och $1")}. Kellner & Kellner drivs av sajtens grundare, och deras viner är märkta "Egen import".` : ""}{" "}
+            {retailerNote([{ isSb: true }, ...(entries.length > sbCount ? [{ isSb: false }] : [])])}{" "}
             <Link href={OWN_IMPORT_HREF} className="underline underline-offset-2">Så rankar vi</Link>.
           </p>
         </div>

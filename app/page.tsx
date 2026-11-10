@@ -94,7 +94,7 @@ export default async function HomePage() {
           <p>
             Varje vin har en smakprofil för syra, fyllighet, strävhet och funk, och ett matförslag skrivet utifrån
             trakten vinet kommer från. Kompassen väger ihop dina svar och visar hur väl varje vin matchar.
-            Viner från egen import är märkta och får ingen fördel i rankningen. <Link href="/om-oss" className="underline underline-offset-4">Läs mer om oss</Link>.
+            Viner från egen import är märkta och får ingen fördel i kompassen. <Link href="/om-oss" className="underline underline-offset-4">Läs mer om oss</Link>.
           </p>
           <p>
             Ny på naturvin? Börja med <Link href="/vad-ar-naturvin" className="underline underline-offset-4">vår guide om vad naturvin är</Link>,
@@ -111,7 +111,7 @@ export default async function HomePage() {
         <section className="max-w-2xl mx-auto px-4 py-12">
           <div className="border-t border-[var(--rule)] pt-10">
             <div className="flex items-baseline justify-between gap-4 mb-6">
-              <h2 className="text-2xl font-bold tracking-tight">Topp 100 på Systembolaget</h2>
+              <h2 className="text-2xl font-bold tracking-tight">Topp 100</h2>
               <Link href="/topp-100" className="text-sm font-semibold whitespace-nowrap underline underline-offset-4">Se hela listan →</Link>
             </div>
             <ol className="divide-y divide-[var(--rule)] border-y border-[var(--rule)]">

@@ -54,7 +54,7 @@ export default async function OmOssPage() {
               Tillsammans gör vi det lättare för fler att hitta viner de verkligen gillar.
             </p>
             <p>
-              Naturvinstipset drivs av grundaren av vinimportören Kellner &amp; Kellner. Viner från egen import är märkta och får ingen fördel i rankningen.
+              Naturvinstipset drivs av grundaren av vinimportören Kellner &amp; Kellner. Viner från egen import är märkta och får ingen fördel i Vinkompassen.
             </p>
           </div>
 
@@ -88,13 +88,13 @@ export default async function OmOssPage() {
             <div>
               <h3 className="font-semibold text-[var(--fg)] mb-2">Topp 100</h3>
               <p>
-                Topplistan innehåller bara viner från Systembolaget. Ordningen bygger på ett snitt av vårt betyg och besökarnas betyg, där vårt betyg väger lika mycket som en röst.
+                Topplistan börjar med naturvinerna på Systembolaget, ordnade efter ett snitt av vårt betyg och besökarnas betyg, där vårt betyg väger lika mycket som en röst. Räcker de inte till 100 fylls resten av platserna med naturviner med hemleverans från Flaskvis, i importörsordningen Kellner &amp; Kellner, Backyard Wines, Wine Rebels och Nordic 4 Wines.
               </p>
             </div>
             <div>
               <h3 className="font-semibold text-[var(--fg)] mb-2">Egen import</h3>
               <p>
-                Naturvinstipset drivs av grundaren av vinimportören Kellner &amp; Kellner. Därför märks viner som Kellner &amp; Kellner importerar med &quot;Egen import&quot; överallt där de visas. Märkningen påverkar inte rankningen: egen import ger ingen extra poäng i kompassen eller i topplistan, och det kontrolleras av ett automatiskt test i koden.
+                Naturvinstipset drivs av grundaren av vinimportören Kellner &amp; Kellner. Därför märks viner som Kellner &amp; Kellner importerar med &quot;Egen import&quot; överallt där de visas. I Vinkompassen ger egen import ingen extra poäng, och det kontrolleras av ett automatiskt test i koden. I Topp 100 kommer Kellner &amp; Kellners viner först bland webbutiksvinerna som fyller ut listan efter Systembolaget-vinerna.
               </p>
             </div>
             <div>

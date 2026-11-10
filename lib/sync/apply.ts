@@ -14,6 +14,8 @@ export type FeedItem = {
   inStock: boolean;
   /** Skattetexten på produktsidan. undefined = inte kontrollerad den här gången. */
   taxIncluded?: boolean;
+  /** Svensk importör enligt butiken. Uppdateras på befintliga viner om den ändrats. */
+  importer?: string;
   /** Komplett vin att skapa om det inte redan finns. Saknas när sidan inte gick att läsa. */
   newWine?: Wine;
 };
@@ -99,7 +101,9 @@ export function applySync(existing: Wine[], feeds: ShopFeed[], now: string): { w
       seen.add(idx);
       const { wine, changed, was } = setOffer(wines[idx], feed.shop, { shop: feed.shop, url: item.url, price: item.price, inStock: item.inStock, lastSyncedAt: now });
       let w = wine;
-      if (changed) r.changed.push(w.slug);
+      let fieldChanged = false;
+      if (item.importer && w.importer !== item.importer && !isLocked(w, "importer")) { w = { ...w, importer: item.importer }; fieldChanged = true; }
+      if (changed || fieldChanged) r.changed.push(w.slug);
       if (was?.inStock && !item.inStock) r.outOfStock.push(w.slug);
       if (was && !was.inStock && item.inStock) r.backInStock.push(w.slug);
 

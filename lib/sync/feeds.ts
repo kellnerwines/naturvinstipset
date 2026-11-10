@@ -148,7 +148,7 @@ export async function flaskvisFeed(known: Set<string>, deadline: number, now: st
     }
     // Alla naturviner från Flaskvis (beslut 2026-11-10), Kellner & Kellners viner även om de inte är märkta.
     if (!page.natural && !page.kellner) return null;
-    const item: FeedItem = { sourceId: p.slug, url: p.permalink, price: wooPrice(p), inStock: p.is_in_stock };
+    const item: FeedItem = { sourceId: p.slug, url: p.permalink, price: wooPrice(p), inStock: p.is_in_stock, importer: page.importer };
     if (known.has(p.slug)) return item;
 
     const text = page.description ?? "";
@@ -166,7 +166,7 @@ export async function flaskvisFeed(known: Set<string>, deadline: number, now: st
       wineType, price: String(wooPrice(p)), shop: FLASKVIS, shopUrl: p.permalink,
       description: describe(wineType, splitOrigin(page.region).region, page.grapes),
       syra: page.values.syra, fyllighet: page.values.fyllighet, funk: page.values.funk, stravhet: page.values.stravhet,
-      flavorTags, primaryImageUrl: p.images?.[0]?.src,
+      flavorTags, primaryImageUrl: p.images?.[0]?.src, importer: page.importer,
       source: `flaskvis.se (synk ${now.slice(0, 10)}, smakprofil från Flaskvis)`, sourceId: p.slug, autoProfile: false,
     };
     return item;

@@ -4,7 +4,8 @@ import { useState, useMemo } from "react";
 import WineCard from "./WineCard";
 import type { Wine } from "@/lib/blob";
 
-export type WineEntry = { wine: Wine; rating: number; count: number; likeCount: number };
+/** filler: platsen fylls med ett webbutiksvin efter Systembolaget-vinerna (lib/topList.ts). */
+export type WineEntry = { wine: Wine; rating: number; count: number; likeCount: number; filler?: boolean };
 
 /* ── Filter shape ──────────────────────────────────────────────────────────── */
 type Filters = {
@@ -162,7 +163,8 @@ export default function WineGrid({ entries }: { entries: WineEntry[] }) {
   const sorted = useMemo(() => {
     return [...filtered].sort((a, b) => {
       switch (sort) {
-        case "rating-desc": return b.rating - a.rating;
+        // Listans ordning: Systembolaget-vinerna efter betyg, sedan utfyllnaden i importörsordning.
+        case "rating-desc": return Number(!!a.filler) - Number(!!b.filler) || (a.filler ? 0 : b.rating - a.rating);
         case "rating-asc":  return a.rating - b.rating;
         case "price-desc":  return Number(b.wine.price ?? 0) - Number(a.wine.price ?? 0);
         case "price-asc":   return Number(a.wine.price ?? 0) - Number(b.wine.price ?? 0);

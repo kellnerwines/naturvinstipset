@@ -6,7 +6,7 @@ import Link from "next/link";
 
 export const OWN_IMPORT_HREF = "/om-oss#sa-rankar-vi";
 export const OWN_IMPORT_TITLE =
-  "Importeras av Kellner & Kellner, som drivs av sajtens grundare. Egen import får ingen fördel i rankningen.";
+  "Importeras av Kellner & Kellner, som drivs av sajtens grundare. Egen import får ingen fördel i Vinkompassen.";
 
 export default function OwnImportBadge({ asLink = true, className = "" }: { asLink?: boolean; className?: string }) {
   const cls = `inline-block normal-case tracking-normal text-[10px] leading-none border border-[var(--fg)] px-1.5 py-[3px] rounded-sm text-[var(--fg)] whitespace-nowrap ${className}`;

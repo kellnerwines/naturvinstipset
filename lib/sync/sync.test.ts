@@ -65,6 +65,7 @@ describe("tolkning", () => {
       values: { syra: 2, fyllighet: 5, funk: 1, stravhet: 4 },
     });
     expect(p.natural).toBe(false);
+    expect(p.importer).toBe("Kellner & Kellner");
     expect(parseFlaskvisPage(html.replace("Kellner &amp; Kellner", "Annan Import AB")).kellner).toBe(false);
     expect(parseFlaskvisPage(html.replace("<span>Rött</span>", "<span>Natur</span> <span>Rött</span>")).natural).toBe(true);
     expect(flaskvisScale(0)).toBe(1);

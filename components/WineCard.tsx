@@ -135,9 +135,9 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
             className="text-base font-bold text-[var(--fg)]"
             style={{ fontFamily: "Georgia, serif" }}
             role="img"
-            aria-label={`Betyg: ${rating.toFixed(1)} av 5${ratingCount > 0 ? ` (${ratingCount} röster)` : ""}`}
+            aria-label={rating > 0 ? `Betyg: ${rating.toFixed(1)} av 5${ratingCount > 0 ? ` (${ratingCount} röster)` : ""}` : "Inget betyg än"}
           >
-            <span aria-hidden="true">★</span> {rating.toFixed(1)}
+            {rating > 0 ? <><span aria-hidden="true">★</span> {rating.toFixed(1)}</> : <span className="text-[11px] font-normal text-[var(--muted)]" style={{ fontFamily: "inherit" }}>Inget betyg än</span>}
           </span>
           {wine.price && (
             <span className="text-[11px] text-[var(--muted)]">{wine.price} kr</span>

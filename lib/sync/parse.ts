@@ -222,6 +222,8 @@ function section(html: string, name: string): string {
 
 export type FlaskvisPage = {
   kellner: boolean;
+  /** Svensk importör ur fliken "Importören". */
+  importer?: string;
   /** Flaskvis märker naturviner med stilen "Natur". */
   natural: boolean;
   region?: string;
@@ -237,7 +239,9 @@ export type FlaskvisPage = {
 export const flaskvisScale = (v: number) => Math.max(1, Math.round(v / 20));
 
 export function parseFlaskvisPage(html: string): FlaskvisPage {
-  const supplier = htmlText(section(html, "supplier"));
+  const supplierHtml = section(html, "supplier");
+  const supplier = htmlText(supplierHtml);
+  const importer = supplierHtml.match(/<h3[^>]*>([\s\S]*?)<\/h3>/)?.[1];
   const producerHtml = section(html, "producer");
   const producer = producerHtml.match(/<h3[^>]*>([\s\S]*?)<\/h3>/)?.[1];
   const metaRow = (label: string) => {
@@ -255,6 +259,7 @@ export function parseFlaskvisPage(html: string): FlaskvisPage {
   const description = html.match(/<div class="product-text">([\s\S]*?)<\/div>/)?.[1];
   return {
     kellner: /kellner/i.test(supplier),
+    importer: importer ? htmlText(importer) : undefined,
     natural: metaRow("stil").some((s) => /^natur(vin)?$/i.test(s)),
     region: region ? htmlText(region) : undefined,
     year,

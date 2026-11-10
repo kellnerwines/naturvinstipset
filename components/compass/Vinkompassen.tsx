@@ -620,7 +620,7 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
         </div>
       </div>
       <p className="text-[11px] leading-snug text-[var(--muted)] mt-4">
-        {RETAILER_DISCLAIMER} För dig som är 25 år eller äldre. Naturvinstipset drivs av grundaren av vinimportören Kellner &amp; Kellner. Viner från egen import är märkta och får ingen fördel i rankningen.
+        {RETAILER_DISCLAIMER} För dig som är 25 år eller äldre. Naturvinstipset drivs av grundaren av vinimportören Kellner &amp; Kellner. Viner från egen import är märkta och får ingen fördel i kompassen.
       </p>
     </div>
   );
