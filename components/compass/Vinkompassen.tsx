@@ -134,10 +134,46 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
 
   const sleep = (ms: number) => new Promise<void>((r) => setTimeout(r, prefersReducedMotion() ? Math.min(ms, 30) : ms));
 
+  // Mjuk scroll med inbromsning (ungefär en sekund) i stället för webbläsarens snabba
+  // standard. Avbryts direkt om användaren själv scrollar.
+  const anim = useRef<number | null>(null);
+  const glideTo = useCallback((el: Element | null | undefined, align: "start" | "end" = "start") => {
+    if (!el) return;
+    const r = el.getBoundingClientRect();
+    // "start": under menyn; "end": ovanför det fasta skrivfältet längst ner.
+    const target = align === "start" ? window.scrollY + r.top - 80 : window.scrollY + r.bottom - window.innerHeight + 150;
+    const to = Math.max(0, Math.min(document.documentElement.scrollHeight - window.innerHeight, target));
+    const from = window.scrollY;
+    if (Math.abs(to - from) < 4) return;
+    if (anim.current) cancelAnimationFrame(anim.current);
+    if (prefersReducedMotion()) { window.scrollTo(0, to); return; }
+    const dur = Math.min(1400, Math.max(800, Math.abs(to - from) * 0.7));
+    const ease = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+    const stop = () => {
+      if (anim.current) cancelAnimationFrame(anim.current);
+      anim.current = null;
+      window.removeEventListener("wheel", stop);
+      window.removeEventListener("touchstart", stop);
+    };
+    window.addEventListener("wheel", stop, { passive: true });
+    window.addEventListener("touchstart", stop, { passive: true });
+    const t0 = performance.now();
+    const step = (now: number) => {
+      const t = Math.min(1, (now - t0) / dur);
+      window.scrollTo(0, from + (to - from) * ease(t));
+      if (t < 1) anim.current = requestAnimationFrame(step); else stop();
+    };
+    anim.current = requestAnimationFrame(step);
+  }, []);
+
+  /** Följer chatten nedåt, men bara när det nya hamnar under skrivfältet. */
   const scrollDown = useCallback(() => {
     if (!R.current.interacted) return;
-    requestAnimationFrame(() => endRef.current?.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "end" }));
-  }, []);
+    requestAnimationFrame(() => {
+      const end = endRef.current;
+      if (end && end.getBoundingClientRect().top > window.innerHeight - 150) glideTo(end, "end");
+    });
+  }, [glideTo]);
 
   // Scroll som följer användaren: väntar en stund så att man hinner trycka fler val,
   // och avbryts om användaren själv scrollar eller skriver under tiden.
@@ -150,14 +186,14 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
     evs.forEach((e) => window.addEventListener(e, onUser, { passive: true }));
     const t = setTimeout(() => {
       cancelScroll.current?.();
-      target()?.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth", block: "start" });
+      glideTo(target());
     }, prefersReducedMotion() ? Math.min(delay, 100) : delay);
     cancelScroll.current = () => {
       clearTimeout(t);
       evs.forEach((e) => window.removeEventListener(e, onUser));
       cancelScroll.current = null;
     };
-  }, []);
+  }, [glideTo]);
 
   const push = useCallback((item: NewItem) => {
     const id = R.current.nextId++;
@@ -210,25 +246,28 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
     ];
     const t0 = performance.now();
     const thinkId = push({ kind: "think", steps: [], summary: null });
+    // Visa tänkandet: en lugn scroll till rutan, sedan bockas stegen av på plats.
+    scheduleScroll(() => document.getElementById(`compass-item-${thinkId}`), 200);
     const steps: Step[] = [];
     const update = (summary: string | null) => {
       R.current.items = R.current.items.map((it) => (it.id === thinkId ? ({ ...it, steps: [...steps], summary } as Item) : it));
       setItems(R.current.items);
     };
     for (const [h, s] of plan) {
-      steps.push({ h, s, done: false }); update(null); scrollDown();
-      await sleep(480);
+      steps.push({ h, s, done: false }); update(null);
+      await sleep(620);
       steps[steps.length - 1] = { h, s, done: true }; update(null);
     }
     await sleep(200);
     update(`Tänkte i ${((performance.now() - t0) / 1000).toLocaleString("sv-SE", { maximumFractionDigits: 1 })} s`);
     push({ kind: "results" });
-    scheduleScroll(() => resultsRef.current, 150);
+    // Låt "Tänkte i … s" synas en stund innan sidan glider vidare till förslaget.
+    scheduleScroll(() => resultsRef.current, 700);
     track({ type: "result", count: list.length });
     await sleep(250);
     push({ kind: "deep" });
     setBusyB(false);
-  }, [W, push, scrollDown, scheduleScroll]);
+  }, [W, push, scheduleScroll]);
 
   const nextQ = useCallback((delay?: number) => {
     const a = R.current.answered;
@@ -430,8 +469,10 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
   };
 
   const renderThink = (item: Extract<Item, { kind: "think" }>) => (
-    <AgentRow key={item.id}>
-      <details open={!item.summary} className="group">
+    <div key={item.id} id={`compass-item-${item.id}`} className="scroll-mt-20">
+    <AgentRow>
+      {/* Stegen står kvar öppna när kompassen är klar, så att inget hoppar innan förslaget visas. */}
+      <details open className="group">
         <summary className="cursor-pointer list-none flex items-center gap-2 text-sm text-[var(--muted)] select-none">
           <GlassIcon className="w-4 h-4" />
           <span>{item.summary ?? "Kompassen letar…"}</span>
@@ -453,6 +494,7 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
         </ol>
       </details>
     </AgentRow>
+    </div>
   );
 
   const renderResults = (item: Extract<Item, { kind: "results" }>) => (
@@ -579,7 +621,7 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
         <p className="text-sm text-[var(--muted)] mt-3">
           Förslagen uppdaterade, {result.list.length} viner passar.{" "}
           <a href="#" className="underline underline-offset-4 text-[var(--fg)]"
-            onClick={(e) => { e.preventDefault(); resultsRef.current?.scrollIntoView({ behavior: prefersReducedMotion() ? "auto" : "smooth" }); }}>Visa ↑</a>
+            onClick={(e) => { e.preventDefault(); glideTo(resultsRef.current); }}>Visa ↑</a>
         </p>
       ) : null}
     </AgentRow>
