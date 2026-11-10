@@ -82,6 +82,9 @@ export type BlogPost = {
   /** Vinkompassens parametrar för en vinlista som hämtas live när inlägget visas (t.ex. { mat: "ost" }). */
   wineQuery?: Record<string, string>;
   wineHeading?: string;
+  /** Fotokredit, t.ex. "Nick Grappone på Unsplash", och länk till bilden. */
+  imageCredit?: string;
+  imageCreditUrl?: string;
 };
 
 /** Publicerat och publiceringsdagen har kommit (svensk tid). Inlägg med framtida datum syns först då. */

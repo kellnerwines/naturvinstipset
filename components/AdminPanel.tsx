@@ -373,7 +373,7 @@ export default function AdminPanel() {
                   onClick={async () => {
                     const res = await fetch("/api/seed?bara=blogg", { method: "POST" });
                     const d = res.ok ? await res.json() : null;
-                    flash(d ? `${d.blogsAdded} nya inlägg hämtade.` : "Kunde inte hämta inläggen.", d ? undefined : "err");
+                    flash(d ? `${d.blogsAdded} nya inlägg och ${d.imagesAdded} bilder hämtade.` : "Kunde inte hämta inläggen.", d ? undefined : "err");
                     if (d) fetchAll();
                   }}
                   className="border border-[var(--green)] text-[var(--green-dark)] px-4 py-2 text-sm font-semibold rounded-lg hover:bg-[var(--green-light)]"
