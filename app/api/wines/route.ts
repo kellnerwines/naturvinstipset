@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getWines, saveWines, Wine, toSlug } from "@/lib/blob";
 import { isAuthenticated } from "@/lib/auth";
+import { isOwnImportByRule } from "@/lib/wineData";
 import { randomUUID } from "crypto";
 import { revalidatePath } from "next/cache";
 
@@ -59,6 +60,9 @@ export async function POST(req: NextRequest) {
   }
 
   const slug = toSlug(body.name + (body.year ? `-${body.year}` : ""));
+  // Egen import följer regeln i 5.2 om admin inte har valt själv; ett eget val låses.
+  const byRule = isOwnImportByRule({ producer: body.producer ?? "", systembolagetUrl: body.systembolagetUrl });
+  const ownImport = typeof body.ownImport === "boolean" ? body.ownImport : byRule;
   const newWine: Wine = {
     id: randomUUID(),
     slug,
@@ -77,6 +81,8 @@ export async function POST(req: NextRequest) {
     primaryImageUrl: body.primaryImageUrl,
     galleryImages: body.galleryImages ?? [],
     adminRating: body.adminRating ?? 4,
+    ownImport,
+    ...(ownImport !== byRule ? { lockedFields: ["ownImport"] } : {}),
     createdAt: new Date().toISOString(),
     published: body.published ?? false,
   };

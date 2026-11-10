@@ -5,6 +5,7 @@ import { useState } from "react";
 import { COLOR_VAR, FOOD, typeOf, type Color, type Scored } from "@/lib/compass/engine";
 import { buyHref, track } from "@/lib/compass/links";
 import { buyRel } from "@/lib/clicks/util";
+import OwnImportBadge from "@/components/OwnImportBadge";
 
 /** Enkel flask-SVG i vinets typfärg, reserv när bild saknas. */
 export function BottleSvg({ type, className }: { type: string; className?: string }) {
@@ -70,15 +71,7 @@ export default function CompassCard({
         <p className="text-[10px] tracking-[0.12em] uppercase text-[var(--muted)] mb-1">
           {w.t} · {w.c}
           {w.y && w.y !== "NV" ? ` · ${w.y}` : ""}
-          {w.own ? (
-            <Link
-              href="/om-oss#sa-rankar-vi"
-              className="ml-2 normal-case tracking-normal text-[10px] border border-[var(--fg)] px-1.5 py-[1px] rounded-sm text-[var(--fg)]"
-              title="Sajten drivs av grundaren av Kellner & Kellner. Egen import får ingen fördel i rankningen."
-            >
-              Egen import
-            </Link>
-          ) : null}
+          {w.own ? <OwnImportBadge className="ml-2" /> : null}
         </p>
         <h3 className="text-base font-bold leading-tight tracking-tight">
           <Link href={`/viner/${w.slug}`} className="hover:opacity-60 transition-opacity">{w.n}</Link>

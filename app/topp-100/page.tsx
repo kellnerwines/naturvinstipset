@@ -4,6 +4,8 @@ import Image from "next/image";
 import { getWines, getRatings, combinedRating, type Wine } from "@/lib/blob";
 import WineGrid from "@/components/WineGrid";
 import HomeFaq from "@/components/HomeFaq";
+import { OWN_IMPORT_HREF } from "@/components/OwnImportBadge";
+import { retailerNote } from "@/lib/buyLinks";
 
 export const dynamic = "force-dynamic";
 
@@ -134,6 +136,10 @@ export default async function Topp100Page() {
             <p className="text-xs text-[var(--faint)] tracking-widest uppercase">{published.length} viner</p>
           </div>
           <WineGrid entries={entries} />
+          <p className="text-[11px] text-[var(--muted)] leading-snug mt-10 max-w-2xl">
+            {retailerNote([{ isSb: true }])} Viner märkta &quot;Egen import&quot; importeras av Kellner &amp; Kellner, som drivs av sajtens grundare, och får ingen fördel i rankningen.{" "}
+            <Link href={OWN_IMPORT_HREF} className="underline underline-offset-2">Så rankar vi</Link>.
+          </p>
         </div>
       </section>
 

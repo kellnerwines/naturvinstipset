@@ -58,7 +58,7 @@ export function whereSentence(w: Wine): string {
 }
 
 /** Ansvarstext där vi länkar till säljställen (avsnitt 8). */
-export function retailerNote(links: BuyLink[]): string {
+export function retailerNote(links: Pick<BuyLink, "isSb">[]): string {
   const sb = links.some((l) => l.isSb);
   const web = links.some((l) => !l.isSb);
   const parts: string[] = [];

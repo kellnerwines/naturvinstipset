@@ -8,6 +8,7 @@ import LikeButton from "./LikeButton";
 import type { Wine } from "@/lib/blob";
 import { buildWineProductJsonLd, getArticleNumber } from "@/lib/wineJsonLd";
 import { buyLinks } from "@/lib/buyLinks";
+import OwnImportBadge from "./OwnImportBadge";
 
 type Props = { wine: Wine; rating: number; ratingCount: number; likeCount: number; rank?: number; wineOfMonth?: boolean };
 
@@ -105,6 +106,7 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
       <div className="px-3 pt-3 pb-3 flex-1 flex flex-col">
         {/* Producer */}
         <p className="text-[10px] tracking-[0.15em] uppercase text-[var(--muted)] mb-0.5">{wine.producer}</p>
+        {wine.ownImport ? <OwnImportBadge className="self-start mb-1.5" /> : null}
 
         {/* Name */}
         <Link href={`/viner/${wine.slug}`} className="group mb-2">

@@ -6,6 +6,7 @@ import { getWines, getRatings, combinedRating, getSettings } from "@/lib/blob";
 import { StarDisplay } from "@/components/Stars";
 import RatingForm from "@/components/RatingForm";
 import LikeButton from "@/components/LikeButton";
+import OwnImportBadge from "@/components/OwnImportBadge";
 import { buildWineProductJsonLd, getArticleNumber } from "@/lib/wineJsonLd";
 import { kellnerProducerUrl } from "@/lib/kellnerLinks";
 import { buyLinks, hasAnyOffer, retailerNote, whereSentence } from "@/lib/buyLinks";
@@ -125,6 +126,7 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
             <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${typeColor[wine.wineType] ?? "bg-gray-100 text-gray-600"}`}>
               {wine.wineType}
             </span>
+            {wine.ownImport ? <OwnImportBadge /> : null}
           </div>
 
           <h1 className="text-3xl md:text-4xl font-bold text-[var(--green-dark)] leading-tight mb-1">
@@ -181,14 +183,19 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
           ) : null}
 
           {importerUrl && (
+            <>
             <a
               href={importerUrl}
               target="_blank"
               rel="noopener noreferrer"
               className="block text-center text-sm text-black/40 hover:text-[var(--green)] mt-3 underline underline-offset-2"
             >
-              Importeras av Kellner & Kellner →
+              Producenten hos Kellner & Kellner (kellnerwines.se) →
             </a>
+            <p className="text-center text-[11px] text-[var(--muted)] mt-1">
+              Kellner & Kellner är vinimportören som drivs av Naturvinstipsets grundare.
+            </p>
+            </>
           )}
         </div>
       </div>

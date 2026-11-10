@@ -1,7 +1,8 @@
 import Link from "next/link";
 import type { Wine, Rating } from "@/lib/blob";
 import { combinedRating } from "@/lib/blob";
-import { buyLinks } from "@/lib/buyLinks";
+import { buyLinks, retailerNote } from "@/lib/buyLinks";
+import OwnImportBadge, { OWN_IMPORT_HREF } from "./OwnImportBadge";
 
 interface Props {
   wines: Wine[];
@@ -20,6 +21,9 @@ export default function GuideWineList({ wines, ratings }: Props) {
       </p>
     );
   }
+
+  const firstLinks = wines.map((w) => buyLinks(w)[0]).filter((l) => !!l);
+  const note = retailerNote(firstLinks);
 
   return (
     <div className="space-y-4">
@@ -45,6 +49,7 @@ export default function GuideWineList({ wines, ratings }: Props) {
                     <p className="text-sm text-[var(--muted)] mt-0.5">
                       {wine.producer}
                       {wine.country ? ` · ${wine.country}` : ""}
+                      {wine.ownImport ? <OwnImportBadge asLink={false} className="ml-2 align-middle" /> : null}
                     </p>
                     {wine.description && (
                       <p className="text-sm text-[var(--muted)] mt-2 line-clamp-2">
@@ -72,6 +77,17 @@ export default function GuideWineList({ wines, ratings }: Props) {
           </Link>
         );
       })}
+      {note || wines.some((w) => w.ownImport) ? (
+        <p className="text-[11px] text-[var(--muted)] leading-snug pt-2">
+          {note}
+          {wines.some((w) => w.ownImport) ? (
+            <>
+              {note ? " " : ""}Viner märkta &quot;Egen import&quot; importeras av Kellner &amp; Kellner, som drivs av sajtens grundare.{" "}
+              <Link href={OWN_IMPORT_HREF} className="underline underline-offset-2">Så rankar vi</Link>.
+            </>
+          ) : null}
+        </p>
+      ) : null}
     </div>
   );
 }
