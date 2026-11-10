@@ -91,3 +91,9 @@ body {
     outline-color: rgba(210, 160, 40, 0.50);
   }
 }
+
+/* "Var köper du?" (components/WhereFilter.tsx): döljer viner som inte säljs där, numrerar om med CSS-räknare */
+.where-filter[data-where-filter="sb"] [data-where="web"],
+.where-filter[data-where-filter="web"] [data-where="sb"] { display: none; }
+.where-filter { counter-reset: guide-rank; }
+.where-filter .guide-rank::before { counter-increment: guide-rank; content: counter(guide-rank); }

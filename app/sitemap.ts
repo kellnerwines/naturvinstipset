@@ -2,7 +2,7 @@ import type { MetadataRoute } from "next";
 import { getWines, getBlogs } from "@/lib/blob";
 import { bars } from "@/lib/bars";
 
-const BASE = "https://naturvinstipset.se";
+const BASE = "https://www.naturvinstipset.se";
 
 export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   const [wines, blogs] = await Promise.all([getWines(), getBlogs()]);
@@ -40,9 +40,16 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
+  // Alla publicerade viner, både från Systembolaget och från webbutikerna (BRIEF-KOMPASSEN.md, 9).
+  // lastModified är senaste synken av vinets erbjudanden, annars när vinet skapades.
   const wineRoutes = wines
     .filter((w) => w.published)
-    .map((w) => ({ url: `${BASE}/viner/${w.slug}`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 }));
+    .map((w) => {
+      const synced = (w.offers ?? []).map((o) => Date.parse(o.lastSyncedAt)).filter(Number.isFinite);
+      const created = Date.parse(w.createdAt);
+      const last = synced.length ? Math.max(...synced) : Number.isFinite(created) ? created : Date.now();
+      return { url: `${BASE}/viner/${w.slug}`, lastModified: new Date(last), changeFrequency: "weekly" as const, priority: 0.8 };
+    });
 
   const blogRoutes = blogs
     .filter((b) => b.published)
