@@ -52,13 +52,16 @@ export default async function HomePage() {
     <div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      {/* ── Vinkompassen: videon fyller första skärmen, rubriken i vitt och chattens början ligger på videon ── */}
-      <section className="relative">
-        <div className="absolute inset-x-0 top-0 h-[calc(100svh-3.5rem)] overflow-hidden bg-[var(--hero-dark)]" aria-hidden="true">
+      {/* ── Vinkompassen: videon ligger fast bakom rubriken och hela chatten medan man scrollar ──
+          Videolagret är sticky och lika högt som skärmen; den negativa marginalen gör att innehållet
+          börjar ovanpå det i stället för under det. Det släpper när sektionen tar slut. */}
+      {/* clip-path klipper videon vid sektionens slut utan att bli en scrollcontainer (overflow-hidden skulle stoppa sticky). */}
+      <section className="relative bg-[var(--hero-dark)]" style={{ clipPath: "inset(0)" }}>
+        <div className="sticky top-14 h-[calc(100svh-3.5rem)] -mb-[calc(100svh-3.5rem)] overflow-hidden" aria-hidden="true">
           <HeroVideo src="/hero-video.mp4" />
           <div className="absolute inset-0" style={{ background: "rgba(42,36,32,0.64)" }} />
         </div>
-        <div className="relative max-w-2xl mx-auto px-4">
+        <div className="relative max-w-2xl mx-auto px-4 pb-16 md:pb-24">
           <div className="min-h-[calc(52svh-3.5rem)] flex flex-col justify-end pt-12 pb-8 md:pb-10 text-white">
             <p className="text-[11px] font-semibold tracking-[0.2em] uppercase text-white/60 mb-3">Vinkompassen</p>
             <h1 className="text-4xl md:text-6xl font-extrabold leading-[1.05] tracking-tight mb-5">
