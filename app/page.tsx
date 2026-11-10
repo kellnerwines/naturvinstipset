@@ -69,7 +69,7 @@ export default async function HomePage() {
               Efter fyra frågor får du ett förslag. Sedan kan du finjustera tills det sitter.
             </p>
           </div>
-          <div className="bg-[var(--card)] border border-[var(--rule)] rounded-xl px-4 pt-6 md:pt-8">
+          <div className="bg-white/80 backdrop-blur-md border border-white/50 rounded-xl px-4 pt-6 md:pt-8">
             <Vinkompassen wines={compassWines} compensation={settings.retailerCompensation} />
           </div>
         </div>
