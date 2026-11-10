@@ -10,11 +10,23 @@ import { revalidatePath } from "next/cache";
 // Wines: migrates existing wines to the Vinkompassen model (offers, shop, food, ownImport),
 // adds missing Systembolaget wines and merges in the web-shop imports. Existing values and
 // lockedFields are never overwritten, so uploaded images and admin edits are preserved.
-export async function POST() {
+export async function POST(req: Request) {
   if (!(await isAuthenticated()))
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
 
   const dataDir = path.join(process.cwd(), "data");
+
+  // ?bara=blogg: lägger bara till nya blogginlägg från data/blogs.json. Vinerna rörs inte,
+  // så att synkens priser och lagerstatus inte skrivs över av importfilerna.
+  if (new URL(req.url).searchParams.get("bara") === "blogg") {
+    const fileBlogs: BlogPost[] = JSON.parse(await readFile(path.join(dataDir, "blogs.json"), "utf-8"));
+    const current = await getBlogs();
+    const have = new Set(current.map((b) => b.id));
+    const fresh = fileBlogs.filter((b) => !have.has(b.id));
+    if (fresh.length) await saveBlogs([...current, ...fresh]);
+    revalidatePath("/blogg", "layout");
+    return NextResponse.json({ ok: true, blogsAdded: fresh.length });
+  }
 
   const readData = async <T,>(file: string): Promise<T> =>
     JSON.parse(await readFile(path.join(dataDir, file), "utf-8"));

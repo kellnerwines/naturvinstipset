@@ -18,8 +18,8 @@
     "imageUrl": "/uploads/blog-naturvin-2026.jpg",
     "publishedAt": "2026-04-23",
     "published": true
-  }
-  ,{
+  },
+  {
     "id": "b2c3d4e5-f6a7-8901-bcde-f12345678901",
     "slug": "de-druvor-ingen-vet-namnet-pa",
     "title": "De druvor ingen vet namnet på gör just nu världens mest spännande viner",
@@ -28,5 +28,168 @@
     "imageUrl": "/uploads/blog-druvor-2026.jpg",
     "publishedAt": "2026-04-23",
     "published": true
+  },
+  {
+    "id": "sasong-naturvin-till-julbordet",
+    "slug": "naturvin-till-julbordet",
+    "title": "Naturvin till julbordet — så klarar du sill, skinka och Janssons på en och samma kväll",
+    "excerpt": "Julbordet är vinvärldens svåraste provning. Sill, senap, rökt lax, skinka och köttbullar på samma tallrik. Det vin som klarar allt finns inte. Men tre flaskor gör det.",
+    "content": "Julbordet är vinvärldens svåraste provning. Sill, senap, rökt lax, skinka och köttbullar på samma tallrik, och allt ska gärna hända samtidigt. Det vin som klarar allt finns inte.\n\nMen tre flaskor gör det. En som bubblar, en med skal och en lätt röd. Ställ dem på bordet och låt var och en hitta sin favorit.\n\n## Till sillen och laxen: något som bubblar\n\nSyra och små bubblor skär genom sill och senap på ett sätt som snaps nästan inte gör. [Kalkspitz](https://www.naturvinstipset.se/viner/kalkspitz-nv) från Christoph Hoch i Hollenburg, strax utanför Krems i Österrike, är en pét-nat på Grüner Veltliner och Welschriesling. Kalkrika jordar, torr stil och en friskhet som gör att nästa sillbit smakar lika bra som den första.\n\n## Till skinkan: ett orangevin med lite grepp\n\nJulskinka är salt, söt och fet på en gång. Där behövs ett vin med textur. [Oragech](https://www.naturvinstipset.se/viner/oragech-2024) från Milan Nestarec i Mähren görs på gröna druvor som fått ligga på skalen några dagar innan vinet lagras i fat. Resultatet doftar torkad aprikos, rosor och apelsinskal, med precis så mycket grepp att det håller emot senapen.\n\n## Till köttbullarna och prinskorven: lätt och rött\n\nEtt tungt rött vin dränker julmaten. Välj något saftigt. [Good Intentions II](https://www.naturvinstipset.se/viner/good-intentions-ii-2021) är ett sidoprojekt mellan Andreas Ziniel och hans gamle vän Niklas Peltzer i Burgenland, nära ungerska gränsen. Gjort på små, utvalda vingårdsskiften och utan krångel i källaren. Servera det svalt.\n\n## Ett tips till\n\nStäll fram vatten och låt flaskorna stå i kylen mellan varven. Julbordet är långt, och det är godare med ett glas som räcker hela kvällen än tre som tar slut innan risgrynsgröten.",
+    "publishedAt": "2026-11-19",
+    "published": true,
+    "wineQuery": {
+      "mat": "flask,fisk"
+    },
+    "wineHeading": "Fler naturviner till julbordet just nu"
+  },
+  {
+    "id": "sasong-bubbel-till-nyar-pet-nat",
+    "slug": "bubbel-till-nyar-pet-nat",
+    "title": "Bubbel till nyår — därför är pét-nat årets bästa skumpa",
+    "excerpt": "Champagne är fantastiskt. Men om du vill ha bubbel med personlighet, en lägre prislapp och en historia att berätta vid tolvslaget, är pét-nat svaret.",
+    "content": "Champagne är fantastiskt. Men om du vill ha bubbel med personlighet, en lägre prislapp och en historia att berätta vid tolvslaget, är pét-nat svaret.\n\nPét-nat, pétillant naturel, är den äldsta metoden att göra mousserande vin. Vinet buteljeras innan jäsningen är klar, och bubblorna bildas i flaskan av sig själva. Inget tillsatt socker, ingen tillsatt jäst. Ofta lite grumligt, alltid levande.\n\n## Från Prosecco-hjärtat, fast inte som du tror\n\n[Lèntico Col Fondo](https://www.naturvinstipset.se/viner/lentico-col-fondo-2022) kommer från Morandin, en liten gård i Valdobbiadene där bara en hektar av tre är vingård. Resten är skog. Col fondo betyder \"med botten\": vinet jäser en andra gång i flaskan och jästfällningen får ligga kvar. Det är så Prosecco gjordes innan det blev industri. Torrt, salt och nästan ölaktigt friskt.\n\n## Chenin från Loire\n\n[Le Naturel Vouvray Pet Nat](https://www.naturvinstipset.se/viner/le-naturel-vouvray-pet-nat-2023) görs av Sébastien Brunet, som tog över familjegården i Vouvray efter sin pappa. Ren Chenin Blanc, ancestralmetoden och inget tillsatt. Päron, kex och honung i doften, fina bubblor och en mineralitet som gör det till ett vin för både förrätten och fyrverkerierna.\n\n## Atlantiskt och lättsamt\n\n[Pequenos Rebentos Ancestral](https://www.naturvinstipset.se/viner/ancestral-pet-nat-2024) kommer från Márcio Lopes i Vinho Verde, på druvan Loureiro. Melon, grapefrukt och en syra som håller sig pigg långt efter midnatt. Ett bra val om du vill ha något lite lättare i glaset.\n\n## Och om det ändå måste vara Champagne\n\nDå finns [Champagne des Copains N°2](https://www.naturvinstipset.se/viner/vn-champagne-des-copains-n-2) med hemleverans, gjort på Pinot Noir av Émile Grados och vänner. Ett naturligare sätt att fira på klassiskt vis.\n\nGott nytt år. Skåla gärna, men ta det lugnt — januari kommer ändå.",
+    "publishedAt": "2026-12-03",
+    "published": true,
+    "wineQuery": {
+      "farg": "bubbel"
+    },
+    "wineHeading": "Fler naturliga bubblor just nu"
+  },
+  {
+    "id": "sasong-naturvin-till-vinterns-langkok",
+    "slug": "naturvin-till-vinterns-langkok",
+    "title": "Vinterns långkok kräver ett vin med kropp — tre naturviner som klarar kylan",
+    "excerpt": "När det är mörkt klockan tre och grytan puttrat hela eftermiddagen vill man ha något mer än ett lätt glouglou-vin. Här är tre röda naturviner med djup.",
+    "content": "När det är mörkt klockan tre och grytan puttrat hela eftermiddagen vill man ha något mer än ett lätt glouglou-vin. Man vill ha djup. Men utan att det blir tungt.\n\nDet är där de bästa röda naturvinerna är som starkast. Kropp och frukt, men med en friskhet som gör att även ett vinterglas känns levande.\n\n## Från Dolomiterna\n\n[Teroldego](https://www.naturvinstipset.se/viner/teroldego-2023) från Foradori är kanske det viktigaste vinet för en hel druva. Elisabetta Foradori tog över familjens gård i Mezzolombardo i Trentino på åttiotalet, bytte till biodynamisk odling i början av 2000-talet och har gjort den lokala druvan Teroldego känd över hela världen. Mörka bär, örter och en elegans som passar perfekt till viltgryta.\n\n## Ungerskt kontrollerat kaos\n\n[Controlled Chaos](https://www.naturvinstipset.se/viner/controlled-chaos-2023) görs av Annamária Török och Attila Francisti på kullen Szent György-hegy vid Balaton. Tre hektar, organiskt och biodynamiskt, och en blandning som skiftar från år till år. Namnet säger det mesta: vilt, saftigt och ändå samlat. Det passar till högrev och rotfrukter.\n\n## Från Slovakiens naturvinspionjär\n\n[Fred 12](https://www.naturvinstipset.se/viner/fred-12-nv) kommer från Strekov 1075, Zsolt Sütós gård i byn Strekov nära ungerska gränsen. Sütó var pumpafrösodlare innan han började köpa vingårdar och har sedan 2017 gjort allt helt utan tillsatt svavel. Fred är hans vardagsserie: mindre tanniner, lägre alkohol, mycket frukt. Ett vin för en tisdag med kålpudding.\n\n## Ett tips till\n\nLåt den röda flaskan stå framme en stund innan middagen och servera den runt 16 grader. Varmt rumsvin smakar alkohol. Svalt rött smakar frukt.",
+    "publishedAt": "2026-12-17",
+    "published": true,
+    "wineQuery": {
+      "farg": "rott",
+      "mat": "kott",
+      "fyllighet": "4"
+    },
+    "wineHeading": "Fler röda naturviner till långkok just nu"
+  },
+  {
+    "id": "sasong-bra-naturvin-under-200-kr",
+    "slug": "bra-naturvin-under-200-kr",
+    "title": "Januari utan dyra flaskor — bra naturvin under 200 kronor",
+    "excerpt": "December var dyr. Januari behöver inte vara det. Färre och enklare flaskor, men fortfarande viner med karaktär. Här är våra bästa naturviner under 200 kronor.",
+    "content": "December var dyr. Januari behöver inte vara det.\n\nDet finns en myt om att naturvin måste kosta skjortan. Det stämmer inte. Några av de mest ärliga vinerna på Systembolaget kostar under 200 kronor, och de är gjorda med samma principer som de dyra: ekologisk odling, vilda jästar och lite eller inget tillsatt.\n\n## Rioja som det borde smaka\n\n[El Marujo Joven](https://www.naturvinstipset.se/viner/el-marujo-joven-2022) från Señorío de Librares är ren Tempranillo från ekologiska vingårdar i El Villar de Arnedo. Spontanjäst och helt utan ek. Rött bär, lite blommor och en saftighet som får dig att undra varför Rioja ens började lagras på fat.\n\n## Ett orangevin för nybörjare\n\n[Revolution White Maceration](https://www.naturvinstipset.se/viner/revolution-white-maceration-2025) kommer från Johannes Zillinger i Weinviertel, en certifierat biodynamisk gård i nordöstra Österrike. Lätt skalkontakt ger ett vin som är blommigt och fruktigt med en liten kryddig kant. Låg alkohol och lätt att tycka om, även för den som aldrig druckit orange förut.\n\n## Slovakiens dolda pärla\n\n[Červené](https://www.naturvinstipset.se/viner/cervene-2020) är ett av de billigaste naturvinerna på vår lista. Det görs av Velkeer, en familjegård i Veľký Kýr i Nitraregionen i Slovakien. Ett enkelt och ärligt rött vin som visar hur mycket som händer i Centraleuropa just nu.\n\n## Portugisiskt vardagsrött\n\n[BRQA](https://www.naturvinstipset.se/viner/brqa-2023) från Barroca da Malhada i Beira Interior är ett rött vin på portugisiska druvor. Mörka bär och en jordighet som passar till allt från pyttipanna till pasta. (Barroca da Malhada importeras av Kellner & Kellner, som drivs av Naturvinstipsets grundare.)\n\nFärre men bättre flaskor. Det är ett gott sätt att börja året.",
+    "publishedAt": "2027-01-07",
+    "published": true,
+    "wineQuery": {
+      "budget": "199"
+    },
+    "wineHeading": "Fler naturviner under 200 kr just nu"
+  },
+  {
+    "id": "sasong-orangevin-till-kryddig-mat",
+    "slug": "orangevin-till-kryddig-mat",
+    "title": "Orangevin och kryddig mat — årets bästa matchning inför kinesiska nyåret",
+    "excerpt": "Den sjätte februari firas kinesiskt nyår. Dumplings, chili, ingefära och sichuanpeppar. Vitt vin blir för tunt, rött blir för strävt. Orangevin är svaret.",
+    "content": "Den sjätte februari firas kinesiskt nyår, och 2027 är det Fårets år. Dumplings, chili, ingefära, sichuanpeppar och sötsura såser. Det är mat som får de flesta viner att ge upp.\n\nVitt vin blir ofta för tunt. Rött blir för strävt, och tanniner plus chili gör det bara hetare. Men orangevin? Det är som gjort för det.\n\nOrangevin görs på gröna druvor som fått ligga med skalen, precis som när man gör rött. Det ger textur, lite grepp och doft av torkad frukt och te. Tillräckligt mycket för att möta kryddorna, men utan tanninerna som bränner.\n\n## Den självklara\n\n[Oragech](https://www.naturvinstipset.se/viner/oragech-2024) från Milan Nestarec i Mähren görs på bland annat Pinot Blanc, Sauvignon Blanc och Gewürztraminer från vingårdarna runt Moravský Žižkov. Aprikos, rosor, honung och apelsinskal. Gewürztraminerns kryddighet gör den perfekt till ingefära och lime.\n\n## Portugisiskt på amfora\n\n[Arinto na Ânfora](https://www.naturvinstipset.se/viner/arinto-na-nfora-2024) från Barroca da Malhada är Arinto, Portugals friskaste vita druva, gjord i lerkärl. Syran hålls kvar, och leran ger en rundare textur. Ett fint val till friterad mat och dumplings. (Barroca da Malhada importeras av Kellner & Kellner, som drivs av Naturvinstipsets grundare.)\n\n## Om du hellre vill ha rött\n\nVälj något med låga tanniner. [Voskeni Areni](https://www.naturvinstipset.se/viner/voskeni-areni-2021) kommer från Vayots Dzor i Armenien, där Areni har odlats i tusentals år. Saftig röd frukt, peppar och en lätthet som gör den till ett av få röda viner som klarar chili.\n\nGott nytt år, igen.",
+    "publishedAt": "2027-01-28",
+    "published": true,
+    "wineQuery": {
+      "mat": "kryddigt"
+    },
+    "wineHeading": "Fler naturviner till kryddig mat just nu"
+  },
+  {
+    "id": "sasong-naturvin-till-ost",
+    "slug": "naturvin-till-ost",
+    "title": "En vinterkväll med ost — naturviner som gör ostbrickan till huvudrätt",
+    "excerpt": "Det finns ingen bättre februarimiddag än en ostbricka, bröd och ett riktigt bra vin. Här är tre naturviner som tar ostbrickan till en ny nivå.",
+    "content": "Det finns ingen bättre februarimiddag än en ostbricka, bröd och ett riktigt bra vin. Inget att laga, inget att diska. Bara äta långsamt.\n\nMen ost är knepigt. Rött vin och ost är inte alls så självklart som det låter. Tanninerna krockar ofta med krämiga ostar. Det som fungerar bäst är syra, och gärna lite mognad.\n\n## Ett vitt vin som fått mogna i tjugo år\n\n[Furmint Száraz Sec](https://www.naturvinstipset.se/viner/furmint-sz-raz-sec-2005) från Királyudvar i Tokaj är en sällsynthet: ett torrt Furmint från 2005 som fortfarande finns att köpa. Äpple, aprikos, honung och pomerans, med en syra som fortfarande är knivskarp. Till lagrad hårdost är det svårslaget.\n\n## Italiensk legend\n\n[Macchiona](https://www.naturvinstipset.se/viner/macchiona-2009) från La Stoppa i Emilia-Romagna är hälften Barbera, hälften Bonarda. Elena Pantaleoni har drivit gården sedan början av nittiotalet, och Macchiona får ligga länge på skalen och sedan mogna i flera år innan det släpps. Det här är en 2009. Mjuka tanniner, torkade körsbär och jord. Till parmesan och salami.\n\n## Bubblor till getosten\n\n[Le Naturel Vouvray Pet Nat](https://www.naturvinstipset.se/viner/le-naturel-vouvray-pet-nat-2023) från Sébastien Brunet är Chenin Blanc med naturliga bubblor. Chenin och getost kommer från samma trakt i Loire, och det märks. Syran och bubblorna gör att den krämiga osten känns lätt.\n\n## Ett tips till\n\nTa fram osten en timme innan. Kall ost smakar ingenting, och samma sak gäller ett för kallt vitt vin.",
+    "publishedAt": "2027-02-11",
+    "published": true,
+    "wineQuery": {
+      "mat": "ost"
+    },
+    "wineHeading": "Fler naturviner till ost just nu"
+  },
+  {
+    "id": "sasong-naturvin-till-paskbordet",
+    "slug": "naturvin-till-paskbordet",
+    "title": "Naturvin till påskbordet — sill, ägg, lax och lamm",
+    "excerpt": "Påskbordet är julbordets lättare kusin. Ägg och sill, gravad lax, kanske en lammstek. Här är naturvinerna som klarar allt från förrätt till huvudrätt.",
+    "content": "Påskbordet är julbordets lättare kusin. Ägg och sill, gravad lax, kanske en lammstek eller ett lammlår på kvällen. Allt är lite friskare, lite grönare, och vinerna ska vara det också.\n\nPåsk 2027 infaller tidigt, påskdagen är den 28 mars, så det kan fortfarande vara kallt ute. Men på bordet är det vår.\n\n## Till sillen och äggen\n\n[Hisno Vino Blanc](https://www.naturvinstipset.se/viner/hisno-vino-blanc-2023) är husvinet från Vino Gross, Maria och Michael Gross gård i Štajerska i Slovenien, alldeles vid österrikiska gränsen. Ekologiskt, friskt och lätt aromatiskt. Precis vad sillen behöver.\n\n## Till laxen\n\n[Chardonnay vom Kalk](https://www.naturvinstipset.se/viner/chardonnay-vom-kalk-2023) från Markus Altenburger kommer från Jois vid Neusiedlersjön i Burgenland. Chardonnay på kalkrika jordar, biodynamiskt odlad och lagrad i betong och stora träfat, inte små nya ekfat. Citrus, gult äpple och en mineralitet som gör det till ett ovanligt rent Chardonnay. Till gravad lax och ägg med kaviar.\n\n## Till lammet\n\nLamm vill ha något med lite grepp men inte för mycket. [Baga Clarete](https://www.naturvinstipset.se/viner/baga-clarete-2024) från Barroca da Malhada är gjort på Baga, en av Portugals mest karaktärsfulla röda druvor, i en ljusare clarete-stil. Saftigt, lite örtigt och lagom kraftigt. (Barroca da Malhada importeras av Kellner & Kellner, som drivs av Naturvinstipsets grundare.)\n\nGlad påsk.",
+    "publishedAt": "2027-03-11",
+    "published": true,
+    "wineQuery": {
+      "mat": "fisk,kott"
+    },
+    "wineHeading": "Fler naturviner till påskbordet just nu"
+  },
+  {
+    "id": "sasong-varens-rose-naturvin",
+    "slug": "varens-rose-naturvin",
+    "title": "Vårens första rosé — tre naturviner för de första ljusa kvällarna",
+    "excerpt": "Den första kvällen det går att sitta ute utan jacka. Det behövs ingen anledning. Men det behövs en rosé. Här är tre naturliga roséer att börja säsongen med.",
+    "content": "Den första kvällen det går att sitta ute utan jacka. Solen står fortfarande lågt, men den värmer. Det behövs ingen anledning. Men det behövs en rosé.\n\nNaturliga roséer är något helt annat än de bleka, söta flaskorna från semesterorterna. Ofta mörkare, alltid torra, och med frukt som smakar på riktigt.\n\n## Från en vulkan i Auvergne\n\n[Courant Alternatif](https://www.naturvinstipset.se/viner/vn-courant-alternatif-2025) från Domaine des Trouillères görs på Gamay från de norra sluttningarna av Puy de Corent i Auvergne, mitt i Frankrike. Basaltjord, biodynamik och en långsam pressning innan vinet får mogna i lerkärl. Corent är en av få franska appellationer som bara får göra rosé. Röda bär och en struktur som klarar grillad fisk.\n\n## Italiensk rosato\n\n[Jungìmmune Rosato](https://www.naturvinstipset.se/viner/vn-jungimmune-rosato-2024) från Gustinella i Italien görs på Grenache och Nerello Mascalese, den röda druva som är mest känd från Etnas sluttningar på Sicilien. Mörkare än de flesta roséer, kryddig och saftig. Mer ett lätt rött vin än en klassisk rosé, och det är en komplimang.\n\n## Portugisisk clarete\n\n[Baga Clarete](https://www.naturvinstipset.se/viner/baga-clarete-2024) från Barroca da Malhada ligger någonstans mellan rosé och rött. Baga är en druva med mycket syra och karaktär, och i den här ljusare stilen blir den perfekt att servera kall. (Barroca da Malhada importeras av Kellner & Kellner, som drivs av Naturvinstipsets grundare.)\n\nServera roséerna kalla men inte iskalla, runt 10 grader. Då får frukten plats.",
+    "publishedAt": "2027-04-08",
+    "published": true,
+    "wineQuery": {
+      "farg": "rose"
+    },
+    "wineHeading": "Fler roséviner just nu"
+  },
+  {
+    "id": "sasong-kylt-rott-naturvin-till-grillen",
+    "slug": "kylt-rott-naturvin-till-grillen",
+    "title": "Kylt rött till grillen — därför ska du lägga rödvinet i kylen i sommar",
+    "excerpt": "Det svåraste med grillsäsongen är inte grillen. Det är att rödvinet blir varmt på fem minuter. Lösningen: lätta röda naturviner, serverade kalla.",
+    "content": "Det svåraste med grillsäsongen är inte grillen. Det är att rödvinet blir varmt på fem minuter i solen och plötsligt smakar sprit och sylt.\n\nLösningen är att välja rätt röda vin och lägga det i kylen. Lätta röda naturviner med låga tanniner och mycket frukt blir bättre kalla. Det är ingen nödlösning. Det är så de är tänkta att drickas.\n\n## Lila från Mähren\n\n[Nach](https://www.naturvinstipset.se/viner/nach-2024) från Milan Nestarec betyder lila på tjeckiska, och det är precis den färgen det har i glaset. En blandning med Blaufränkisch i botten, inget tillsatt svavel och mjuka tanniner. Körsbär, hallon och blommor. Det här är vinet att ha i kylväskan.\n\n## Atlantiskt rött\n\n[Pequenos Rebentos Atlântico](https://www.naturvinstipset.se/viner/pequenos-rebentos-atlantico-2024) från Márcio Lopes kommer från gamla stockar i Vinho Verde, där de flesta bara tänker på vitt vin. Röda druvor från den atlantiska kusten ger ett lätt, friskt och lite salt rött vin. Till grillade sardiner eller korv.\n\n## Rioja utan ek\n\n[El Marujo Joven](https://www.naturvinstipset.se/viner/el-marujo-joven-2022) från Señorío de Librares är ung Tempranillo utan fatlagring. Spontanjäst och saftigt. Lägg det i kylen en halvtimme innan grillen tänds.\n\n## Från södra Frankrike\n\n[Cortado](https://www.naturvinstipset.se/viner/cortado-2024) från Domaine de Majas är en klassiker på listan. Pinot Noir, Merlot och några till, lätt och fruktigt. Ett vin som alltid levererar.\n\nKylskåpet en halvtimme, sedan på bordet. Ställ flaskan i skuggan mellan varven.",
+    "publishedAt": "2027-05-06",
+    "published": true,
+    "wineQuery": {
+      "farg": "rott",
+      "fyllighet": "2",
+      "smak": "lattsam"
+    },
+    "wineHeading": "Fler lätta röda naturviner just nu"
+  },
+  {
+    "id": "sasong-naturvin-till-midsommar",
+    "slug": "naturvin-till-midsommar",
+    "title": "Naturvin till midsommar — sill, färskpotatis och jordgubbar",
+    "excerpt": "Midsommarafton är den 25 juni. Sill, färskpotatis med dill, gräddfil och jordgubbar. Här är de friska naturvinerna som passar till det svenskaste bordet av alla.",
+    "content": "Midsommarafton är den 25 juni i år. Sill, färskpotatis med dill, gräddfil, gräslök och jordgubbar. Det svenskaste bordet av alla, och kanske det mest vänliga mot vin. Allt är friskt, salt och lite syrligt.\n\nDet som behövs är lätta, friska vita viner med låg alkohol. Något som håller hela eftermiddagen.\n\n## Ett vin från grannlandet i söder\n\n[Wilde Witte](https://www.naturvinstipset.se/viner/wilde-witte-2020) kommer från Wijngaard Dassemus i södra Nederländerna, nära Chaam. Ron Langeveld odlar bara svampresistenta druvor, så kallade PIWI, som Solaris och Johanniter. Det betyder att vingården klarar sig utan besprutning, även i ett nordligt klimat. Certifierat biodynamiskt sedan 2021. Lätt, frisk och med låg alkohol. Ett vin som kunde ha gjorts i Skåne.\n\n## Litervin för långbordet\n\n[Běl](https://www.naturvinstipset.se/viner/bel-2024) från Milan Nestarec betyder vit på gammal tjeckiska. Grüner Veltliner, Müller-Thurgau och Welschriesling från vingårdarna runt Bílovice. Torrt, lätt aromatiskt och mycket lättdrucket. Perfekt till sill och potatis.\n\n## Bubblor till jordgubbarna\n\n[Kalkspitz](https://www.naturvinstipset.se/viner/kalkspitz-nv) från Christoph Hoch är en torr pét-nat från Österrike. Bubblorna och syran gör att den passar till både sillen och jordgubbstårtan.\n\nGlad midsommar. Ta det lugnt, drick vatten mellan glasen och låt dagen vara lång.",
+    "publishedAt": "2027-06-10",
+    "published": true,
+    "wineQuery": {
+      "farg": "vitt,bubbel",
+      "mat": "fisk"
+    },
+    "wineHeading": "Fler friska naturviner till midsommar just nu"
+  },
+  {
+    "id": "sasong-naturvin-till-kraftskivan",
+    "slug": "naturvin-till-kraftskivan",
+    "title": "Kräftskiva med naturvin — de bästa vita vinerna till kräftor och västerbottenpaj",
+    "excerpt": "Augusti betyder kräftor, dill och västerbottenpaj. Här är de vita naturvinerna som klarar salt, dill och ost på samma tallrik.",
+    "content": "Augusti betyder kräftor. Dill, salt, västerbottenpaj, knäckebröd och lyktor i trädgården. Det är en av årets roligaste middagar, och en av de mest underskattade när det gäller vin.\n\nKräftor vill ha syra och mineralitet. Västerbottenpaj vill ha lite fyllighet. Det låter som två olika viner, men det finns flaskor som klarar båda.\n\n## Slovakisk Grüner\n\n[Veltlin](https://www.naturvinstipset.se/viner/veltlin-2022) från Strekov 1075 är Grüner Veltliner från Zsolt Sütós gård i södra Slovakien. Helt utan tillsatt svavel. Grüner har den där lilla vita pepparn som gör den perfekt till dill, och strukturen räcker hela vägen till pajen.\n\n## Chablis, fast naturligt\n\n[Chablis](https://www.naturvinstipset.se/viner/chablis-2022) från Domaine Pattes Loup görs av Thomas Pico i Courgis, på några av de högst belägna vingårdarna i Chablis. Han startade gården i mitten av 2000-talet och har odlat ekologiskt från början. Spontanjäst och knivskarp. Chablis och skaldjur är en av vinvärldens äldsta kombinationer, och det här visar varför.\n\n## Portugisiskt vitt\n\n[Barroca White](https://www.naturvinstipset.se/viner/barroca-white-2023) från Barroca da Malhada är huvudsakligen Arinto från Beira Interior. Hög syra, citrus och lite salt. Ett bra val till både kräftor och paj. (Barroca da Malhada importeras av Kellner & Kellner, som drivs av Naturvinstipsets grundare.)\n\n## Och ett tips\n\nStäll fram vatten på bordet och låt vitvinet stå i en hink med is. Kräftskivor brukar bli långa.",
+    "publishedAt": "2027-08-05",
+    "published": true,
+    "wineQuery": {
+      "farg": "vitt",
+      "mat": "fisk"
+    },
+    "wineHeading": "Fler vita naturviner till kräftskivan just nu"
+  },
+  {
+    "id": "sasong-naturvin-till-svamp",
+    "slug": "naturvin-till-svamp",
+    "title": "Svampsäsong — jordiga naturviner till kantareller och karl-johan",
+    "excerpt": "September är svampens månad. Kantarelltoast, karl-johan i grädde och svamprisotto. Här är de röda naturvinerna med jord och skogsbotten i doften.",
+    "content": "September är svampens månad. Kantarelltoast med smör, karl-johan i grädde, svamprisotto och den första riktiga höstgrytan.\n\nSvamp är umami och jord. Det vill ha viner som har samma sak i sig: lite skogsbotten, mörka bär och mjuka tanniner. Inga stora, ekiga viner, de tar över. Hellre något som låter svampen vara huvudrollen.\n\n## Från Villány\n\n[Schiller Fercsy](https://www.naturvinstipset.se/viner/schiller-fercsy-2021) kommer från Horst Hummel, som flyttade till Villány i södra Ungern i slutet av nittiotalet och startade sin gård på kalkrika lössjordar. Blaufränkisch och Portugieser, kort skalkontakt, spontanjäst och ofiltrerat. Lätt, saftigt och lite vilt. Till kantarelltoast.\n\n## Balaton på flaska\n\n[Cabernet Franc](https://www.naturvinstipset.se/viner/cabernet-franc-2023) från Kolonia 52 görs på kullen Szent György-hegy vid Balaton, där Annamária Török och Attila Francisti odlar tre hektar organiskt och biodynamiskt. Cabernet Franc har en naturlig örtighet som passar svamp perfekt.\n\n## Kylt och lila\n\n[Nach](https://www.naturvinstipset.se/viner/nach-2024) från Milan Nestarec är vinet från sommaren som fungerar lika bra på hösten. Lätta tanniner, körsbär och blommor. Till svamprisotto med parmesan.\n\nGå ut i skogen, plocka svamp och kom hem till ett glas. Det är svårt att tänka sig en bättre septemberkväll.",
+    "publishedAt": "2027-09-09",
+    "published": true,
+    "wineQuery": {
+      "farg": "rott",
+      "mat": "vego"
+    },
+    "wineHeading": "Fler naturviner till svamp just nu"
   }
 ]

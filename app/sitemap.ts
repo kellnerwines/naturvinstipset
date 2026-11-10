@@ -1,5 +1,5 @@
 import type { MetadataRoute } from "next";
-import { getWines, getBlogs } from "@/lib/blob";
+import { getWines, getBlogs, isPostLive } from "@/lib/blob";
 import { bars } from "@/lib/bars";
 import { ANSWER_PAGES } from "@/lib/answers";
 
@@ -53,7 +53,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     });
 
   const blogRoutes = blogs
-    .filter((b) => b.published)
+    .filter((b) => isPostLive(b))
     .map((b) => ({ url: `${BASE}/blogg/${b.slug}`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.7 }));
 
   const answerRoutes: MetadataRoute.Sitemap = [
