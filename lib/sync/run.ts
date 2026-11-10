@@ -1,0 +1,68 @@
+// Kör synken mot webbutikerna (BRIEF-KOMPASSEN.md, avsnitt 6). Anropas av
+// Vercel Cron en gång per månad och av "Synka nu" i admin. Vanlig kod utan AI.
+
+import { backupWines, getSyncLog, getWines, putWineImage, saveSyncLog, saveWines, type Wine } from "../blob";
+import { downloadImage, imageKey, processBottleImage } from "../wineImages";
+import { applySync, type ShopReport } from "./apply";
+import { flaskvisFeed, vinNaturFeed } from "./feeds";
+
+export type SyncLogEntry = {
+  startedAt: string;
+  finishedAt: string;
+  trigger: "cron" | "admin";
+  dryRun: boolean;
+  reports: ShopReport[];
+  alerts: string[];
+  backup?: string | null;
+};
+
+const LOG_KEEP = 24;
+
+const knownIds = (wines: Wine[], source: string) =>
+  new Set(wines.filter((w) => (w.source ?? "").startsWith(source) && w.sourceId).map((w) => w.sourceId!));
+
+export async function runSync(opts: { trigger: "cron" | "admin"; dryRun?: boolean; budgetMs?: number }): Promise<SyncLogEntry> {
+  const started = new Date();
+  const now = started.toISOString();
+  // Lämna tid åt bilder och sparning innan funktionen stängs (maxDuration 300 s).
+  const deadline = started.getTime() + (opts.budgetMs ?? 230_000);
+
+  const existing = await getWines();
+  const [vn, fv] = await Promise.all([
+    vinNaturFeed(knownIds(existing, "vinnatur.shop"), deadline, now),
+    flaskvisFeed(knownIds(existing, "flaskvis.se"), deadline, now),
+  ]);
+  const { wines, reports, alerts } = applySync(existing, [vn, fv], now);
+
+  // Nya vins flaskbilder flyttas till Blob (5.1). Misslyckas det står butikens bild kvar tills vidare.
+  const added = new Set(reports.flatMap((r) => r.added));
+  if (!opts.dryRun) {
+    for (const w of wines) {
+      if (!added.has(w.slug) || !w.primaryImageUrl?.startsWith("http") || Date.now() > deadline + 40_000) continue;
+      try {
+        const img = await processBottleImage(await downloadImage(w.primaryImageUrl));
+        const src = await putWineImage(imageKey(w), img.data);
+        if (src) { w.sourceImageUrl = w.primaryImageUrl; w.primaryImageUrl = src; }
+      } catch (e) {
+        alerts.push(`${w.name}: bilden kunde inte flyttas till Blob (${(e as Error).message})`);
+      }
+    }
+  }
+
+  const changed = reports.some((r) => r.added.length || r.changed.length || r.unpublished.length || r.republished.length);
+  let backup: string | null | undefined;
+  if (!opts.dryRun && changed) {
+    backup = await backupWines("synk");
+    await saveWines(wines);
+  }
+
+  const entry: SyncLogEntry = {
+    startedAt: now, finishedAt: new Date().toISOString(), trigger: opts.trigger, dryRun: !!opts.dryRun,
+    reports, alerts, backup,
+  };
+  if (!opts.dryRun) {
+    const log = await getSyncLog<SyncLogEntry>();
+    await saveSyncLog([entry, ...log].slice(0, LOG_KEEP));
+  }
+  return entry;
+}

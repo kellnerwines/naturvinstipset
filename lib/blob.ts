@@ -43,6 +43,7 @@ export type Wine = {
   autoProfile?: boolean;         // smakprofil uppskattad automatiskt
   sourceImageUrl?: string;       // butikens originalbild, innan den flyttats till Blob (5.1)
   lockedFields?: string[];       // fält som admin ändrat – importen får inte skriva över dem
+  syncHidden?: string;           // varför synken avpublicerade vinet (6.1); publiceras igen när orsaken är borta
 };
 
 export type Shop = "Systembolaget" | "Vin & Natur" | "Flaskvis" | (string & {});
@@ -188,3 +189,25 @@ export async function getSettings(): Promise<SiteSettings> {
   return { ...DEFAULT_SETTINGS, ...(rows[0] ?? {}) };
 }
 export const saveSettings = (s: SiteSettings) => writeJson(SETTINGS_KEY, [s]);
+
+// ─── Synklogg och backup (BRIEF-KOMPASSEN.md, 6.3) ────────────────────────────
+
+const SYNC_LOG_KEY = "naturvin/sync-log.json";
+export const getSyncLog  = <T,>() => readJson<T>(SYNC_LOG_KEY);
+export const saveSyncLog = <T,>(d: T[]) => writeJson(SYNC_LOG_KEY, d);
+
+/** Sparar nuvarande vinlista som backup innan synken skriver. Bara i Blob. */
+export async function backupWines(tag: string): Promise<string | null> {
+  if (!useBlob) return null;
+  const key = `naturvin/backups/wines-${tag}-${new Date().toISOString().replace(/[:.]/g, "-")}.json`;
+  await blobWrite(key, await readJson<Wine>(WINES_KEY));
+  return key;
+}
+
+/** Laddar upp en bearbetad flaskbild och returnerar adressen sajten visar den via. */
+export async function putWineImage(key: string, data: Buffer): Promise<string | null> {
+  if (!useBlob) return null;
+  const { put } = await import("@vercel/blob");
+  const blob = await put(key, data, { access: "private", addRandomSuffix: false, allowOverwrite: true, contentType: "image/webp" });
+  return `/api/image?url=${encodeURIComponent(blob.url)}`;
+}

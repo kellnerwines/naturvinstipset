@@ -1,0 +1,252 @@
+// Tolkning av webbutikernas data för synken (BRIEF-KOMPASSEN.md, avsnitt 6).
+// Rena funktioner utan I/O, så att de kan testas mot sparade sidor.
+// Bara typ-importer, som i lib/wineData.ts.
+
+import type { Wine } from "../blob";
+
+// ─── Gemensamt ────────────────────────────────────────────────────────────────
+
+const ENTITIES: Record<string, string> = { amp: "&", lt: "<", gt: ">", quot: '"', apos: "'", nbsp: " ", rsaquo: "›" };
+
+export function decodeEntities(s: string): string {
+  return s
+    .replace(/&#(\d+);/g, (_, n) => String.fromCodePoint(Number(n)))
+    .replace(/&#x([0-9a-f]+);/gi, (_, n) => String.fromCodePoint(parseInt(n, 16)))
+    .replace(/&([a-z]+);/gi, (m, n) => ENTITIES[n.toLowerCase()] ?? m);
+}
+
+/** HTML → ren text på en rad. */
+export function htmlText(html: string): string {
+  return decodeEntities(html.replace(/<(script|style)[\s\S]*?<\/\1>/gi, " ").replace(/<[^>]+>/g, " "))
+    .replace(/\s+/g, " ")
+    .trim();
+}
+
+/** Ord utan ordgränsproblem för å, ä, ö och accenter. */
+const wordRe = (w: string) => new RegExp(`(^|[^\\p{L}])${w.replace(/[.*+?^${}()|[\]\\]/g, "\\$&")}($|[^\\p{L}])`, "iu");
+
+// ─── Druvor, färg och land (6.1) ─────────────────────────────────────────────
+
+/** Blå druvor. Namnet är det som visas på sajten. */
+export const BLUE_GRAPES = [
+  "Pinot Noir", "Gamay", "Syrah", "Grenache", "Garnacha", "Mourvèdre", "Carignan", "Cinsault", "Merlot",
+  "Cabernet Sauvignon", "Cabernet Franc", "Malbec", "Côt", "Tempranillo", "Sangiovese", "Nebbiolo", "Barbera",
+  "Dolcetto", "Montepulciano", "Nero d'Avola", "Frappato", "Nerello Mascalese", "Aglianico", "Lambrusco",
+  "Zweigelt", "Blaufränkisch", "St. Laurent", "Poulsard", "Trousseau", "Pinot Meunier", "Mondeuse",
+  "Grolleau", "Pineau d'Aunis", "Touriga Nacional", "Baga", "Castelão", "Ramisco", "Jaen", "Alfrocheiro",
+  "Tinta Roriz", "Rufete", "Tinto Cão", "Vranac", "Teroldego", "Lagrein", "Schiava", "Corvina", "Refosco",
+  "Mencía", "Bobal", "Monastrell", "Xinomavro", "Agiorgitiko", "Mavrud", "Saperavi", "Dornfelder", "Regent",
+  "Rondo", "Solaris Rouge", "Pinot Nero", "Spätburgunder", "Négrette", "Tannat", "Fer Servadou", "Braucol",
+  "Duras", "Prunelard", "Ciliegiolo", "Canaiolo", "Susumaniello", "Primitivo", "Negroamaro", "Croatina",
+  "Freisa", "Grignolino", "Pelaverga", "Ruché", "Fumin", "Petit Rouge", "Cornalin", "Gamaret", "Merlot Noir",
+] as const;
+
+/** Gröna druvor. */
+export const GREEN_GRAPES = [
+  "Chardonnay", "Sauvignon Blanc", "Chenin Blanc", "Riesling", "Grüner Veltliner", "Gewürztraminer", "Muscat",
+  "Muskateller", "Pinot Gris", "Pinot Grigio", "Pinot Blanc", "Weissburgunder", "Auxerrois", "Sylvaner",
+  "Silvaner", "Savagnin", "Melon de Bourgogne", "Aligoté", "Viognier", "Marsanne", "Roussanne", "Grenache Blanc",
+  "Macabeu", "Macabeo", "Xarel·lo", "Xarello", "Parellada", "Albariño", "Godello", "Verdejo", "Arinto",
+  "Fernão Pires", "Encruzado", "Malvasia", "Malvazija", "Vermentino", "Trebbiano", "Garganega", "Glera",
+  "Verdicchio", "Fiano", "Greco", "Falanghina", "Catarratto", "Grillo", "Inzolia", "Zibibbo", "Carricante",
+  "Cortese", "Arneis", "Timorasso", "Pecorino", "Passerina", "Ribolla Gialla", "Friulano", "Welschriesling",
+  "Furmint", "Hárslevelű", "Müller-Thurgau", "Scheurebe", "Neuburger", "Rotgipfler", "Zierfandler", "Traminer",
+  "Sauvignonasse", "Assyrtiko", "Aidani", "Athiri", "Moschofilero", "Rkatsiteli", "Mtsvane", "Kisi", "Solaris",
+  "Souvignier Gris", "Johanniter", "Muscaris", "Romorantin", "Jacquère", "Altesse", "Chasselas", "Petit Manseng",
+  "Gros Manseng", "Mauzac", "Loin de l'Œil", "Len de l'El", "Picpoul", "Clairette", "Bourboulenc", "Rolle",
+  "Ugni Blanc", "Colombard", "Sémillon", "Muscadelle", "Siria", "Síria", "Fonte Cal", "Rabigato", "Gouveio",
+  "Viosinho", "Códega", "Avesso", "Loureiro", "Alvarinho", "Antão Vaz", "Roupeiro", "Vital", "Bical", "Cerceal",
+] as const;
+
+const GRAPES = [...BLUE_GRAPES, ...GREEN_GRAPES].sort((a, b) => b.length - a.length);
+const BLUE = new Set<string>(BLUE_GRAPES);
+
+/** Druvor som nämns i texten, med ordgränser (så att "côte" inte blir Côt). Längsta namn först. */
+export function findGrapes(text: string): string[] {
+  let t = ` ${text} `;
+  const found: string[] = [];
+  for (const g of GRAPES) {
+    const re = wordRe(g);
+    if (re.test(t)) {
+      found.push(g);
+      t = t.replace(new RegExp(re.source, "giu"), "$1 $2"); // "Pinot Gris" ska inte också ge "Pinot"
+    }
+  }
+  return found;
+}
+
+/** Färg enligt prioriteten i 6.1. Returnerar sajtens vintyp, eller undefined om det inte går att avgöra. */
+export function deriveWineType(text: string, tags: string[], grapes: string[]): string | undefined {
+  const t = text.toLowerCase();
+  if (tags.some((x) => x.toLowerCase() === "bubbel") || /pétillant|petillant|pet[ -]?nat|mousserande|champagne|crémant|cremant|ancestral/.test(t))
+    return /pet[ -]?nat|pétillant naturel|ancestral/.test(t) ? "Pét Nat" : "Mousserande";
+  if (/rosato|rosado|rosé|(^|[^\p{L}])rose($|[^\p{L}])/u.test(t)) return "Rosé";
+  if (!grapes.length) return undefined;
+  const blue = grapes.filter((g) => BLUE.has(g)).length;
+  if (blue === grapes.length) return /blanc de noirs/.test(t) ? "Vitt" : "Rött";
+  if (blue === 0) return /skalkontakt|skalmacer|maceration|macerat|orange/.test(t) ? "Orange" : "Vitt";
+  return undefined;
+}
+
+/** Land från region (6.1). */
+export const REGION_COUNTRY: Record<string, string> = {
+  Alsace: "Frankrike", "Ardèche": "Frankrike", Auvergne: "Frankrike", Beaujolais: "Frankrike", Bourgogne: "Frankrike",
+  Champagne: "Frankrike", Jura: "Frankrike", Languedoc: "Frankrike", Loire: "Frankrike", Lorraine: "Frankrike",
+  "Rhône": "Frankrike", Roussillon: "Frankrike", Savoie: "Frankrike",
+  Emilia: "Italien", Friuli: "Italien", Lazio: "Italien", Piemonte: "Italien", Sicilien: "Italien", Toscana: "Italien",
+  Umbrien: "Italien", Veneto: "Italien",
+  Granada: "Spanien", "Skåne": "Sverige", Tinos: "Grekland", Steiermark: "Österrike",
+  // Flaskvis (Kellner & Kellners portugisiska producenter)
+  Lissabon: "Portugal", Lisboa: "Portugal", Douro: "Portugal", "Trás-os-Montes": "Portugal", "Dão": "Portugal",
+  Alentejo: "Portugal", "Beira Interior": "Portugal", Bairrada: "Portugal", Tejo: "Portugal", "Setúbal": "Portugal",
+  "Vinho Verde": "Portugal", Minho: "Portugal", Colares: "Portugal",
+};
+
+// ─── Heuristisk smakprofil för Vin & Natur (5.3) ─────────────────────────────
+
+const has = (t: string, re: RegExp) => re.test(t);
+
+/** Syra, fyllighet, strävhet och funk 1–5 samt smaktaggar ur butikens text. autoProfile: true. */
+export function heuristicProfile(text: string, wineType: string): Pick<Wine, "syra" | "fyllighet" | "funk" | "stravhet" | "flavorTags"> {
+  const t = text.toLowerCase();
+  const red = wineType === "Rött";
+  const syra = has(t, /hög syra|syrlig|syrlighet|krispig|frisk|livlig|spänstig|citrus/) ? 4 : has(t, /mjuk|rund|låg syra/) ? 2 : 3;
+  const fyllighet = has(t, /fyllig|kraftig|koncentrerad|mustig|rik|generös/) ? 4 : has(t, /lätt|luftig|törstsläckande|glou|klunk/) ? 2 : 3;
+  const funk = has(t, /funky|funkig|vild|cider|flyktig|kombucha|oxidativ|syrlig öl/) ? 4 : has(t, /ren|precis|stram|klar/) ? 1 : 2;
+  const stravhet = !red && wineType !== "Orange" ? 1
+    : has(t, /tanninrik|strävhet|sträv|kraftiga tanniner|tydliga tanniner/) ? 4
+    : has(t, /mjuka tanniner|lätta tanniner|silkig/) ? 2 : wineType === "Orange" ? 2 : 3;
+
+  const TAG_WORDS: [string, RegExp][] = [
+    ["Fruktig", /frukt|bär|körsbär|jordgubb|hallon|persika|aprikos|äpple|päron/],
+    ["Mineralisk", /mineral|sten|flinta|salt/], ["Blommig", /blom|ros(?!é)|viol|fläder/],
+    ["Kryddig", /krydd|peppar|kanel|nejlika/], ["Jordig", /jord|svamp|skogsbotten|läder/],
+    ["Citrus", /citrus|citron|lime|grapefrukt|apelsin/], ["Örtig", /ört|timjan|rosmarin|salvia|mynta/],
+    ["Krispig", /krispig|spänstig/], ["Lättsam", /lättdrucken|klunk|törstsläckande|glou/],
+    ["Komplex", /komplex|lager på lager|djup/], ["Tanninrik", /tanninrik|strävhet/],
+  ];
+  const flavorTags = TAG_WORDS.filter(([, re]) => re.test(t)).map(([n]) => n).slice(0, 5);
+  return { syra, fyllighet, funk, stravhet, flavorTags };
+}
+
+// ─── Vin & Natur (Shopify) ────────────────────────────────────────────────────
+
+export type ShopifyVariant = { title: string; price: string; available: boolean };
+export type ShopifyProduct = {
+  handle: string; title: string; product_type: string; tags: string[] | string; body_html: string;
+  variants: ShopifyVariant[]; images?: { src: string }[];
+};
+
+export const tagList = (t: string[] | string) => (Array.isArray(t) ? t : t.split(",").map((x) => x.trim()).filter(Boolean));
+const BIG_BOTTLE = /magnum|jeroboam|1[,.]5\s*l/i;
+
+/** Urval enligt 6.1: typ Vin, inte stora flaskor och pris över 0. Tillgänglighet avgör lagerstatus, inte urvalet. */
+export function isVinNaturWine(p: ShopifyProduct): boolean {
+  if (p.product_type !== "Vin") return false;
+  if (BIG_BOTTLE.test(p.title) || BIG_BOTTLE.test(p.handle)) return false;
+  return !!vinNaturVariant(p);
+}
+
+/** Varianten "1 flaska", annars "Default Title". */
+export function vinNaturVariant(p: ShopifyProduct): { price: number; available: boolean } | undefined {
+  const v = p.variants.find((x) => x.title.toLowerCase() === "1 flaska") ?? p.variants.find((x) => x.title === "Default Title");
+  const price = v ? Number(v.price) : 0;
+  if (!v || !(price > 0) || BIG_BOTTLE.test(v.title)) return undefined;
+  return { price: Math.round(price), available: v.available };
+}
+
+export const VIN_NATUR_TAX_TEXT = /moms\s+och\s+alkoholskatt\s+inkluderad/i;
+
+/** Region och producent ur brödsmulorna: de två första länkarna före "›". */
+export function vinNaturBreadcrumbs(html: string): { region?: string; producer?: string } {
+  const i = html.search(/›|&rsaquo;|&#8250;/);
+  if (i < 0) return {};
+  // Brödsmulorna ligger i samma element som första "›": ta texten runt den.
+  const start = Math.max(html.lastIndexOf("<nav", i), html.lastIndexOf("<ol", i), html.lastIndexOf("<ul", i), html.lastIndexOf("<div", i));
+  const end = html.indexOf("</nav>", i) > -1 ? html.indexOf("</nav>", i) : i + 3000;
+  const block = html.slice(start, end);
+  const links = [...block.matchAll(/<a\b[^>]*>([\s\S]*?)<\/a>/gi)].map((m) => htmlText(m[1])).filter(Boolean)
+    .filter((x) => !/^(hem|home|start|alla produkter|vin)$/i.test(x));
+  let [region, producer] = links;
+  if (region === "Strohmeier") { producer = "Strohmeier"; region = "Steiermark"; }
+  return { region, producer };
+}
+
+/** Vad produktsidan säger: skattetexten och brödsmulorna. */
+export function parseVinNaturPage(html: string): { taxIncluded: boolean; region?: string; producer?: string } {
+  return { taxIncluded: VIN_NATUR_TAX_TEXT.test(htmlText(html)), ...vinNaturBreadcrumbs(html) };
+}
+
+// ─── Flaskvis (WooCommerce) ──────────────────────────────────────────────────
+
+export type WooProduct = {
+  id: number; name: string; slug: string; permalink: string; is_in_stock: boolean;
+  prices: { price: string; currency_minor_unit: number };
+  images?: { src: string }[];
+};
+
+export const wooPrice = (p: WooProduct) => Math.round(Number(p.prices.price) / 10 ** (p.prices.currency_minor_unit ?? 0));
+
+/** Innehållet i `<div class="items…" data-section="X">` fram till nästa sådan sektion. */
+function section(html: string, name: string): string {
+  const m = html.match(new RegExp(`<div class="items[^"]*" data-section="${name}">`));
+  if (!m || m.index === undefined) return "";
+  const rest = html.slice(m.index + m[0].length);
+  const next = rest.search(/<div class="items[^"]*" data-section="/);
+  return next > -1 ? rest.slice(0, next) : rest.slice(0, 5000);
+}
+
+export type FlaskvisPage = {
+  kellner: boolean;
+  region?: string;
+  year?: string;
+  grapes: string[];
+  style: string[];
+  producer?: string;
+  values: Partial<Record<"syra" | "fyllighet" | "funk" | "stravhet", number>>;
+  description?: string;
+};
+
+/** 0–100 → 1–5 enligt 5.3: max(1, round(v/20)). */
+export const flaskvisScale = (v: number) => Math.max(1, Math.round(v / 20));
+
+export function parseFlaskvisPage(html: string): FlaskvisPage {
+  const supplier = htmlText(section(html, "supplier"));
+  const producerHtml = section(html, "producer");
+  const producer = producerHtml.match(/<h3[^>]*>([\s\S]*?)<\/h3>/)?.[1];
+  const metaRow = (label: string) => {
+    const m = html.match(new RegExp(`<label class="icon ${label}">[\\s\\S]*?<div class="meta-items">([\\s\\S]*?)</div>`));
+    return m ? [...m[1].matchAll(/<span>([\s\S]*?)<\/span>/g)].map((x) => htmlText(x[1])) : [];
+  };
+  const values: FlaskvisPage["values"] = {};
+  const KEY = { torr: "syra", fyllighet: "fyllighet", funk: "funk", stravhet: "stravhet" } as const;
+  for (const m of html.matchAll(/class="row (torr|fyllighet|funk|stravhet)-(\d{1,3})"/g)) {
+    values[KEY[m[1] as keyof typeof KEY]] = flaskvisScale(Number(m[2]));
+  }
+  const meta = html.match(/<ul class="wine-volume-meta">([\s\S]*?)<\/ul>/)?.[1] ?? "";
+  const year = [...meta.matchAll(/<li>([\s\S]*?)<\/li>/g)].map((x) => htmlText(x[1])).find((x) => /^(19|20)\d{2}$/.test(x));
+  const region = html.match(/<span class="country">([\s\S]*?)<\/span>/)?.[1];
+  const description = html.match(/<div class="product-text">([\s\S]*?)<\/div>/)?.[1];
+  return {
+    kellner: /kellner/i.test(supplier),
+    region: region ? htmlText(region) : undefined,
+    year,
+    grapes: metaRow("druvor"),
+    style: metaRow("stil"),
+    producer: producer ? htmlText(producer) : undefined,
+    values,
+    description: description ? htmlText(description) : undefined,
+  };
+}
+
+/** Vintyp ur Flaskvis stil-taggar ("Rött", "Vitt", "Orange", "Rosé", "Mousserande"/"Pet nat"). */
+export function flaskvisWineType(style: string[], grapes: string[], text: string): string | undefined {
+  const s = style.map((x) => x.toLowerCase());
+  if (s.some((x) => /pet ?nat|pét/.test(x))) return "Pét Nat";
+  if (s.some((x) => /mousserande|bubbel/.test(x))) return "Mousserande";
+  if (s.includes("orange")) return "Orange";
+  if (s.includes("rosé") || s.includes("rose")) return "Rosé";
+  if (s.includes("rött")) return "Rött";
+  if (s.includes("vitt")) return "Vitt";
+  return deriveWineType(text, [], grapes);
+}
