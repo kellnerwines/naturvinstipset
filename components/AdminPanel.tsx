@@ -140,7 +140,7 @@ export default function AdminPanel() {
   if (!authed) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-[var(--green-light)] px-6">
-        <div className="bg-white p-8 w-full max-w-sm rounded-xl shadow-sm">
+        <div className="bg-white p-8 w-full max-w-sm rounded-xl border border-[var(--rule)]">
           <div className="text-center mb-6">
             <span className="text-3xl">🍇</span>
             <h1 className="text-lg font-bold text-[var(--green-dark)] mt-2">Admin – Naturvinstipset</h1>
@@ -175,6 +175,8 @@ export default function AdminPanel() {
           >
             {seeding ? "Seeder..." : "⬆ Seed data → Blob"}
           </button>
+          <a href="/admin/klick" className="text-sm text-white/80 hover:text-white">Klickstatistik →</a>
+          <a href="/admin/synk" className="text-sm text-white/80 hover:text-white">Synk av webbutiker →</a>
           <button onClick={async () => { await fetch("/api/logout", { method: "POST" }); setAuthed(false); }} className="text-sm text-white/60 hover:text-white">Logga ut</button>
         </div>
       </div>
@@ -297,6 +299,11 @@ export default function AdminPanel() {
                 <div className="flex items-center gap-2">
                   <input type="checkbox" id="pub-wine" checked={editWine.published ?? false} onChange={(e) => setEditWine({ ...editWine, published: e.target.checked })} />
                   <label htmlFor="pub-wine" className="text-sm">Publicerat (visas på sajten)</label>
+                </div>
+
+                <div className="flex items-center gap-2">
+                  <input type="checkbox" id="own-wine" checked={editWine.ownImport ?? false} onChange={(e) => setEditWine({ ...editWine, ownImport: e.target.checked })} />
+                  <label htmlFor="own-wine" className="text-sm">Egen import (märks &quot;Egen import&quot;, påverkar inte rankningen)</label>
                 </div>
 
                 <div className="flex items-center gap-2 bg-amber-50 border border-amber-200 rounded-lg px-3 py-2">

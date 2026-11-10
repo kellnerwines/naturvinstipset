@@ -1,10 +1,24 @@
 import { NextRequest, NextResponse } from "next/server";
 import { getWines, saveWines, Wine, toSlug } from "@/lib/blob";
 import { isAuthenticated } from "@/lib/auth";
+import { isOwnImportByRule } from "@/lib/wineData";
 import { randomUUID } from "crypto";
 import { revalidatePath } from "next/cache";
 
 export const dynamic = "force-dynamic";
+
+/** Fält som import/synk kan skriva; ändras de av admin hamnar de i lockedFields. */
+const IMPORT_FIELDS = [
+  "name", "producer", "country", "region", "grape", "wineType", "year", "price",
+  "description", "longDescription", "flavorTags", "syra", "fyllighet", "funk", "stravhet",
+  "flavorNotes", "primaryImageUrl", "offers", "ownImport", "foodPairing", "foodCategories",
+] as const satisfies readonly (keyof Wine)[];
+
+/** Tomma värden ("", null, [], undefined) räknas som lika så att formuläret inte låser i onödan. */
+function comparable(v: unknown): string {
+  if (v === undefined || v === null || v === "" || (Array.isArray(v) && v.length === 0)) return "";
+  return JSON.stringify(v);
+}
 
 export async function GET() {
   const wines = await getWines();
@@ -31,6 +45,14 @@ export async function POST(req: NextRequest) {
     // Never wipe an existing image with an empty value — require a non-empty URL to overwrite
     if (!update.primaryImageUrl) delete update.primaryImageUrl;
     if (!update.galleryImages?.length) delete update.galleryImages;
+    // Fält som admin ändrar låses så att import och synk inte skriver över dem (5.4, 6.3).
+    const locked = new Set(wines[idx].lockedFields ?? []);
+    for (const f of IMPORT_FIELDS) {
+      if (f in update && comparable(update[f]) !== comparable(wines[idx][f])) locked.add(f);
+    }
+    if (Array.isArray(body.lockedFields)) for (const f of body.lockedFields) locked.add(String(f));
+    update.lockedFields = [...locked];
+    if (!update.lockedFields.length) delete update.lockedFields;
     wines[idx] = { ...wines[idx], ...update };
     await saveWines(wines);
     revalidatePath("/", "layout");
@@ -38,6 +60,9 @@ export async function POST(req: NextRequest) {
   }
 
   const slug = toSlug(body.name + (body.year ? `-${body.year}` : ""));
+  // Egen import följer regeln i 5.2 om admin inte har valt själv; ett eget val låses.
+  const byRule = isOwnImportByRule({ producer: body.producer ?? "", systembolagetUrl: body.systembolagetUrl });
+  const ownImport = typeof body.ownImport === "boolean" ? body.ownImport : byRule;
   const newWine: Wine = {
     id: randomUUID(),
     slug,
@@ -56,6 +81,8 @@ export async function POST(req: NextRequest) {
     primaryImageUrl: body.primaryImageUrl,
     galleryImages: body.galleryImages ?? [],
     adminRating: body.adminRating ?? 4,
+    ownImport,
+    ...(ownImport !== byRule ? { lockedFields: ["ownImport"] } : {}),
     createdAt: new Date().toISOString(),
     published: body.published ?? false,
   };

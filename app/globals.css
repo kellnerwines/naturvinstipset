@@ -7,13 +7,16 @@
 */
 
 :root {
-  --bg:      #f0ebe2;
+  --bg:      #ffffff;
   --fg:      #0d0d0d;
-  --muted:   rgba(13, 13, 13, 0.45);
-  --faint:   rgba(13, 13, 13, 0.22);
-  --rule:    rgba(13, 13, 13, 0.10);
+  /* Kontrast mot vitt: --muted ≈ 5,6:1 (WCAG AA för brödtext), --faint ≈ 2,6:1
+     (bara för dekor och sekundära etiketter, aldrig för text man måste läsa). */
+  --muted:   rgba(13, 13, 13, 0.62);
+  --faint:   rgba(13, 13, 13, 0.40);
+  --rule:    rgba(13, 13, 13, 0.12);
   --rule-xs: rgba(13, 13, 13, 0.06);
-  --card:    #ffffff;
+  --card:    #ffffff;   /* kort: vita med tunn kant i --rule, ingen skugga */
+  --surface: #f0ebe2;   /* krämvitt, sparsamt för små ytor som taggar */
   --hero-dark: #2a2420;
 
   /* Wine type colors */
@@ -88,3 +91,9 @@ body {
     outline-color: rgba(210, 160, 40, 0.50);
   }
 }
+
+/* "Var köper du?" (components/WhereFilter.tsx): döljer viner som inte säljs där, numrerar om med CSS-räknare */
+.where-filter[data-where-filter="sb"] [data-where="web"],
+.where-filter[data-where-filter="web"] [data-where="sb"] { display: none; }
+.where-filter { counter-reset: guide-rank; }
+.where-filter .guide-rank::before { counter-increment: guide-rank; content: counter(guide-rank); }

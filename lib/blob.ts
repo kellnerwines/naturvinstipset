@@ -30,6 +30,34 @@ export type Wine = {
   wineOfMonth?: boolean;     // pinned to #1 with glowy border
   createdAt: string;
   published: boolean;
+
+  // ── Vinkompassen (BRIEF-KOMPASSEN.md, avsnitt 5) ──
+  offers?: Offer[];              // alla säljställen; ersätter på sikt systembolagetUrl/price
+  shop?: Shop;                   // primärt säljställe (för enkel filtrering)
+  shopUrl?: string;
+  ownImport?: boolean;           // Kellner & Kellner-import → "Egen import"-märkning
+  foodPairing?: string;          // regional mattext, se 5.4
+  foodCategories?: FoodCategory[];
+  source?: string;               // t.ex. "vinnatur.shop", "flaskvis.se", "manual"
+  sourceId?: string;             // butikens handle/slug
+  autoProfile?: boolean;         // smakprofil uppskattad automatiskt
+  sourceImageUrl?: string;       // butikens originalbild, innan den flyttats till Blob (5.1)
+  lockedFields?: string[];       // fält som admin ändrat – importen får inte skriva över dem
+  importer?: string;             // svensk importör enligt webbutiken, t.ex. "Wine Rebels" (Flaskvis)
+  syncHidden?: string;           // varför synken avpublicerade vinet (6.1); publiceras igen när orsaken är borta
+};
+
+export type Shop = "Systembolaget" | "Vin & Natur" | "Flaskvis" | (string & {});
+
+export type FoodCategory =
+  | "fisk" | "fagel" | "kott" | "flask" | "vego" | "kryddigt" | "ost" | "aperitif";
+
+export type Offer = {
+  shop: Shop;
+  url: string;          // butikens produktsida (rå URL, länkas via /go)
+  price: number;        // SEK inkl. moms och svensk alkoholskatt
+  inStock: boolean;
+  lastSyncedAt: string; // ISO
 };
 
 export type Rating = {
@@ -65,7 +93,10 @@ export type BlogInteraction = {
 
 // ─── Storage backends ─────────────────────────────────────────────────────────
 
-const useBlob = !!process.env.BLOB_READ_WRITE_TOKEN;
+// Blob används med en läs- och skrivtoken (lokalt och i skript) eller med Vercels
+// OIDC-koppling, där lagringen anges med BLOB_STORE_ID (produktionen).
+export const hasBlobCredentials = () => !!(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
+const useBlob = hasBlobCredentials();
 const DATA_DIR = path.join(process.cwd(), "data");
 
 async function fsRead<T>(filename: string): Promise<T[]> {
@@ -145,4 +176,42 @@ export function toSlug(s: string): string {
     .replace(/å/g, "a").replace(/ä/g, "a").replace(/ö/g, "o")
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/^-|-$/g, "");
+}
+
+// ─── Inställningar (BRIEF-KOMPASSEN.md, 7.1) ──────────────────────────────────
+
+export type SiteSettings = {
+  /** Ersättning från webbutiker: slår på rel="sponsored nofollow" och ersättningsmeningen. */
+  retailerCompensation: boolean;
+};
+
+const SETTINGS_KEY = "naturvin/settings.json";
+const DEFAULT_SETTINGS: SiteSettings = { retailerCompensation: false };
+
+export async function getSettings(): Promise<SiteSettings> {
+  const rows = await readJson<SiteSettings>(SETTINGS_KEY);
+  return { ...DEFAULT_SETTINGS, ...(rows[0] ?? {}) };
+}
+export const saveSettings = (s: SiteSettings) => writeJson(SETTINGS_KEY, [s]);
+
+// ─── Synklogg och backup (BRIEF-KOMPASSEN.md, 6.3) ────────────────────────────
+
+const SYNC_LOG_KEY = "naturvin/sync-log.json";
+export const getSyncLog  = <T,>() => readJson<T>(SYNC_LOG_KEY);
+export const saveSyncLog = <T,>(d: T[]) => writeJson(SYNC_LOG_KEY, d);
+
+/** Sparar nuvarande vinlista som backup innan synken skriver. Bara i Blob. */
+export async function backupWines(tag: string): Promise<string | null> {
+  if (!useBlob) return null;
+  const key = `naturvin/backups/wines-${tag}-${new Date().toISOString().replace(/[:.]/g, "-")}.json`;
+  await blobWrite(key, await readJson<Wine>(WINES_KEY));
+  return key;
+}
+
+/** Laddar upp en bearbetad flaskbild och returnerar adressen sajten visar den via. */
+export async function putWineImage(key: string, data: Buffer): Promise<string | null> {
+  if (!useBlob) return null;
+  const { put } = await import("@vercel/blob");
+  const blob = await put(key, data, { access: "private", addRandomSuffix: false, allowOverwrite: true, contentType: "image/webp" });
+  return `/api/image?url=${encodeURIComponent(blob.url)}`;
 }

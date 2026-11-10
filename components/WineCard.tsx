@@ -7,6 +7,8 @@ import { StarDisplay } from "./Stars";
 import LikeButton from "./LikeButton";
 import type { Wine } from "@/lib/blob";
 import { buildWineProductJsonLd, getArticleNumber } from "@/lib/wineJsonLd";
+import { buyLinks } from "@/lib/buyLinks";
+import OwnImportBadge from "./OwnImportBadge";
 
 type Props = { wine: Wine; rating: number; ratingCount: number; likeCount: number; rank?: number; wineOfMonth?: boolean };
 
@@ -55,10 +57,11 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
   const hasProfile = wine.syra != null || wine.fyllighet != null || wine.funk != null;
 
   const articleNumber = getArticleNumber(wine);
+  const buy = buyLinks(wine, { source: "topplistan", path: "/topp-100" })[0];
   const jsonLd = buildWineProductJsonLd(wine, { combinedRating: rating, communityCount: ratingCount });
 
   return (
-    <div className={`flex flex-col bg-white${wineOfMonth ? " motm-card" : ""}`}>
+    <div className={`flex flex-col bg-[var(--card)] border border-[var(--rule)]${wineOfMonth ? " motm-card" : ""}`}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* ── Top bar: rank + type pill ───────────────────────────────────── */}
@@ -103,6 +106,7 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
       <div className="px-3 pt-3 pb-3 flex-1 flex flex-col">
         {/* Producer */}
         <p className="text-[10px] tracking-[0.15em] uppercase text-[var(--muted)] mb-0.5">{wine.producer}</p>
+        {wine.ownImport ? <OwnImportBadge className="self-start mb-1.5" /> : null}
 
         {/* Name */}
         <Link href={`/viner/${wine.slug}`} className="group mb-2">
@@ -131,9 +135,9 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
             className="text-base font-bold text-[var(--fg)]"
             style={{ fontFamily: "Georgia, serif" }}
             role="img"
-            aria-label={`Betyg: ${rating.toFixed(1)} av 5${ratingCount > 0 ? ` (${ratingCount} röster)` : ""}`}
+            aria-label={rating > 0 ? `Betyg: ${rating.toFixed(1)} av 5${ratingCount > 0 ? ` (${ratingCount} röster)` : ""}` : "Inget betyg än"}
           >
-            <span aria-hidden="true">★</span> {rating.toFixed(1)}
+            {rating > 0 ? <><span aria-hidden="true">★</span> {rating.toFixed(1)}</> : <span className="text-[11px] font-normal text-[var(--muted)]" style={{ fontFamily: "inherit" }}>Inget betyg än</span>}
           </span>
           {wine.price && (
             <span className="text-[11px] text-[var(--muted)]">{wine.price} kr</span>
@@ -148,20 +152,22 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
             wine.grape && `Druva: ${wine.grape}`,
             articleNumber && `Systembolaget art.nr: ${articleNumber}`,
             wine.price && `Pris: ca ${wine.price} kr`,
+            buy && !buy.isSb && `Hemleverans från webbutiken ${buy.shop}`,
           ].filter(Boolean).join(" · ")}
         </p>
 
         {/* Actions row */}
         <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-[var(--rule-xs)] pt-2">
           <LikeButton wineId={wine.id} likeCount={likeCount} small />
-          {wine.systembolagetUrl && (
+          {buy && (
             <a
-              href={wine.systembolagetUrl}
+              href={buy.href}
               target="_blank"
-              rel="noopener noreferrer sponsored"
+              rel={buy.rel}
+              title={`${buy.label} – ${buy.how.toLowerCase()}`}
               className="text-[10px] font-bold tracking-[0.2em] uppercase text-[var(--fg)] border-b border-[var(--fg)] hover:opacity-50 transition-opacity pb-px whitespace-nowrap"
             >
-              Beställ
+              {buy.isSb ? "Beställ" : "Hemleverans"}
             </a>
           )}
           <button

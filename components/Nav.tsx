@@ -6,7 +6,8 @@ import { usePathname } from "next/navigation";
 import { useState } from "react";
 
 const links = [
-  { href: "/", label: "Topp 100" },
+  { href: "/", label: "Vinkompassen" },
+  { href: "/topp-100", label: "Topp 100" },
   { href: "/vad-ar-naturvin", label: "Vad är naturvin?" },
   { href: "/basta-naturvinsbarer-stockholm", label: "Barer i Stockholm" },
   { href: "/om-listan", label: "Om listan" },
@@ -37,7 +38,7 @@ export default function Nav() {
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex gap-8 text-sm">
+        <nav className="hidden md:flex gap-5 lg:gap-8 text-sm">
           {links.map((l) => (
             <Link
               key={l.href}

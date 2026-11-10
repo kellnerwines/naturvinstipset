@@ -6,11 +6,11 @@ import GuideWineList from "@/components/GuideWineList";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Bästa naturvinet för nybörjare på Systembolaget | Naturvinstipset",
+  title: "Bästa naturvinet för nybörjare på Systembolaget eller från webbutiker med hemleverans",
   description:
-    "Ny till naturvin? Här är de bästa, mest tillgängliga naturvinerna på Systembolaget för nybörjare — med låg funk och tydliga smakprofiler.",
+    "Ny till naturvin? Här är de bästa, mest tillgängliga naturvinerna för nybörjare, på Systembolaget eller från webbutiker med hemleverans — med låg funk och tydliga smakprofiler.",
   openGraph: {
-    title: "Bästa naturvinet för nybörjare på Systembolaget",
+    title: "Bästa naturvinet för nybörjare på Systembolaget eller från webbutiker med hemleverans",
     description:
       "De bästa naturvinerna för nybörjare — tillgängliga, välbalanserade och handplockade av Naturvinstipset.",
     url: "https://www.naturvinstipset.se/basta-naturvin-for-nyborjare",
@@ -20,9 +20,9 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  name: "Bästa naturvinet för nybörjare på Systembolaget",
+  name: "Bästa naturvinet för nybörjare på Systembolaget eller från webbutiker med hemleverans",
   description:
-    "De bästa naturvinerna för nybörjare på Systembolaget. Handplockade av Naturvinstipset.",
+    "De bästa naturvinerna för nybörjare på Systembolaget eller från webbutiker med hemleverans. Handplockade av Naturvinstipset.",
   url: "https://www.naturvinstipset.se/basta-naturvin-for-nyborjare",
   publisher: { "@type": "Organization", name: "Naturvinstipset" },
 };
@@ -54,7 +54,7 @@ export default async function BastaNaturvinNyborjarePage() {
             Börja med ett vin som matchar hur du redan dricker. Vinerna i den
             här listan har låg funk — de är tillgängliga, välbalanserade och ger
             en rättvis bild av vad naturvin kan vara. Alla håller hög kvalitet
-            och finns på Systembolaget.
+            och går att köpa på Systembolaget eller från webbutiker med hemleverans.
           </p>
         </div>
       </div>
@@ -78,7 +78,7 @@ export default async function BastaNaturvinNyborjarePage() {
           <p className="text-[var(--muted)] text-sm leading-relaxed">
             Gillar du vad du hittar här? Nästa steg är att utforska viner med
             lite högre funk och djupare karaktär. Vår{" "}
-            <Link href="/" className="underline">
+            <Link href="/topp-100" className="underline">
               fullständiga lista
             </Link>{" "}
             har smakparametrar som hjälper dig steg för steg.

@@ -5,7 +5,7 @@ import Nav from "./Nav";
 import Footer from "./Footer";
 import AgeGate from "./AgeGate";
 
-export default function SiteShell({ children }: { children: React.ReactNode }) {
+export default function SiteShell({ children, retailerCompensation = false }: { children: React.ReactNode; retailerCompensation?: boolean }) {
   const pathname = usePathname();
   if (pathname.startsWith("/admin")) return <>{children}</>;
 
@@ -14,7 +14,7 @@ export default function SiteShell({ children }: { children: React.ReactNode }) {
       <AgeGate />
       <Nav />
       <main className="flex-1">{children}</main>
-      <Footer />
+      <Footer retailerCompensation={retailerCompensation} />
     </>
   );
 }

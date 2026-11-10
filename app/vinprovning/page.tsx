@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 
 export const metadata: Metadata = {
-  title: "Vinprovning – Naturvinsupplevelser för grupper | Naturvinstipset",
+  title: "Vinprovning – Naturvinsupplevelser för grupper",
   description:
     "Skräddarsydda vinprovningar med fokus på naturvin — anpassade helt efter er grupp. After work, nybörjarkvällar och privata middagar. Hör av dig!",
   openGraph: {

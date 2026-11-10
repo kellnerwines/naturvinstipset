@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import { Outfit } from "next/font/google";
 import "./globals.css";
 import SiteShell from "@/components/SiteShell";
+import { getSettings } from "@/lib/blob";
 import CookieBanner from "@/components/CookieBanner";
 
 /*
@@ -19,12 +20,15 @@ const outfit = Outfit({
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.naturvinstipset.se"),
   title: {
-    default: "Naturvinstipset – 100 bästa naturvinerna på Systembolaget",
+    default: "Naturvinstipset – hitta rätt naturvin på Systembolaget eller från webbutiker med hemleverans",
     template: "%s – Naturvinstipset",
   },
   description:
-    "Hitta de bästa naturvinerna på Systembolaget. Betyg, smakprofiler och köptips för nybörjare och nyfikna. Helt utan krångel.",
-  keywords: ["naturvin", "systembolaget", "naturvinstips", "vinbetyg", "ekologiskt vin", "biodynamiskt vin"],
+    "Svara på fyra snabba frågor och få naturvin som passar din smak, din budget och din mat. På Systembolaget eller från webbutiker med hemleverans, med smakprofiler, matförslag och köptips.",
+  keywords: [
+    "naturvin", "systembolaget", "naturvinstips", "vinbetyg", "ekologiskt vin", "biodynamiskt vin",
+    "naturvin online", "köpa naturvin", "naturvin hemleverans", "orange vin", "vinkompass", "vilket vin passar",
+  ],
   authors: [{ name: "Naturvinstipset" }],
   icons: {
     icon: [
@@ -38,15 +42,18 @@ export const metadata: Metadata = {
     type: "website",
     locale: "sv_SE",
     siteName: "Naturvinstipset",
+    title: "Naturvinstipset – hitta rätt naturvin på Systembolaget eller från webbutiker med hemleverans",
+    description: "Svara på fyra snabba frågor och få naturvin som passar din smak, din budget och din mat. På Systembolaget eller från webbutiker med hemleverans, med smakprofiler, matförslag och köptips.",
     images: [{ url: "/og-image.png", width: 1200, height: 630 }],
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+export default async function RootLayout({ children }: { children: React.ReactNode }) {
+  const settings = await getSettings().catch(() => ({ retailerCompensation: false }));
   return (
     <html lang="sv" className={`${outfit.variable} h-full`}>
       <body className="min-h-full flex flex-col antialiased">
-        <SiteShell>{children}</SiteShell>
+        <SiteShell retailerCompensation={settings.retailerCompensation}>{children}</SiteShell>
         <CookieBanner />
       </body>
     </html>

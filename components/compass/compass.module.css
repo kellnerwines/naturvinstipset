@@ -1,0 +1,31 @@
+/* Vinkompassen – sajtens tema (tokens i app/globals.css), redaktionellt och minimalt.
+   Inga gradienter, skuggor eller glödeffekter. Animationer stängs av med prefers-reduced-motion. */
+
+.dots { display: inline-flex; gap: 4px; padding: 6px 0; }
+.dots i { width: 5px; height: 5px; border-radius: 50%; background: var(--fg); opacity: .25; animation: dot 1s infinite; }
+.dots i:nth-child(2) { animation-delay: .15s; }
+.dots i:nth-child(3) { animation-delay: .3s; }
+@keyframes dot { 0%, 100% { opacity: .2; } 40% { opacity: .7; } }
+
+/* Nedräkning vid flerval */
+.auto { height: 2px; background: transparent; margin-top: 12px; overflow: hidden; }
+.auto.run { background: var(--rule); }
+.auto i { display: block; height: 100%; width: 0; background: var(--fg); }
+.auto.run i { animation: fill 1.2s linear forwards; }
+@keyframes fill { from { width: 0; } to { width: 100%; } }
+
+/* Tänker-block */
+.spin { width: 12px; height: 12px; border: 1.5px solid var(--rule); border-top-color: var(--fg); border-radius: 50%; animation: spin .8s linear infinite; flex-shrink: 0; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Kort markering när förslagen uppdateras */
+.flash { animation: flash .9s ease-out; }
+@keyframes flash { 0% { outline: 1px solid var(--fg); outline-offset: 6px; } 100% { outline: 1px solid transparent; outline-offset: 6px; } }
+
+.enter { animation: enter .25s ease-out; }
+@keyframes enter { from { opacity: 0; transform: translateY(4px); } to { opacity: 1; transform: none; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .dots i, .spin, .flash, .enter { animation: none; }
+  .auto.run i { animation: none; width: 100%; }
+}

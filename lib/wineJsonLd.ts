@@ -54,6 +54,22 @@ export function buildWineProductJsonLd(wine: Wine, score: ScoreInput): Record<st
     },
   };
 
+  // En Offer per säljställe (BRIEF-KOMPASSEN.md, 9), även när det bara finns ett.
+  const sources: { shop: string; url?: string; price?: number | string; inStock: boolean }[] = wine.offers?.length
+    ? wine.offers
+    : wine.systembolagetUrl || wine.price
+    ? [{ shop: "Systembolaget", url: wine.systembolagetUrl, price: wine.price, inStock: true }]
+    : [];
+  const offers = sources.map((o) => ({
+    "@type": "Offer",
+    ...(o.price ? { price: String(o.price) } : {}),
+    priceCurrency: "SEK",
+    availability: o.inStock ? "https://schema.org/InStock" : "https://schema.org/OutOfStock",
+    ...(o.url ? { url: o.url } : {}),
+    seller: { "@type": "Organization", name: o.shop },
+    ...shippingAndReturns,
+  }));
+
   return {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -64,29 +80,8 @@ export function buildWineProductJsonLd(wine: Wine, score: ScoreInput): Record<st
     ...(articleNumber ? { sku: articleNumber } : {}),
     manufacturer: { "@type": "Organization", name: wine.producer },
     ...(wine.producer ? { brand: { "@type": "Brand", name: wine.producer } } : {}),
-    ...(wine.primaryImageUrl ? { image: `${BASE}${wine.primaryImageUrl}` } : {}),
-    ...(wine.price
-      ? {
-          offers: {
-            "@type": "Offer",
-            price: wine.price,
-            priceCurrency: "SEK",
-            availability: "https://schema.org/InStock",
-            ...(wine.systembolagetUrl ? { url: wine.systembolagetUrl } : {}),
-            ...shippingAndReturns,
-          },
-        }
-      : wine.systembolagetUrl
-      ? {
-          offers: {
-            "@type": "Offer",
-            url: wine.systembolagetUrl,
-            priceCurrency: "SEK",
-            availability: "https://schema.org/InStock",
-            ...shippingAndReturns,
-          },
-        }
-      : {}),
+    ...(wine.primaryImageUrl ? { image: /^https?:/.test(wine.primaryImageUrl) ? wine.primaryImageUrl : `${BASE}${wine.primaryImageUrl}` } : {}),
+    ...(offers.length ? { offers } : {}),
     review: {
       "@type": "Review",
       reviewRating: {

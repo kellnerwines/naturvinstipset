@@ -22,7 +22,7 @@ export async function generateMetadata({
   const bar = getBarBySlug(slug);
   if (!bar) return { title: "Vinbar" };
   return {
-    title: `${bar.name} – Naturvinsbar i ${bar.city} | Naturvinstipset`,
+    title: `${bar.name} – Naturvinsbar i ${bar.city}`,
     description: bar.description,
     openGraph: {
       title: `${bar.name} – Naturvinsbar i ${bar.city}`,
@@ -182,7 +182,7 @@ export default async function BarPage({
           <p className="text-sm text-black/50">Vår rankning av de bästa naturvinerna på Systembolaget.</p>
         </div>
         <Link
-          href="/"
+          href="/topp-100"
           className="shrink-0 text-sm font-semibold text-[var(--fg)] border border-[var(--fg)] px-5 py-3 hover:bg-[var(--fg)] hover:text-[var(--bg)] transition-colors"
         >
           Se Topp 100 →

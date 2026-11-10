@@ -4,7 +4,7 @@ import BarMap from "@/components/BarMap";
 import { getBarsByCity } from "@/lib/bars";
 
 export const metadata: Metadata = {
-  title: "Bästa naturvinsbarerna i Stockholm 2026 | Naturvinstipset",
+  title: "Bästa naturvinsbarerna i Stockholm 2026",
   description:
     "Naturvinstipsets guide till de 15 bästa ställena att dricka naturvin i Stockholm — från Södermalms mysiga vinbarer till Östermalms avskalade alternativ. Med adresser, priser och omdömen.",
   openGraph: {
@@ -330,7 +330,7 @@ export default function BastaNaturvinsbarer() {
             </p>
           </div>
           <Link
-            href="/"
+            href="/topp-100"
             className="shrink-0 inline-flex items-center gap-2 text-sm font-semibold text-[var(--fg)] border border-[var(--fg)] px-5 py-3 hover:bg-[var(--fg)] hover:text-[var(--bg)] transition-colors"
           >
             Se Topp 100 →

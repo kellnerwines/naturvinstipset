@@ -10,9 +10,19 @@ const FAQS = [
       "Ja, nästan allt vin innehåller viss mängd sulfiter eftersom de bildas naturligt under jäsningen. Naturvin tillsätts dock sällan extra svavel i källaren, vilket ofta ger betydligt lägre sulfithalter än konventionellt vin.",
   },
   {
+    question: "Var kan man köpa naturvin online i Sverige?",
+    answer:
+      "Du kan beställa naturvin från webbutiker med hemleverans, till exempel Vin & Natur, Flaskvis och Philipson Wine, eller hämta det på Systembolaget. Vinkompassen här på Naturvinstipset visar viner från båda. Vi listar bara webbutiker som säljer till Sverige med svensk alkoholskatt inräknad i priset, så att priset du ser är det du betalar för vinet.",
+  },
+  {
+    question: "Ingår alkoholskatten när man köper vin från en webbutik i EU?",
+    answer:
+      "Inte alltid. När vin skickas hem till dig i Sverige ska svensk alkoholskatt betalas. En del webbutiker tar med den i priset, medan andra låter dig som köpare betala skatten själv i efterhand. Webbutikerna på Naturvinstipset har svensk alkoholskatt inräknad i priset. Kontrollera alltid villkoren innan du beställer från en butik vi inte listar.",
+  },
+  {
     question: "Hur hittar man naturvin på Systembolaget?",
     answer:
-      "De flesta naturviner säljs via Systembolagets tillfälliga sortiment och beställningssortiment snarare än i den fasta hyllan, så de kan vara svåra att hitta på egen hand. Enklast är att söka på producent eller artikelnummer direkt på systembolaget.se — eller använda vår rankade lista här på Naturvinstipset med direktlänkar till varje vin.",
+      "De flesta naturviner säljs via Systembolagets tillfälliga sortiment och beställningssortiment snarare än i den fasta hyllan, så de kan vara svåra att hitta på egen hand. Enklast är att söka på producent eller artikelnummer direkt på systembolaget.se — eller använda vår Topp 100-lista här på Naturvinstipset med direktlänkar till varje vin.",
   },
 ];
 

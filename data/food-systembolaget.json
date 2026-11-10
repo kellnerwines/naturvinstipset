@@ -1,0 +1,581 @@
+{
+ "fred-12-nv": {
+  "foodPairing": "Paprikagryta med nötkött, potatisklyftor med rökt paprika eller svampstuvning.",
+  "foodCategories": [
+   "kott",
+   "vego"
+  ],
+  "ownImport": false
+ },
+ "oragech-2024": {
+  "foodPairing": "Anka med rödkål, grön curry med kyckling eller en bit lagrad getost.",
+  "foodCategories": [
+   "kryddigt",
+   "ost",
+   "vego"
+  ],
+  "ownImport": false
+ },
+ "hisno-vino-blanc-2023": {
+  "foodPairing": "Grillad abborre, sparrissallad eller friterade grönsaker med citronmajonnäs.",
+  "foodCategories": [
+   "aperitif",
+   "fisk",
+   "vego"
+  ],
+  "ownImport": false
+ },
+ "nach-2024": {
+  "foodPairing": "Rökt fläsk med kål, kyckling med svamp eller en tjock linssoppa.",
+  "foodCategories": [
+   "fagel",
+   "flask",
+   "vego"
+  ],
+  "ownImport": false
+ },
+ "bel-2024": {
+  "foodPairing": "Gös med brynt smör, räkmacka eller kall sparris.",
+  "foodCategories": [
+   "aperitif",
+   "fisk"
+  ],
+  "ownImport": false
+ },
+ "cabernet-franc-2023": {
+  "foodPairing": "Fläskkarré med senap, pasta med svamp och timjan eller grillad kyckling.",
+  "foodCategories": [
+   "fagel",
+   "flask",
+   "vego"
+  ],
+  "ownImport": false
+ },
+ "fka-2022": {
+  "foodPairing": "Hamburgare från grillen, revbensspjäll eller rostad kyckling med örter.",
+  "foodCategories": [
+   "fagel",
+   "flask",
+   "kott"
+  ],
+  "ownImport": false
+ },
+ "lentico-col-fondo-2022": {
+  "foodPairing": "Friterad småfisk, salami och oliver eller en enkel risotto.",
+  "foodCategories": [
+   "aperitif",
+   "fisk"
+  ],
+  "ownImport": false
+ },
+ "veltlin-2022": {
+  "foodPairing": "Kyckling i gräddsås, kokt torsk med pepparrot eller pasta med zucchini.",
+  "foodCategories": [
+   "fagel",
+   "fisk",
+   "vego"
+  ],
+  "ownImport": false
+ },
+ "controlled-chaos-2023": {
+  "foodPairing": "Lammkotletter, högrev från grillen eller lagrad hårdost.",
+  "foodCategories": [
+   "kott",
+   "ost"
+  ],
+  "ownImport": false
+ },
+ "schiller-fercsy-2021": {
+  "foodPairing": "Fläskfilé med paprika, kycklinglårfilé från ugnen eller rödbetsbiffar.",
+  "foodCategories": [
+   "fagel",
+   "flask",
+   "vego"
+  ],
+  "ownImport": false
+ },
+ "good-intentions-ii-2021": {
+  "foodPairing": "Gulasch, lammkorv eller långkok på högrev.",
+  "foodCategories": [
+   "kott",
+   "ost"
+  ],
+  "ownImport": false
+ },
+ "cervene-2020": {
+  "foodPairing": "Lammstek med vitlök, viltgryta eller en bit lagrad cheddar.",
+  "foodCategories": [
+   "flask",
+   "kott"
+  ],
+  "ownImport": false
+ },
+ "wilde-witte-2020": {
+  "foodPairing": "Kokt kräftor, stekt strömming eller ugnsrostade rotfrukter.",
+  "foodCategories": [
+   "aperitif",
+   "fisk",
+   "vego"
+  ],
+  "ownImport": false
+ },
+ "chardonnay-vom-kalk-2023": {
+  "foodPairing": "Stekt kyckling med citron, gravad lax eller gös med smörsås.",
+  "foodCategories": [
+   "fagel",
+   "fisk"
+  ],
+  "ownImport": false
+ },
+ "revolution-white-maceration-2025": {
+  "foodPairing": "Indisk dal, grön curry eller en ostbricka med aprikosmarmelad.",
+  "foodCategories": [
+   "kryddigt",
+   "ost",
+   "vego"
+  ],
+  "ownImport": false
+ },
+ "el-marujo-joven-2022": {
+  "foodPairing": "Lammgryta med vitlök, chorizo eller ugnsrostade bönor med tomat.",
+  "foodCategories": [
+   "flask",
+   "kott",
+   "vego"
+  ],
+  "ownImport": false
+ },
+ "kalkspitz-nv": {
+  "foodPairing": "Ostron, räkor med aioli eller friterade grönsaker.",
+  "foodCategories": [
+   "aperitif",
+   "fisk"
+  ],
+  "ownImport": false
+ },
+ "tuff-nutt-bianco-pet-nat-2025": {
+  "foodPairing": "Thailändsk räksallad, kryddiga kycklingvingar eller tacos med fisk.",
+  "foodCategories": [
+   "aperitif",
+   "kryddigt"
+  ],
+  "ownImport": false
+ },
+ "sp68-rosso-2024": {
+  "foodPairing": "Grillade sardiner, tonfisk med kapris eller ugnsrostad aubergine.",
+  "foodCategories": [
+   "fagel",
+   "fisk",
+   "vego"
+  ],
+  "ownImport": false
+ },
+ "le-naturel-vouvray-pet-nat-2023": {
+  "foodPairing": "Getost med honung, rökt laxtartar eller gös med vitvinssås.",
+  "foodCategories": [
+   "aperitif",
+   "fisk",
+   "ost"
+  ],
+  "ownImport": false
+ },
+ "teroldego-2023": {
+  "foodPairing": "Vilt med svamp, köttbullar med lingon eller pasta med salsiccia.",
+  "foodCategories": [
+   "kott",
+   "vego"
+  ],
+  "ownImport": false
+ },
+ "macchiona-2009": {
+  "foodPairing": "Lasagne, salami och parmesan eller en fyllig köttgryta.",
+  "foodCategories": [
+   "kott",
+   "ost"
+  ],
+  "ownImport": false
+ },
+ "furmint-sz-raz-sec-2005": {
+  "foodPairing": "Kryddig korv, anka eller en kraftig blåmögelost.",
+  "foodCategories": [
+   "fagel",
+   "flask",
+   "kryddigt",
+   "ost"
+  ],
+  "ownImport": false
+ },
+ "domaine-de-trevallon-rouge-2022": {
+  "foodPairing": "Lammstek med rosmarin och oliver eller en långkokt köttgryta.",
+  "foodCategories": [
+   "kott"
+  ],
+  "ownImport": false
+ },
+ "chablis-2022": {
+  "foodPairing": "Ostron, kokt torsk med äggsås eller räkor.",
+  "foodCategories": [
+   "fisk"
+  ],
+  "ownImport": false
+ },
+ "saroto-white-2024": {
+  "foodPairing": "Grillad kyckling, stekt fisk med citron eller en sommarsallad med fetaost.",
+  "foodCategories": [
+   "fagel",
+   "fisk"
+  ],
+  "ownImport": true
+ },
+ "saroto-palhete-2024": {
+  "foodPairing": "Lätt kyld till grillat fläsk, sardiner eller chark och oliver.",
+  "foodCategories": [
+   "aperitif",
+   "fisk",
+   "flask"
+  ],
+  "ownImport": true
+ },
+ "barroca-white-2023": {
+  "foodPairing": "Kyckling med citron och vitlök, stekt torsk eller ugnsbakad potatis med örter.",
+  "foodCategories": [
+   "fagel",
+   "fisk"
+  ],
+  "ownImport": true
+ },
+ "arinto-na-nfora-2024": {
+  "foodPairing": "Grönsaksgryta med kikärtor, kryddig kycklinggryta eller en bit lagrad fårost.",
+  "foodCategories": [
+   "kryddigt",
+   "ost",
+   "vego"
+  ],
+  "ownImport": true
+ },
+ "arinto-2024": {
+  "foodPairing": "Grillad fisk med citron, kycklingspett eller räkor med vitlök.",
+  "foodCategories": [
+   "fagel",
+   "fisk"
+  ],
+  "ownImport": true
+ },
+ "baga-clarete-2024": {
+  "foodPairing": "Lätt kyld till chark, grillad korv eller laxsallad.",
+  "foodCategories": [
+   "aperitif",
+   "fisk",
+   "flask"
+  ],
+  "ownImport": true
+ },
+ "brqa-2023": {
+  "foodPairing": "Grillad fläskkarré, lammfärsbiffar eller en kraftig korvgryta.",
+  "foodCategories": [
+   "flask",
+   "kott"
+  ],
+  "ownImport": true
+ },
+ "encruzado-2023": {
+  "foodPairing": "Stekt kyckling, fisk i ugn med fänkål eller svampsoppa.",
+  "foodCategories": [
+   "fagel",
+   "fisk",
+   "vego"
+  ],
+  "ownImport": false
+ },
+ "versante-nord-2022": {
+  "foodPairing": "Pasta med aubergine och tomat, kyckling med oliver eller grillad korv.",
+  "foodCategories": [
+   "fagel",
+   "flask",
+   "vego"
+  ],
+  "ownImport": false
+ },
+ "cortado-2024": {
+  "foodPairing": "Chark och oliver, kyckling med paprika eller grillad fläskkotlett.",
+  "foodCategories": [
+   "aperitif",
+   "fagel",
+   "flask"
+  ],
+  "ownImport": false
+ },
+ "saltamart-2021": {
+  "foodPairing": "Grillad korv, lammfärsbiffar eller ugnsrostad paprika med vitlök.",
+  "foodCategories": [
+   "flask",
+   "kott",
+   "vego"
+  ],
+  "ownImport": false
+ },
+ "voskeni-areni-2021": {
+  "foodPairing": "Lammspett med kryddor, grillad kyckling eller fyllda paprikor.",
+  "foodCategories": [
+   "fagel",
+   "flask",
+   "kryddigt"
+  ],
+  "ownImport": false
+ },
+ "shoror-voskehat-2023": {
+  "foodPairing": "Grillad fisk med örter, fetaost med gurka eller grönsaksspett.",
+  "foodCategories": [
+   "aperitif",
+   "fisk",
+   "vego"
+  ],
+  "ownImport": false
+ },
+ "shoror-areni-2021": {
+  "foodPairing": "Kryddig köttfärs i pitabröd, kyckling på grillen eller grillad aubergine.",
+  "foodCategories": [
+   "fagel",
+   "flask",
+   "kryddigt"
+  ],
+  "ownImport": false
+ },
+ "shoror-areni-reserve-2021": {
+  "foodPairing": "Lammstek, grillad entrecôte eller en långkokt köttgryta.",
+  "foodCategories": [
+   "kott"
+  ],
+  "ownImport": false
+ },
+ "shoror-kangun-voskehat-reserve-2023": {
+  "foodPairing": "Kyckling med citron, grillad fisk eller fyllda vinblad med yoghurt.",
+  "foodCategories": [
+   "fagel",
+   "fisk"
+  ],
+  "ownImport": false
+ },
+ "voskeni-volcani-kangun-2022": {
+  "foodPairing": "Färsk getost, grillad fisk eller sallad med örter och granatäpple.",
+  "foodCategories": [
+   "aperitif",
+   "fisk",
+   "vego"
+  ],
+  "ownImport": false
+ },
+ "voskeni-voskehat-2021": {
+  "foodPairing": "Gurksallad med dill, fisk från grillen eller fetaost och oliver.",
+  "foodCategories": [
+   "aperitif",
+   "fisk",
+   "vego"
+  ],
+  "ownImport": false
+ },
+ "arewine-jigouli-06-2023": {
+  "foodPairing": "Kryddig köttfärsgryta, lagrad ost eller grillad halloumi.",
+  "foodCategories": [
+   "kott",
+   "kryddigt",
+   "ost"
+  ],
+  "ownImport": false
+ },
+ "khme-karasi-2023": {
+  "foodPairing": "Halloumi med aprikos och chili, kryddig grönsaksgryta eller lagrad fårost.",
+  "foodCategories": [
+   "kryddigt",
+   "ost",
+   "vego"
+  ],
+  "ownImport": false
+ },
+ "chat-fou-2021": {
+  "foodPairing": "Grillad korv, lammfärsbiffar eller köttgryta med oliver.",
+  "foodCategories": [
+   "flask",
+   "kott"
+  ],
+  "ownImport": false
+ },
+ "clos-du-tue-boeuf-vin-blanc-2023": {
+  "foodPairing": "Getost, sparrispaj eller fisk med smörsås.",
+  "foodCategories": [
+   "fisk",
+   "ost",
+   "vego"
+  ],
+  "ownImport": false
+ },
+ "tom-barbera-2021": {
+  "foodPairing": "Pasta med köttfärssås, kycklinglår med svamp eller rostade grönsaker.",
+  "foodCategories": [
+   "fagel",
+   "flask",
+   "vego"
+  ],
+  "ownImport": false
+ },
+ "pregadeu-2023": {
+  "foodPairing": "Friterad bläckfisk, tapas med skinka eller räkor i vitlöksolja.",
+  "foodCategories": [
+   "aperitif",
+   "fisk"
+  ],
+  "ownImport": false
+ },
+ "lluerna-2021": {
+  "foodPairing": "Räkor i vitlöksolja, grillad fisk eller tomatbröd med skinka.",
+  "foodCategories": [
+   "aperitif",
+   "fisk"
+  ],
+  "ownImport": false
+ },
+ "encostas-de-melgaco-alvarinho-2023": {
+  "foodPairing": "Ostron, kryddig räksallad eller friterad fisk.",
+  "foodCategories": [
+   "aperitif",
+   "fisk",
+   "kryddigt"
+  ],
+  "ownImport": false
+ },
+ "pequenos-rebentos-alvarinho-2025": {
+  "foodPairing": "Stekt fisk med citron, musslor eller räkor.",
+  "foodCategories": [
+   "aperitif",
+   "fisk"
+  ],
+  "ownImport": false
+ },
+ "acrobat-2023": {
+  "foodPairing": "Kryddig grillkorv, kycklingspett eller fläskkotlett från grillen.",
+  "foodCategories": [
+   "fagel",
+   "flask",
+   "kryddigt"
+  ],
+  "ownImport": false
+ },
+ "pequenos-rebentos-atlantico-2024": {
+  "foodPairing": "Lätt kyld till grillad fisk, chark eller fläskkotlett.",
+  "foodCategories": [
+   "aperitif",
+   "fisk",
+   "flask"
+  ],
+  "ownImport": false
+ },
+ "druida-reserva-encruzado-2023": {
+  "foodPairing": "Kyckling i ugn, torsk med smör eller en krämig risotto.",
+  "foodCategories": [
+   "fagel",
+   "fisk"
+  ],
+  "ownImport": false
+ },
+ "pequenos-rebentos-o-caminho-2023": {
+  "foodPairing": "Kokt fisk med äggsås, kyckling med citron eller sparris.",
+  "foodCategories": [
+   "fagel",
+   "fisk"
+  ],
+  "ownImport": false
+ },
+ "tinto-do-tareco-2023": {
+  "foodPairing": "Grillat fläsk, köttgryta med rött vin eller korv och bönor.",
+  "foodCategories": [
+   "flask",
+   "kott"
+  ],
+  "ownImport": false
+ },
+ "casa-de-sarmento-branco-bruto-2021": {
+  "foodPairing": "Räkor, stekt fisk eller chips och oliver.",
+  "foodCategories": [
+   "aperitif",
+   "fisk"
+  ],
+  "ownImport": false
+ },
+ "campolargo-baga-castelao-2019": {
+  "foodPairing": "Helstekt spädgris eller fläskstek, rostad kyckling eller lammkotletter.",
+  "foodCategories": [
+   "fagel",
+   "flask",
+   "kott"
+  ],
+  "ownImport": false
+ },
+ "permitido-branco-2024": {
+  "foodPairing": "Kyckling med örter, stekt fisk eller en grönsakspaj.",
+  "foodCategories": [
+   "fagel",
+   "fisk",
+   "vego"
+  ],
+  "ownImport": false
+ },
+ "ancestral-pet-nat-2024": {
+  "foodPairing": "Ostron, friterad fisk eller räkor med citron.",
+  "foodCategories": [
+   "aperitif",
+   "fisk"
+  ],
+  "ownImport": false
+ },
+ "mm-rouge-2023": {
+  "foodPairing": "Grillat fläsk, chark och oliver eller kyckling med örter.",
+  "foodCategories": [
+   "aperitif",
+   "fagel",
+   "flask"
+  ],
+  "ownImport": false
+ },
+ "menard-le-rouge-2023": {
+  "foodPairing": "Fläskfilé med svamp, kycklinggryta eller rotfrukter från ugnen.",
+  "foodCategories": [
+   "fagel",
+   "flask",
+   "vego"
+  ],
+  "ownImport": false
+ },
+ "les-sablonnettes-zeste-2023": {
+  "foodPairing": "Getost, räkor eller kall sparris.",
+  "foodCategories": [
+   "aperitif",
+   "fisk"
+  ],
+  "ownImport": false
+ },
+ "paloma-2023": {
+  "foodPairing": "Chark, grillad korv eller pizza.",
+  "foodCategories": [
+   "aperitif",
+   "flask"
+  ],
+  "ownImport": false
+ },
+ "mm-blanc-2022": {
+  "foodPairing": "Kryddig wok, räkor med chili eller fisktacos.",
+  "foodCategories": [
+   "aperitif",
+   "kryddigt"
+  ],
+  "ownImport": false
+ },
+ "orange-mauzanic-2022": {
+  "foodPairing": "Kryddig grönsaksgryta, halloumi eller lagrad getost.",
+  "foodCategories": [
+   "kryddigt",
+   "ost",
+   "vego"
+  ],
+  "ownImport": false
+ }
+}

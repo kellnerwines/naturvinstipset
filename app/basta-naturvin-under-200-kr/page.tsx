@@ -6,13 +6,13 @@ import GuideWineList from "@/components/GuideWineList";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
-  title: "Bästa naturvinet under 200 kr på Systembolaget | Naturvinstipset",
+  title: "Bästa naturvinet under 200 kr på Systembolaget eller från webbutiker med hemleverans",
   description:
-    "Vi har samlat de bästa naturvinerna under 200 kr på Systembolaget. Handplockade av Sveriges seriösaste naturvinsimportörer — med direktlänkar och smakparametrar.",
+    "Vi har samlat de bästa naturvinerna under 200 kr på Systembolaget eller från webbutiker med hemleverans. Handplockade av Sveriges seriösaste naturvinsimportörer — med direktlänkar och smakparametrar.",
   openGraph: {
-    title: "Bästa naturvinet under 200 kr på Systembolaget",
+    title: "Bästa naturvinet under 200 kr på Systembolaget eller från webbutiker med hemleverans",
     description:
-      "De bästa naturvinerna under 200 kr på Systembolaget — handplockade med direktlänkar.",
+      "De bästa naturvinerna under 200 kr på Systembolaget eller från webbutiker med hemleverans — handplockade med direktlänkar.",
     url: "https://www.naturvinstipset.se/basta-naturvin-under-200-kr",
   },
 };
@@ -20,9 +20,9 @@ export const metadata: Metadata = {
 const jsonLd = {
   "@context": "https://schema.org",
   "@type": "CollectionPage",
-  name: "Bästa naturvinet under 200 kr på Systembolaget",
+  name: "Bästa naturvinet under 200 kr på Systembolaget eller från webbutiker med hemleverans",
   description:
-    "De bästa naturvinerna under 200 kr på Systembolaget. Handplockade av Naturvinstipset.",
+    "De bästa naturvinerna under 200 kr på Systembolaget eller från webbutiker med hemleverans. Handplockade av Naturvinstipset.",
   url: "https://www.naturvinstipset.se/basta-naturvin-under-200-kr",
   publisher: { "@type": "Organization", name: "Naturvinstipset" },
 };
@@ -56,7 +56,7 @@ export default async function BastaNaturvinUnder200Page() {
           </h1>
           <p className="text-base text-[var(--muted)] leading-relaxed max-w-lg">
             Naturvin behöver inte kosta skjortan. Vi har samlat de bästa
-            naturvinerna under 200 kr på Systembolaget — handplockade av Sveriges
+            naturvinerna under 200 kr på Systembolaget eller från webbutiker med hemleverans — handplockade av Sveriges
             seriösaste naturvinsimportörer och betygsatta av vår redaktion och
             community.
           </p>
