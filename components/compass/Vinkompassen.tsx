@@ -30,7 +30,7 @@ const PANELS: [PanelKey, string][] = [
   ["shop", "Hur vill du få vinet?"], ["prof", "Smakprofil"], ["tags", "Smak"], ["dfood", "Mat"],
   ["country", "Land"], ["grape", "Druva"], ["like", "Liknar ett vin jag gillar"],
 ];
-const S0 = ["Något kryddigt till solnedgången på balkongen", "Ett vitt till skaldjur under 250 kr", "Något funkigt och orange", "Ett rött till lammgryta", "Bubbel till mingel", "Från Portugal"];
+const S0 = ["Något kryddigt till solnedgången på balkongen", "Ett vitt till skaldjur under 300 kr", "Något funkigt och orange", "Ett rött till lammgryta", "Bubbel till mingel", "Från Portugal"];
 const S1 = ["Mer mineraliskt", "Från Portugal", "Lite mer funk", "Till kryddig mat", "Börja om"];
 const FIRST_SHOWN = 5;
 

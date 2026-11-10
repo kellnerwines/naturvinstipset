@@ -67,9 +67,9 @@ export function parse(raw: string, W: CompassWine[]): Parsed {
 
   /* budget */
   const m = t.match(/(\d{2,4})\s*(kr|kronor|:-|spänn)?/);
-  if (m) { const v = +m[1]; if (v >= 80 && v <= 5000) o.budget = v <= 150 ? "150" : v <= 250 ? "250" : v <= 400 ? "400" : "9999"; }
-  if (!o.budget && /billig|budget|inte för dyr|plånbok/.test(t)) o.budget = "150";
-  if (!o.budget && /prisvärt|vardagsvin|tisdag/.test(t)) o.budget = "250";
+  if (m) { const v = +m[1]; if (v >= 80 && v <= 5000) o.budget = v <= 200 ? "199" : v <= 300 ? "299" : v <= 400 ? "400" : "9999"; }
+  if (!o.budget && /billig|budget|inte för dyr|plånbok/.test(t)) o.budget = "199";
+  if (!o.budget && /prisvärt|vardagsvin|tisdag/.test(t)) o.budget = "299";
   if (!o.budget && /lyx|unna mig|spara inte|kalasvin|något fint/.test(t)) o.budget = "9999";
 
   /* äventyr */

@@ -1,5 +1,5 @@
 // Delbar URL för Vinkompassen (BRIEF-KOMPASSEN.md, 4.4), t.ex.
-// ?farg=vitt,orange&budget=250&aventyr=2&mat=fisk
+// ?farg=vitt,orange&budget=299&aventyr=2&mat=fisk
 // Ett svar "Spelar ingen roll" skrivs som "alla" så att frågan räknas som besvarad.
 
 import type { FoodCategory } from "../blob";
@@ -41,7 +41,9 @@ export function paramsToState(p: URLSearchParams): { state: CompassState; answer
     if (S.color.length || p.get("farg") === ANY) answered.push("color");
   }
   const b = p.get("budget");
-  if (b && (["150", "250", "400", "9999"].includes(b) || b === ANY)) { S.budget = b === ANY ? null : (b as Budget); answered.push("budget"); }
+  // Äldre delade länkar har budget=150/250 (stegen hette så före 2026-11-10).
+  const bb = b === "150" ? "199" : b === "250" ? "299" : b;
+  if (bb && (["199", "299", "400", "9999"].includes(bb) || bb === ANY)) { S.budget = bb === ANY ? null : (bb as Budget); answered.push("budget"); }
   const a = p.get("aventyr");
   if (a && (["1", "2", "3"].includes(a) || a === ANY)) { S.adv = a === ANY ? null : (a as Adventure); answered.push("adv"); }
   if (p.has("mat")) {

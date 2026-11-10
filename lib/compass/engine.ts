@@ -4,7 +4,7 @@
 import type { FoodCategory, Wine } from "../blob";
 
 export type Color = "Rött" | "Vitt" | "Orange" | "Rosé" | "Bubbel";
-export type Budget = "150" | "250" | "400" | "9999";
+export type Budget = "199" | "299" | "400" | "9999";
 export type Adventure = "1" | "2" | "3";
 export type ShopPref = "" | "sb" | "web";
 export type AxisKey = "s" | "f" | "st" | "fu";
@@ -75,7 +75,7 @@ export type Question = {
 export const QUESTIONS: Question[] = [
   { k: "color", h: "Vilken färg är du sugen på?", s: "Välj en eller flera.", multi: true,
     o: (["Rött", "Vitt", "Orange", "Rosé", "Bubbel"] as Color[]).map((c) => [c, c, COLOR_VAR[c]]) },
-  { k: "budget", h: "Hur mycket vill du lägga?", o: [["150", "Under 150 kr"], ["250", "Upp till 250 kr"], ["400", "Upp till 400 kr"]] },
+  { k: "budget", h: "Hur mycket vill du lägga?", o: [["199", "Under 199 kr"], ["299", "Upp till 299 kr"], ["400", "Upp till 400 kr"]] },
   { k: "adv", h: "Hur vilt får det smaka?", s: "Naturvin kan smaka precis som vanligt vin eller vara riktigt funky.",
     o: [["1", "Som ett vanligt vin"], ["2", "Överraska mig lite"], ["3", "Ge mig något funky"]] },
   { k: "food", h: "Ska vinet passa till mat?", s: "Välj en eller flera.", multi: true, none: "none",
@@ -217,14 +217,14 @@ export function matching(S: CompassState, W: CompassWine[], relax: Set<RelaxKey>
   return W.filter((w) => F.every((f) => f(w)));
 }
 
-const BUDGET_STEPS: Budget[] = ["150", "250", "400"];
+const BUDGET_STEPS: Budget[] = ["199", "299", "400"];
 const nextBudget = (b: Budget | null): Budget | null =>
   b ? BUDGET_STEPS[BUDGET_STEPS.indexOf(b) + 1] ?? null : null;
 
 /**
  * Hårda filter, och om färre än 3 viner matchar släpps ett filter i taget i
  * RELAX-ordning – bara om det ger fler träffar. Färg släpps bara vid 0 träffar.
- * Budgeten höjs ett steg i taget (150 → 250 → 400) innan den släpps helt, och
+ * Budgeten höjs ett steg i taget (199 → 299 → 400) innan den släpps helt, och
  * viner som uppfyller alla val visas alltid före de som kom med när ett filter släpptes.
  */
 export function pick(S: CompassState, W: CompassWine[]): { list: Scored[]; relax: RelaxKey[]; budget?: Budget } {
@@ -257,7 +257,7 @@ export function pick(S: CompassState, W: CompassWine[]): { list: Scored[]; relax
 export const relaxLabel = (keys: RelaxKey[]) =>
   keys.map((k) => RELAX.find((r) => r[0] === k)![1]).join(" och ");
 
-/** "För få viner matchade alla dina val, så jag bortsåg från mat och tog med viner upp till 250 kr." */
+/** "För få viner matchade alla dina val, så jag bortsåg från mat och tog med viner upp till 299 kr." */
 export function relaxMessage(keys: RelaxKey[], budget?: Budget): string {
   const parts: string[] = [];
   if (keys.length) parts.push(`bortsåg från ${relaxLabel(keys)}`);

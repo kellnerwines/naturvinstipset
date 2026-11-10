@@ -81,12 +81,12 @@ describe("poängmotorn", () => {
   });
 
   it("filtrerar på färg, budget och mat", () => {
-    const { list, relax } = pick(state({ color: ["Vitt"], budget: "250", food: ["fisk"] }), W);
+    const { list, relax } = pick(state({ color: ["Vitt"], budget: "299", food: ["fisk"] }), W);
     expect(relax).toEqual([]);
     expect(list.length).toBeGreaterThanOrEqual(3);
     for (const { w } of list) {
       expect(w.t).toBe("Vitt");
-      expect(w.pr).toBeLessThanOrEqual(250);
+      expect(w.pr).toBeLessThanOrEqual(299);
       expect(w.food).toContain("fisk");
     }
   });
@@ -117,15 +117,20 @@ describe("poängmotorn", () => {
       cw({ id: "d", pr: 239, rt: 5 }),
       cw({ id: "e", pr: 599, rt: 5 }),
     ];
-    const r = pick(state({ budget: "150" }), X);
+    const r = pick(state({ budget: "199" }), X);
     expect(r.relax).toEqual([]);
-    expect(r.budget).toBe("250");
+    expect(r.budget).toBe("299");
     expect(r.list.map(({ w }) => w.id)).toEqual(["a", "b", "c", "d"]);
-    expect(relaxMessage(r.relax, r.budget)).toBe("För få viner matchade alla dina val, så jag tog med viner upp till 250 kr.");
+    expect(relaxMessage(r.relax, r.budget)).toBe("För få viner matchade alla dina val, så jag tog med viner upp till 299 kr.");
     // räcker inget steg släpps budgeten helt
-    const only = pick(state({ budget: "150" }), [cw({ id: "x", pr: 900 })]);
+    const only = pick(state({ budget: "199" }), [cw({ id: "x", pr: 900 })]);
     expect(only.relax).toEqual(["budget"]);
     expect(only.budget).toBeUndefined();
+  });
+
+  it("äldre delade länkar med budget=150/250 får de nya stegen", () => {
+    expect(paramsToState(new URLSearchParams("budget=150")).state.budget).toBe("199");
+    expect(paramsToState(new URLSearchParams("budget=250")).state.budget).toBe("299");
   });
 
   it("butiksfiltret", () => {
@@ -155,7 +160,7 @@ describe("fritext", () => {
   });
 
   it("förstår budget, funk, mat och land", () => {
-    expect(parse("ett vitt till skaldjur under 250 kr", W)).toMatchObject({ color: ["Vitt"], budget: "250", food: ["fisk"] });
+    expect(parse("ett vitt till skaldjur under 300 kr", W)).toMatchObject({ color: ["Vitt"], budget: "299", food: ["fisk"] });
     expect(parse("inte för funkigt", W).adv).toBe("1");
     expect(parse("ge mig något funkigt", W).adv).toBe("3");
     expect(parse("något fint", W).budget).toBe("9999");
@@ -192,16 +197,16 @@ describe("fritext", () => {
 
 describe("delbar URL", () => {
   it("speglar valen och läser tillbaka dem", () => {
-    const S = state({ color: ["Vitt", "Orange"], budget: "250", adv: "2", food: ["fisk"], tags: ["Mineralisk"], ax: { s: 4, f: 0, st: 0, fu: 0 }, country: "Frankrike", shop: "web" });
+    const S = state({ color: ["Vitt", "Orange"], budget: "299", adv: "2", food: ["fisk"], tags: ["Mineralisk"], ax: { s: 4, f: 0, st: 0, fu: 0 }, country: "Frankrike", shop: "web" });
     const answered: QuestionKey[] = ["color", "budget", "adv", "food"];
     const p = stateToParams(S, answered);
-    expect(p.toString()).toContain("farg=vitt%2Corange&budget=250&aventyr=2&mat=fisk");
+    expect(p.toString()).toContain("farg=vitt%2Corange&budget=299&aventyr=2&mat=fisk");
     expect(paramsToState(p)).toEqual({ state: S, answered });
   });
 
   it("läser exemplet från briefen och 'Spelar ingen roll'", () => {
-    const r = paramsToState(new URLSearchParams("farg=vitt,orange&budget=250&aventyr=2&mat=fisk"));
-    expect(r.state).toMatchObject({ color: ["Vitt", "Orange"], budget: "250", adv: "2", food: ["fisk"] });
+    const r = paramsToState(new URLSearchParams("farg=vitt,orange&budget=299&aventyr=2&mat=fisk"));
+    expect(r.state).toMatchObject({ color: ["Vitt", "Orange"], budget: "299", adv: "2", food: ["fisk"] });
     expect(r.answered).toEqual(["color", "budget", "adv", "food"]);
     const any = paramsToState(new URLSearchParams("farg=alla&budget=alla&aventyr=alla&mat=alla"));
     expect(any.answered).toHaveLength(4);
