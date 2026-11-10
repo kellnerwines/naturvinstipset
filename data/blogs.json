@@ -40,7 +40,10 @@
     "wineQuery": {
       "mat": "flask,fisk"
     },
-    "wineHeading": "Fler naturviner till julbordet just nu"
+    "wineHeading": "Fler naturviner till julbordet just nu",
+    "imageUrl": "/uploads/blogg/naturvin-till-julbordet.jpg",
+    "imageCredit": "Vladimir Gladkov på Unsplash",
+    "imageCreditUrl": "https://unsplash.com/photos/6QtccoZQnpk"
   },
   {
     "id": "sasong-bubbel-till-nyar-pet-nat",
@@ -53,7 +56,10 @@
     "wineQuery": {
       "farg": "bubbel"
     },
-    "wineHeading": "Fler naturliga bubblor just nu"
+    "wineHeading": "Fler naturliga bubblor just nu",
+    "imageUrl": "/uploads/blogg/bubbel-till-nyar-pet-nat.jpg",
+    "imageCredit": "Alexandria Courtney på Unsplash",
+    "imageCreditUrl": "https://unsplash.com/photos/9b0KKhw9CU8"
   },
   {
     "id": "sasong-naturvin-till-vinterns-langkok",
@@ -68,7 +74,10 @@
       "mat": "kott",
       "fyllighet": "4"
     },
-    "wineHeading": "Fler röda naturviner till långkok just nu"
+    "wineHeading": "Fler röda naturviner till långkok just nu",
+    "imageUrl": "/uploads/blogg/naturvin-till-vinterns-langkok.jpg",
+    "imageCredit": "Gustavo Zambelli på Unsplash",
+    "imageCreditUrl": "https://unsplash.com/photos/YQ0hCwyIgUU"
   },
   {
     "id": "sasong-bra-naturvin-under-200-kr",
@@ -81,7 +90,10 @@
     "wineQuery": {
       "budget": "199"
     },
-    "wineHeading": "Fler naturviner under 200 kr just nu"
+    "wineHeading": "Fler naturviner under 200 kr just nu",
+    "imageUrl": "/uploads/blogg/bra-naturvin-under-200-kr.jpg",
+    "imageCredit": "Harper Sunday på Unsplash",
+    "imageCreditUrl": "https://unsplash.com/photos/9OVYIk_rqSQ"
   },
   {
     "id": "sasong-orangevin-till-kryddig-mat",
@@ -94,7 +106,10 @@
     "wineQuery": {
       "mat": "kryddigt"
     },
-    "wineHeading": "Fler naturviner till kryddig mat just nu"
+    "wineHeading": "Fler naturviner till kryddig mat just nu",
+    "imageUrl": "/uploads/blogg/orangevin-till-kryddig-mat.jpg",
+    "imageCredit": "Rimsha Noor på Unsplash",
+    "imageCreditUrl": "https://unsplash.com/photos/4v6tWt8BmNk"
   },
   {
     "id": "sasong-naturvin-till-ost",
@@ -107,7 +122,10 @@
     "wineQuery": {
       "mat": "ost"
     },
-    "wineHeading": "Fler naturviner till ost just nu"
+    "wineHeading": "Fler naturviner till ost just nu",
+    "imageUrl": "/uploads/blogg/naturvin-till-ost.jpg",
+    "imageCredit": "Giovanni L. på Unsplash",
+    "imageCreditUrl": "https://unsplash.com/photos/V8xQvN4xxZo"
   },
   {
     "id": "sasong-naturvin-till-paskbordet",
@@ -120,7 +138,10 @@
     "wineQuery": {
       "mat": "fisk,kott"
     },
-    "wineHeading": "Fler naturviner till påskbordet just nu"
+    "wineHeading": "Fler naturviner till påskbordet just nu",
+    "imageUrl": "/uploads/blogg/naturvin-till-paskbordet.jpg",
+    "imageCredit": "Michal Balog på Unsplash",
+    "imageCreditUrl": "https://unsplash.com/photos/O0bbw2Mo8Yk"
   },
   {
     "id": "sasong-varens-rose-naturvin",
@@ -133,7 +154,10 @@
     "wineQuery": {
       "farg": "rose"
     },
-    "wineHeading": "Fler roséviner just nu"
+    "wineHeading": "Fler roséviner just nu",
+    "imageUrl": "/uploads/blogg/varens-rose-naturvin.jpg",
+    "imageCredit": "Nataliya Melnychuk på Unsplash",
+    "imageCreditUrl": "https://unsplash.com/photos/51CJ8nl1Yrk"
   },
   {
     "id": "sasong-kylt-rott-naturvin-till-grillen",
@@ -148,7 +172,10 @@
       "fyllighet": "2",
       "smak": "lattsam"
     },
-    "wineHeading": "Fler lätta röda naturviner just nu"
+    "wineHeading": "Fler lätta röda naturviner just nu",
+    "imageUrl": "/uploads/blogg/kylt-rott-naturvin-till-grillen.jpg",
+    "imageCredit": "zeliha turk på Unsplash",
+    "imageCreditUrl": "https://unsplash.com/photos/-Cm583Ww2vo"
   },
   {
     "id": "sasong-naturvin-till-midsommar",
@@ -162,7 +189,10 @@
       "farg": "vitt,bubbel",
       "mat": "fisk"
     },
-    "wineHeading": "Fler friska naturviner till midsommar just nu"
+    "wineHeading": "Fler friska naturviner till midsommar just nu",
+    "imageUrl": "/uploads/blogg/naturvin-till-midsommar.jpg",
+    "imageCredit": "Davide Biscuso på Unsplash",
+    "imageCreditUrl": "https://unsplash.com/photos/MAs60jlt64U"
   },
   {
     "id": "sasong-naturvin-till-kraftskivan",
@@ -176,7 +206,10 @@
       "farg": "vitt",
       "mat": "fisk"
     },
-    "wineHeading": "Fler vita naturviner till kräftskivan just nu"
+    "wineHeading": "Fler vita naturviner till kräftskivan just nu",
+    "imageUrl": "/uploads/blogg/naturvin-till-kraftskivan.jpg",
+    "imageCredit": "Christy Fontenot på Unsplash",
+    "imageCreditUrl": "https://unsplash.com/photos/CfmsLiZthOo"
   },
   {
     "id": "sasong-naturvin-till-svamp",
@@ -190,6 +223,9 @@
       "farg": "rott",
       "mat": "vego"
     },
-    "wineHeading": "Fler naturviner till svamp just nu"
+    "wineHeading": "Fler naturviner till svamp just nu",
+    "imageUrl": "/uploads/blogg/naturvin-till-svamp.jpg",
+    "imageCredit": "Nick Grappone på Unsplash",
+    "imageCreditUrl": "https://unsplash.com/photos/3U2J1dADs2Y"
   }
 ]

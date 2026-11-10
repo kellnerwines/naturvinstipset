@@ -125,6 +125,12 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
       {/* ── Article body ────────────────────────────────────────────────── */}
       <div className="max-w-2xl mx-auto px-6 py-14">
+        {post.imageCredit ? (
+          <p className="text-[11px] text-[var(--muted)] -mt-8 mb-10">
+            Foto:{" "}
+            {post.imageCreditUrl ? <a href={post.imageCreditUrl} rel="noopener" target="_blank" className="underline underline-offset-2">{post.imageCredit}</a> : post.imageCredit}
+          </p>
+        ) : null}
         {post.excerpt && (
           <p className="text-lg md:text-xl text-[var(--fg)] leading-relaxed font-medium mb-10 border-l-2 border-[var(--fg)] pl-5">
             {post.excerpt}

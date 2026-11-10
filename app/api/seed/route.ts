@@ -23,9 +23,18 @@ export async function POST(req: Request) {
     const current = await getBlogs();
     const have = new Set(current.map((b) => b.id));
     const fresh = fileBlogs.filter((b) => !have.has(b.id));
-    if (fresh.length) await saveBlogs([...current, ...fresh]);
+    // Befintliga inlägg utan bild får bild och fotokredit från filen; texter som admin ändrat rörs inte.
+    let imagesAdded = 0;
+    const byId = new Map(fileBlogs.map((b) => [b.id, b]));
+    const updated = current.map((b) => {
+      const f = byId.get(b.id);
+      if (b.imageUrl || !f?.imageUrl) return b;
+      imagesAdded++;
+      return { ...b, imageUrl: f.imageUrl, imageCredit: f.imageCredit, imageCreditUrl: f.imageCreditUrl };
+    });
+    if (fresh.length || imagesAdded) await saveBlogs([...updated, ...fresh]);
     revalidatePath("/blogg", "layout");
-    return NextResponse.json({ ok: true, blogsAdded: fresh.length });
+    return NextResponse.json({ ok: true, blogsAdded: fresh.length, imagesAdded });
   }
 
   const readData = async <T,>(file: string): Promise<T> =>
