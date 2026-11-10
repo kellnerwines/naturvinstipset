@@ -142,64 +142,119 @@ export const understood = (o: Parsed): boolean =>
 
 export const regexInterpreter: Interpreter = { parse };
 
-const FOOD_OPENERS: Record<string, string> = {
-  kryddigt: "Kryddig mat, då behövs ett vin som tål hettan och inte är för strävt.",
-  fisk: "Fisk och skaldjur, då letar jag efter syra och lite sälta.",
-  kott: "Till kött, då får vinet gärna ha lite grepp.",
-  fagel: "Fågel, det öppnar för både vitt, orange och lättare rött.",
-  flask: "Fläsk och chark, då vill man ha något saftigt som skär igenom fettet.",
-  vego: "Vegetariskt, då tittar jag efter jordiga och örtiga toner.",
-  ost: "Ost, då kan vinet gärna ha både syra och djup.",
+// ─── Svaret på fritext ────────────────────────────────────────────────────────
+// Bekräftar det kompassen förstått med användarens egna ord ("Ett lättdrucket
+// rött") och bygger vidare med vad det betyder för sökningen. Nästa fråga visas
+// direkt efteråt, så svaret räknar inte upp vad som saknas.
+
+/** Artikel och substantiv per färg. Neutrum utom rosé. */
+const NOUN: Record<Color, { art: "ett" | "en" | "något"; noun: string; after?: string }> = {
+  "Rött": { art: "ett", noun: "rött" }, "Vitt": { art: "ett", noun: "vitt" }, "Orange": { art: "ett", noun: "orangevin" },
+  "Rosé": { art: "en", noun: "rosé" }, "Bubbel": { art: "något", noun: "", after: "som bubblar" },
 };
 
-/** Svar som speglar tolkningen i ord (inte bara listar den). */
-export function reflect(o: Parsed, raw: string, W: CompassWine[]): string {
-  const t = raw.toLowerCase();
-  let open: string;
-  if (o.mood === "sun") open = /solnedgång/.test(t) && /balkong/.test(t) ? "Solnedgång på balkongen, det låter som en fin kväll."
-    : /solnedgång/.test(t) ? "Ett glas i solnedgången, fint." : "Ute i solen alltså, då ska vinet vara svalt och piggt.";
-  else if (o.mood === "cozy") open = "En mysig kväll inne, då får vinet gärna ha lite mer kropp.";
-  else if (o.mood === "party") open = "Fest, då ska det vara lätt att tycka om.";
-  else if (o.food && !o.alone) open = FOOD_OPENERS[o.food[0]] ?? "Okej, jag förstår vad du är ute efter.";
-  else open = "Okej, jag förstår vad du är ute efter.";
+/** Adjektiv som [neutrum, utrum]. */
+const ADJ: [test: (o: Parsed) => boolean, neutrum: string, utrum: string][] = [
+  [(o) => o.tags.includes("Lättsam"), "lättdrucket", "lättdrucken"],
+  [(o) => o.tags.includes("Friskt"), "friskt", "frisk"],
+  [(o) => o.ax.f === 4, "fylligt", "fyllig"],
+  [(o) => o.tags.includes("Fruktig") && o.mood !== "party", "fruktigt", "fruktig"],
+  [(o) => o.tags.includes("Mineralisk"), "mineraliskt", "mineralisk"],
+  [(o) => o.tags.includes("Jordig") && o.mood !== "cozy", "jordigt", "jordig"],
+  [(o) => o.ax.st === 2, "mjukt", "mjuk"],
+  [(o) => o.ax.st === 4, "strävt", "sträv"],
+];
 
-  const p: string[] = [];
-  if (o.color) {
-    const c = o.color.filter((x) => !(o.skin && x === "Orange" && o.color!.includes("Vitt")));
-    const one: Record<Color, string> = { "Rött": "ett rött", "Vitt": "ett vitt", "Orange": "ett orange", "Rosé": "en rosé", "Bubbel": "något som bubblar" };
-    let s = c.length === 1 ? one[c[0]] : c.map((x) => x.toLowerCase()).join(" eller ");
-    if (o.skin) s += o.color.includes("Vitt")
-      ? ", och eftersom du nämner skalkontakt tar jag med orangeviner också, det är vita druvor som fått ligga på skalen"
-      : " med skalkontakt";
-    p.push(s);
-  }
-  if (o.tags.includes("Kryddig")) p.push("med lite kryddighet i doften");
-  if (o.mood === "sun") p.push("friskt och inte för fylligt, så att det håller sig pigg i värmen");
-  if (o.mood === "cozy") p.push("med lite djup och jordighet");
-  const rest = o.tags.filter((x) => !["Kryddig", "Friskt", "Lättsam", "Komplex", "Jordig", "Fruktig"].includes(x));
-  if (rest.length) p.push(rest.join(", ").toLowerCase());
-  if (o.ax.st === 2) p.push("mjukt i munnen");
-  if (o.ax.st === 4) p.push("med lite grepp");
-  if (o.ax.f === 4 && o.mood !== "cozy") p.push("med kropp");
-  if (o.alone) p.push("gott att dricka på egen hand");
-  if (o.budget) p.push(o.budget === "9999" ? "utan prisgräns" : label("budget", o.budget).toLowerCase());
-  if (o.adv) p.push({ "1": "som smakar som ett vanligt vin", "2": "som överraskar lite", "3": "som får vara riktigt funky" }[o.adv]);
-  if (o.shop) p.push(o.shop === "sb" ? "att hämta på Systembolaget" : "med hemleverans från en webbutik");
-  if (o.country) p.push("från " + o.country);
-  if (o.grape) p.push("gärna " + o.grape);
-  if (o.like) { const L = W.find((w) => w.id === o.like); if (L) p.push("i stil med " + L.n); }
-  return open + (p.length ? " Jag tänker " + (o.color ? "" : "något ") + p.join(", ") + "." : "");
+const FOOD_TO: Record<string, string> = {
+  fisk: "fisk och skaldjur", fagel: "fågel", kott: "kött", flask: "fläsk och chark", vego: "vegetariskt",
+  ost: "ost", kryddigt: "kryddig mat", aperitif: "fördrinken",
+};
+
+const FOOD_HINT: Record<string, string> = {
+  kryddigt: "då behövs ett vin som tål hettan och inte är för strävt",
+  fisk: "då letar jag efter syra och lite sälta",
+  kott: "då får vinet gärna ha lite grepp",
+  fagel: "det öppnar för både vitt, orange och lättare rött",
+  flask: "då vill man ha något saftigt som skär igenom fettet",
+  vego: "då tittar jag efter jordiga och örtiga toner",
+  ost: "då kan vinet gärna ha både syra och djup",
+};
+
+const MOOD_OPENER = (o: Parsed, t: string): string | undefined => {
+  if (o.mood === "sun") return /solnedgång/.test(t) && /balkong/.test(t) ? "Solnedgång på balkongen, det låter som en fin kväll."
+    : /solnedgång/.test(t) ? "Ett glas i solnedgången, fint." : "Ute i solen alltså, då ska vinet vara svalt och piggt.";
+  if (o.mood === "cozy") return "En mysig kväll inne, då får vinet gärna ha lite mer kropp.";
+  if (o.mood === "party") return "Fest, då ska det vara lätt att tycka om.";
+  return undefined;
+};
+
+/** Vad tolkningen betyder för sökningen, en bisats. Mest specifikt först. */
+function hint(o: Parsed, color: Color[]): string | undefined {
+  const one = color.length === 1 ? color[0] : undefined;
+  const light = o.tags.includes("Lättsam") || o.ax.f === 2;
+  if (one === "Rött" && light) return "då letar jag bland saftiga och svala röda med mjuka tanniner, som gamay och pinot noir";
+  if (one === "Rött" && o.ax.f === 4) return "då letar jag efter något med kropp och lite grepp";
+  if (one === "Vitt" && o.tags.includes("Friskt")) return "då letar jag efter hög syra och gärna lite mineralitet";
+  const food = o.food?.find((f) => f !== "none");
+  if (food && FOOD_HINT[food]) return FOOD_HINT[food];
+  if (one === "Orange") return "alltså vita druvor som fått ligga på skalen, med lite textur och grepp";
+  if (one === "Rosé") return "då letar jag efter något torrt och friskt";
+  if (one === "Bubbel") return "pét-nat eller något mer klassiskt, det ser vi";
+  if (one === "Rött") return "då börjar jag bland de röda och smalnar av med några frågor";
+  if (one === "Vitt") return "då börjar jag bland de vita och smalnar av med några frågor";
+  if (o.adv === "3") return "då letar jag bland de vildare vinerna";
+  if (o.adv === "1") return "då håller jag mig till viner som smakar som man väntar sig";
+  if (o.budget === "199") return "det finns fina fynd i den prisklassen";
+  if (o.budget === "9999") return "då tar jag med de riktigt fina flaskorna också";
+  if (o.budget) return "det håller jag mig inom";
+  return undefined;
 }
 
-const MISSING_LABEL: Record<QuestionKey, string> = { color: "färg", budget: "budget", adv: "hur vilt det får smaka", food: "mat" };
+/** Svar som bekräftar tolkningen med användarens ord och bygger vidare på den. */
+export function reflect(o: Parsed, raw: string, W: CompassWine[]): string {
+  const t = raw.toLowerCase();
+  const sentences: string[] = [];
+  const opener = MOOD_OPENER(o, t);
+  if (opener) sentences.push(opener);
 
-/** "Det jag inte vet än är budget och hur vilt det får smaka, …" */
+  // Färgen: vid skalkontakt räknas orange som en följd av vitt och nämns i en egen mening.
+  const color = (o.color ?? []).filter((x) => !(o.skin && x === "Orange" && o.color!.includes("Vitt")));
+  const single = color.length === 1 ? NOUN[color[0]] : undefined;
+  const art = single?.art ?? (color.length ? "ett" : "något");
+  const adjs = ADJ.filter(([test]) => test(o)).map(([, n, u]) => (art === "en" ? u : n)).slice(0, 2);
+  let phrase = [art, adjs.join(" och "), single ? single.noun : color.map((c) => c.toLowerCase()).join(" eller ")]
+    .filter(Boolean).join(" ");
+  if (single?.after) phrase += " " + single.after;
+
+  const extras: string[] = [];
+  if (o.tags.includes("Kryddig")) extras.push("med lite kryddighet i doften");
+  if (o.grape) extras.push(`på ${o.grape.toLowerCase()}`);
+  if (o.country) extras.push(`från ${o.country}`);
+  if (o.like) { const L = W.find((w) => w.id === o.like); if (L) extras.push(`i stil med ${L.n}`); }
+  const food = (o.food ?? []).filter((f) => f !== "none");
+  if (food.length && !opener) extras.push(`till ${food.map((f) => FOOD_TO[f] ?? f).join(" och ")}`);
+  if (o.alone && !opener) extras.push("att dricka på egen hand");
+  if (o.budget) extras.push(o.budget === "9999" ? "utan prisgräns" : o.budget === "199" ? "under 199 kr" : `för upp till ${o.budget} kr`);
+  if (o.shop) extras.push(o.shop === "sb" ? "att hämta på Systembolaget" : "med hemleverans");
+  if (o.mood === "cozy") extras.push("med lite djup och jordighet");
+  phrase = [phrase, ...extras].join(" ").replace(/\s+/g, " ").trim();
+
+  const h = opener ? undefined : hint(o, color);
+  // Med bara en budget eller en butik blir "något under 199 kr" en hel mening.
+  const echo = phrase === "något" ? "" : phrase.charAt(0).toUpperCase() + phrase.slice(1);
+  if (echo) sentences.push(h ? `${echo}, ${h}.` : `${echo}.`);
+  else if (h) sentences.push(h.charAt(0).toUpperCase() + h.slice(1) + ".");
+
+  if (o.skin && o.color?.includes("Vitt")) sentences.push("Eftersom du nämner skalkontakt tar jag med orangeviner också, det är vita druvor som fått ligga på skalen.");
+  if (o.adv && opener) sentences.push({ "1": "Det ska smaka som ett vanligt vin.", "2": "Gärna något som överraskar lite.", "3": "Och det får vara riktigt funky." }[o.adv]);
+  return sentences.join(" ");
+}
+
+/** Kort avslutning. Nästa fråga visas direkt efteråt, så den räknas inte upp här. */
 export function missingTail(missing: QuestionKey[], done: boolean): string {
   if (done) return " Jag har uppdaterat förslagen.";
   if (!missing.length) return " Då har jag allt jag behöver.";
-  const names = missing.map((k) => MISSING_LABEL[k]);
-  const list = names.length > 1 ? names.slice(0, -1).join(", ") + " och " + names[names.length - 1] : names[0];
-  return ` Det jag inte vet än är ${list}, ${missing.length === 1 ? "ett tryck" : "några tryck"} till så har du ditt förslag.`;
+  return missing.length === 1 ? " En fråga till, så har du ditt förslag." : " Några snabba frågor till, så hittar jag rätt flaska.";
 }
 
 /**

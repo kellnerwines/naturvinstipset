@@ -155,8 +155,11 @@ describe("fritext", () => {
     const missing = QUESTIONS.map((q) => q.k).filter((k) => !answered.includes(k));
     expect(missing).toEqual(["budget", "adv"]);
     const reply = reflect(o, text, W) + missingTail(missing, false);
-    expect(reply).toMatch(/^Solnedgång på balkongen, det låter som en fin kväll\. Jag tänker ett vitt, och eftersom du nämner skalkontakt tar jag med orangeviner också/);
-    expect(reply).toContain("Det jag inte vet än är budget och hur vilt det får smaka, några tryck till så har du ditt förslag.");
+    expect(reply).toBe(
+      "Solnedgång på balkongen, det låter som en fin kväll. Ett lättdrucket och friskt vitt med lite kryddighet i doften. "
+      + "Eftersom du nämner skalkontakt tar jag med orangeviner också, det är vita druvor som fått ligga på skalen. "
+      + "Några snabba frågor till, så hittar jag rätt flaska.",
+    );
   });
 
   it("förstår budget, funk, mat och land", () => {
@@ -177,9 +180,14 @@ describe("fritext", () => {
     expect(parse("ett kryddigt rött", W).tags).toContain("Kryddig");
   });
 
-  it("speglar mat i inledningen", () => {
-    const o = parse("till kryddig mat", W);
-    expect(reflect(o, "till kryddig mat", W)).toMatch(/^Kryddig mat, då behövs ett vin som tål hettan/);
+  it("bekräftar med användarens ord och bygger vidare", () => {
+    const say = (t: string) => reflect(parse(t, W), t, W);
+    expect(say("Ge mig ett lättdrucket rött")).toBe("Ett lättdrucket rött, då letar jag bland saftiga och svala röda med mjuka tanniner, som gamay och pinot noir.");
+    expect(say("till kryddig mat")).toBe("Något till kryddig mat, då behövs ett vin som tål hettan och inte är för strävt.");
+    expect(say("ett vitt till skaldjur under 300 kr")).toBe("Ett vitt till fisk och skaldjur för upp till 299 kr, då letar jag efter syra och lite sälta.");
+    expect(say("en frisk rosé")).toBe("En frisk rosé, då letar jag efter något torrt och friskt.");
+    expect(say("något billigt")).toBe("Något under 199 kr, det finns fina fynd i den prisklassen.");
+    expect(missingTail(["budget"], false)).toBe(" En fråga till, så har du ditt förslag.");
   });
 
   it("likt ett vin kräver hela namnet", () => {
