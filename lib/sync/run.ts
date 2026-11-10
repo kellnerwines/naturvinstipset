@@ -14,6 +14,7 @@ export type SyncLogEntry = {
   reports: ShopReport[];
   alerts: string[];
   backup?: string | null;
+  preview?: Pick<Wine, "slug" | "name" | "producer" | "country" | "region" | "wineType" | "grape" | "price">[];
 };
 
 const LOG_KEEP = 24;
@@ -21,18 +22,19 @@ const LOG_KEEP = 24;
 const knownIds = (wines: Wine[], source: string) =>
   new Set(wines.filter((w) => (w.source ?? "").startsWith(source) && w.sourceId).map((w) => w.sourceId!));
 
-export async function runSync(opts: { trigger: "cron" | "admin"; dryRun?: boolean; budgetMs?: number }): Promise<SyncLogEntry> {
+/** `only` begränsar körningen till en butik, t.ex. för en snabb torrkörning. */
+export async function runSync(opts: { trigger: "cron" | "admin"; dryRun?: boolean; budgetMs?: number; only?: "vinnatur" | "flaskvis" }): Promise<SyncLogEntry> {
   const started = new Date();
   const now = started.toISOString();
   // Lämna tid åt bilder och sparning innan funktionen stängs (maxDuration 300 s).
   const deadline = started.getTime() + (opts.budgetMs ?? 230_000);
 
   const existing = await getWines();
-  const [vn, fv] = await Promise.all([
-    vinNaturFeed(knownIds(existing, "vinnatur.shop"), deadline, now),
-    flaskvisFeed(knownIds(existing, "flaskvis.se"), deadline, now),
+  const feeds = await Promise.all([
+    opts.only !== "flaskvis" ? vinNaturFeed(knownIds(existing, "vinnatur.shop"), deadline, now) : null,
+    opts.only !== "vinnatur" ? flaskvisFeed(knownIds(existing, "flaskvis.se"), deadline, now) : null,
   ]);
-  const { wines, reports, alerts } = applySync(existing, [vn, fv], now);
+  const { wines, reports, alerts } = applySync(existing, feeds.filter((f) => f !== null), now);
 
   // Nya vins flaskbilder flyttas till Blob (5.1). Misslyckas det står butikens bild kvar tills vidare.
   const added = new Set(reports.flatMap((r) => r.added));
@@ -59,6 +61,8 @@ export async function runSync(opts: { trigger: "cron" | "admin"; dryRun?: boolea
   const entry: SyncLogEntry = {
     startedAt: now, finishedAt: new Date().toISOString(), trigger: opts.trigger, dryRun: !!opts.dryRun,
     reports, alerts, backup,
+    // Torrkörningen visar vad som skulle skapas, så att det går att granska innan synken skriver.
+    ...(opts.dryRun ? { preview: wines.filter((w) => added.has(w.slug)).map((w) => ({ slug: w.slug, name: w.name, producer: w.producer, country: w.country, region: w.region, wineType: w.wineType, grape: w.grape, price: w.price })) } : {}),
   };
   if (!opts.dryRun) {
     const log = await getSyncLog<SyncLogEntry>();

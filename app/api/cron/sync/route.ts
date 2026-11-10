@@ -1,6 +1,7 @@
 // Månadssynk mot webbutikerna (BRIEF-KOMPASSEN.md, avsnitt 6). Vercel Cron
 // anropar GET den 1:a varje månad med "Authorization: Bearer $CRON_SECRET".
-// "Synka nu" i admin skickar POST. ?dry=1 hämtar och räknar men skriver inget.
+// "Synka nu" i admin skickar POST. ?dry=1 hämtar och räknar men skriver inget,
+// ?shop=vinnatur|flaskvis kör bara en butik.
 
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";
@@ -20,7 +21,8 @@ export async function GET(req: NextRequest) {
   const trigger = await allowed(req);
   if (!trigger) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   const dryRun = req.nextUrl.searchParams.get("dry") === "1";
-  const entry = await runSync({ trigger, dryRun });
+  const shop = req.nextUrl.searchParams.get("shop");
+  const entry = await runSync({ trigger, dryRun, only: shop === "vinnatur" || shop === "flaskvis" ? shop : undefined });
   if (!dryRun) revalidatePath("/", "layout");
   return NextResponse.json(entry);
 }

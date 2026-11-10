@@ -100,7 +100,31 @@ export const REGION_COUNTRY: Record<string, string> = {
   Lissabon: "Portugal", Lisboa: "Portugal", Douro: "Portugal", "Trás-os-Montes": "Portugal", "Dão": "Portugal",
   Alentejo: "Portugal", "Beira Interior": "Portugal", Bairrada: "Portugal", Tejo: "Portugal", "Setúbal": "Portugal",
   "Vinho Verde": "Portugal", Minho: "Portugal", Colares: "Portugal",
+  // Flaskvis övriga naturviner
+  "Terra Alta": "Spanien", "Penedès": "Spanien", Catalunya: "Spanien", Bierzo: "Spanien", "Kanarieöarna": "Spanien",
+  Tenerife: "Spanien", Teneriffa: "Spanien", Mallorca: "Spanien", Montsant: "Spanien", Priorat: "Spanien",
+  "Conca de Barberà": "Spanien", Empordà: "Spanien", "Biera Interior": "Portugal",
+  Burgenland: "Österrike", Wachau: "Österrike", Kamptal: "Österrike", Niederösterreich: "Österrike",
+  "Štajerska": "Slovenien", "Goriska Brda": "Slovenien", "Goriška Brda": "Slovenien", Vipava: "Slovenien",
+  Swartland: "Sydafrika", Stellenbosch: "Sydafrika", "Western Cape": "Sydafrika", Elgin: "Sydafrika",
 };
+
+/** Länder som butikerna skriver ut, på svenska. */
+export const COUNTRIES = [
+  "Frankrike", "Italien", "Spanien", "Portugal", "Österrike", "Tyskland", "Slovenien", "Kroatien", "Ungern",
+  "Tjeckien", "Slovakien", "Grekland", "Georgien", "Serbien", "Bosnien", "Nordmakedonien", "Rumänien", "Bulgarien",
+  "Schweiz", "Sverige", "Danmark", "England", "Storbritannien", "Sydafrika", "Australien", "Nya Zeeland", "Chile",
+  "Argentina", "USA", "Kanada", "Mexiko", "Japan", "Libanon", "Armenien", "Moldavien", "Turkiet", "Israel",
+];
+
+/** "Sydafrika - Western Cape" → land och region; "Terra Alta" → region, land via REGION_COUNTRY. */
+export function splitOrigin(origin: string | undefined): { country: string; region?: string } {
+  if (!origin) return { country: "" };
+  const [first, ...rest] = origin.split(/\s+[-–]\s+/).map((x) => x.trim());
+  if (COUNTRIES.includes(first)) return { country: first, region: rest.join(" - ") || undefined };
+  // "Štajerska (Styria)" slås upp som "Štajerska".
+  return { country: REGION_COUNTRY[first] ?? REGION_COUNTRY[first.replace(/\s*\(.*\)$/, "")] ?? "", region: origin };
+}
 
 // ─── Heuristisk smakprofil för Vin & Natur (5.3) ─────────────────────────────
 
@@ -198,6 +222,8 @@ function section(html: string, name: string): string {
 
 export type FlaskvisPage = {
   kellner: boolean;
+  /** Flaskvis märker naturviner med stilen "Natur". */
+  natural: boolean;
   region?: string;
   year?: string;
   grapes: string[];
@@ -229,6 +255,7 @@ export function parseFlaskvisPage(html: string): FlaskvisPage {
   const description = html.match(/<div class="product-text">([\s\S]*?)<\/div>/)?.[1];
   return {
     kellner: /kellner/i.test(supplier),
+    natural: metaRow("stil").some((s) => /^natur(vin)?$/i.test(s)),
     region: region ? htmlText(region) : undefined,
     year,
     grapes: metaRow("druvor"),

@@ -7,7 +7,7 @@ import { mapLimit, USER_AGENT } from "../wineImages";
 import type { FeedItem, ShopFeed } from "./apply";
 import {
   REGION_COUNTRY, deriveWineType, findGrapes, flaskvisWineType, heuristicProfile, htmlText, isVinNaturWine,
-  parseFlaskvisPage, parseVinNaturPage, tagList, vinNaturVariant, wooPrice,
+  parseFlaskvisPage, parseVinNaturPage, splitOrigin, tagList, vinNaturVariant, wooPrice,
   type ShopifyProduct, type WooProduct,
 } from "./parse";
 
@@ -119,7 +119,7 @@ export async function vinNaturFeed(known: Set<string>, deadline: number, now: st
 
 // ─── Flaskvis ────────────────────────────────────────────────────────────────
 
-/** Store API sidvis, sedan produktsidan för varje produkt: bara Kellner & Kellners viner tas med. */
+/** Store API sidvis, sedan produktsidan för varje produkt: naturviner (stilen "Natur") och Kellner & Kellners viner tas med. */
 export async function flaskvisFeed(known: Set<string>, deadline: number, now: string): Promise<ShopFeed> {
   const feed: ShopFeed = { shop: FLASKVIS, source: "flaskvis.se", complete: false, items: [], errors: [] };
   const products: WooProduct[] = [];
@@ -144,7 +144,8 @@ export async function flaskvisFeed(known: Set<string>, deadline: number, now: st
       if (known.has(p.slug)) { feed.errors.push(`${p.slug}: produktsidan ${(e as Error).message}`); return { sourceId: p.slug, url: p.permalink, price: wooPrice(p), inStock: p.is_in_stock }; }
       return null;
     }
-    if (!page.kellner) return null;
+    // Alla naturviner från Flaskvis (beslut 2026-11-10), Kellner & Kellners viner även om de inte är märkta.
+    if (!page.natural && !page.kellner) return null;
     const item: FeedItem = { sourceId: p.slug, url: p.permalink, price: wooPrice(p), inStock: p.is_in_stock };
     if (known.has(p.slug)) return item;
 
@@ -159,9 +160,9 @@ export async function flaskvisFeed(known: Set<string>, deadline: number, now: st
     item.newWine = {
       ...baseWine(now),
       id, slug: id, name: decodeName(p.name), year: page.year ?? "NV", producer: page.producer,
-      region: page.region, country: (page.region && REGION_COUNTRY[page.region]) || "", grape: page.grapes.join(", "),
+      ...splitOrigin(page.region), grape: page.grapes.join(", "),
       wineType, price: String(wooPrice(p)), shop: FLASKVIS, shopUrl: p.permalink,
-      description: describe(wineType, page.region, page.grapes),
+      description: describe(wineType, splitOrigin(page.region).region, page.grapes),
       syra: page.values.syra, fyllighet: page.values.fyllighet, funk: page.values.funk, stravhet: page.values.stravhet,
       flavorTags, primaryImageUrl: p.images?.[0]?.src,
       source: `flaskvis.se (synk ${now.slice(0, 10)}, smakprofil från Flaskvis)`, sourceId: p.slug, autoProfile: false,

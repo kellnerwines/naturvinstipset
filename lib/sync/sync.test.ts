@@ -2,7 +2,7 @@ import { describe, expect, it } from "vitest";
 import type { Wine } from "../blob";
 import { applySync, TAX_HIDDEN, type ShopFeed } from "./apply";
 import {
-  deriveWineType, findGrapes, flaskvisScale, parseFlaskvisPage, parseVinNaturPage, vinNaturVariant,
+  deriveWineType, findGrapes, flaskvisScale, parseFlaskvisPage, parseVinNaturPage, splitOrigin, vinNaturVariant,
   type ShopifyProduct,
 } from "./parse";
 
@@ -62,8 +62,13 @@ describe("tolkning", () => {
       kellner: true, region: "Lissabon", year: "2024", grapes: ["Touriga Nacional"], producer: "Desviso Vinhos",
       values: { syra: 2, fyllighet: 5, funk: 1, stravhet: 4 },
     });
+    expect(p.natural).toBe(false);
     expect(parseFlaskvisPage(html.replace("Kellner &amp; Kellner", "Annan Import AB")).kellner).toBe(false);
+    expect(parseFlaskvisPage(html.replace("<span>Rött</span>", "<span>Natur</span> <span>Rött</span>")).natural).toBe(true);
     expect(flaskvisScale(0)).toBe(1);
+    expect(splitOrigin("Sydafrika - Western Cape")).toEqual({ country: "Sydafrika", region: "Western Cape" });
+    expect(splitOrigin("Terra Alta")).toEqual({ country: "Spanien", region: "Terra Alta" });
+    expect(splitOrigin("Lissabon")).toEqual({ country: "Portugal", region: "Lissabon" });
   });
 });
 
