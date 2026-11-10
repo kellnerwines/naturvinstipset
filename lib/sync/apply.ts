@@ -4,7 +4,7 @@
 // utan dubbletter, och skriver aldrig över fält i lockedFields.
 
 import type { Offer, Wine } from "../blob";
-import { isLocked, mergeWines } from "../wineData";
+import { isLocked, matchKey, mergeWines } from "../wineData";
 
 export type FeedItem = {
   /** Butikens handle/slug. */
@@ -83,6 +83,8 @@ export function applySync(existing: Wine[], feeds: ShopFeed[], now: string): { w
       if (idx === -1) {
         if (!item.newWine) continue; // feeds.ts har redan loggat varför vinet inte kunde skapas
         if (item.taxIncluded === false) { alerts.push(`${feed.shop}: ${item.sourceId} saknar skattetext, skapas inte`); continue; }
+        const twin = wines.findIndex((w) => matchKey(w) === matchKey(item.newWine!));
+        if (twin > -1 && seen.has(twin)) continue; // samma vin har redan fått butikens erbjudande i den här körningen
         const before = wines.length;
         const res = mergeWines(wines, [{ ...item.newWine, offers: [{ shop: feed.shop, url: item.url, price: item.price, inStock: item.inStock, lastSyncedAt: now }] }]);
         wines = res.wines;
@@ -92,6 +94,8 @@ export function applySync(existing: Wine[], feeds: ShopFeed[], now: string): { w
         continue;
       }
 
+      // Två produkter i samma butik för samma vin: det första erbjudandet gäller, annars skriver de över varandra.
+      if (seen.has(idx)) continue;
       seen.add(idx);
       const { wine, changed, was } = setOffer(wines[idx], feed.shop, { shop: feed.shop, url: item.url, price: item.price, inStock: item.inStock, lastSyncedAt: now });
       let w = wine;

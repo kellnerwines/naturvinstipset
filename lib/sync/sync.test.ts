@@ -1,6 +1,7 @@
 import { describe, expect, it } from "vitest";
 import type { Wine } from "../blob";
 import { applySync, TAX_HIDDEN, type ShopFeed } from "./apply";
+import { deriveFoodCategories, fillFoodCategories } from "./food";
 import {
   deriveWineType, findGrapes, flaskvisScale, parseFlaskvisPage, parseVinNaturPage, splitOrigin, vinNaturVariant,
   isPhilipsonBottle, philipsonName, philipsonProducer, philipsonWineType,
@@ -141,6 +142,18 @@ describe("synkregler", () => {
     expect(second.reports[0]).toMatchObject({ added: [], changed: [], outOfStock: [] });
   });
 
+  it("två produkter för samma vin i samma butik skriver inte över varandra", () => {
+    const dup = feed({ items: [
+      { sourceId: "fxaus-2024", url, price: 255, inStock: true },
+      { sourceId: "fxaus-2024-b", url: "https://vinnatur.shop/products/fxaus-2024-b", price: 999, inStock: true,
+        newWine: wine({ id: "vn-fxaus-2024-b", slug: "vn-fxaus-2024-b", name: "FXAUS", producer: "P" }) },
+    ] });
+    const a = applySync(existing, [dup], LATER);
+    const b = applySync(a.wines, [dup], LATER);
+    expect(b.wines.find((w) => w.id === "vn-fxaus-2024")!.offers![0].price).toBe(255);
+    expect(b.reports[0].changed).toEqual([]);
+  });
+
   it("ofullständig produktlista markerar inget som slut", () => {
     const { reports } = applySync(existing, [feed({ complete: false })], LATER);
     expect(reports[0].outOfStock).toEqual([]);
@@ -181,5 +194,28 @@ describe("synkregler", () => {
     expect(wines).toHaveLength(1);
     expect(wines[0].offers!.map((o) => o.shop)).toEqual(["Systembolaget", "Vin & Natur"]);
     expect(reports[0].added).toEqual([]);
+  });
+});
+
+describe("matkategorier ur druva, färg och land", () => {
+  it("rött, vitt, orange och bubbel", () => {
+    expect(deriveFoodCategories({ wineType: "Rött", grape: "Touriga Nacional", country: "Portugal" })).toEqual(["kott", "flask"]);
+    expect(deriveFoodCategories({ wineType: "Rött", grape: "Gamay", country: "Frankrike" })).toEqual(["fagel", "vego"]);
+    expect(deriveFoodCategories({ wineType: "Vitt", grape: "Gewürztraminer", country: "Frankrike", region: "Alsace" })).toEqual(["kryddigt", "vego", "flask"]);
+    expect(deriveFoodCategories({ wineType: "Vitt", grape: "Arinto", country: "Portugal" })).toEqual(["fisk", "vego"]);
+    expect(deriveFoodCategories({ wineType: "Orange", grape: "Kharji", country: "Armenien", stravhet: 3 })).toEqual(["vego", "kryddigt", "fagel"]);
+    expect(deriveFoodCategories({ wineType: "Mousserande", country: "Frankrike", region: "Champagne" })).toEqual(["aperitif", "fisk", "ost"]);
+  });
+
+  it("fyller bara i viner som saknar kategorier och rör inte låsta", () => {
+    const ws = [
+      wine({ id: "a", slug: "a", wineType: "Rött", grape: "Syrah" }),
+      wine({ id: "b", slug: "b", foodCategories: ["ost"] }),
+      wine({ id: "c", slug: "c", lockedFields: ["foodCategories"] }),
+    ];
+    expect(fillFoodCategories(ws)).toEqual(["a"]);
+    expect(ws[0].foodCategories).toEqual(["kott", "flask"]);
+    expect(ws[1].foodCategories).toEqual(["ost"]);
+    expect(ws[2].foodCategories).toBeUndefined();
   });
 });
