@@ -4,7 +4,7 @@
 import { backupWines, getSyncLog, getWines, putWineImage, saveSyncLog, saveWines, type Wine } from "../blob";
 import { downloadImage, imageKey, processBottleImage } from "../wineImages";
 import { applySync, type ShopReport } from "./apply";
-import { flaskvisFeed, vinNaturFeed } from "./feeds";
+import { flaskvisFeed, philipsonFeed, vinNaturFeed } from "./feeds";
 
 export type SyncLogEntry = {
   startedAt: string;
@@ -23,7 +23,7 @@ const knownIds = (wines: Wine[], source: string) =>
   new Set(wines.filter((w) => (w.source ?? "").startsWith(source) && w.sourceId).map((w) => w.sourceId!));
 
 /** `only` begränsar körningen till en butik, t.ex. för en snabb torrkörning. */
-export async function runSync(opts: { trigger: "cron" | "admin"; dryRun?: boolean; budgetMs?: number; only?: "vinnatur" | "flaskvis" }): Promise<SyncLogEntry> {
+export async function runSync(opts: { trigger: "cron" | "admin"; dryRun?: boolean; budgetMs?: number; only?: "vinnatur" | "flaskvis" | "philipson" }): Promise<SyncLogEntry> {
   const started = new Date();
   const now = started.toISOString();
   // Lämna tid åt bilder och sparning innan funktionen stängs (maxDuration 300 s).
@@ -31,8 +31,9 @@ export async function runSync(opts: { trigger: "cron" | "admin"; dryRun?: boolea
 
   const existing = await getWines();
   const feeds = await Promise.all([
-    opts.only !== "flaskvis" ? vinNaturFeed(knownIds(existing, "vinnatur.shop"), deadline, now) : null,
-    opts.only !== "vinnatur" ? flaskvisFeed(knownIds(existing, "flaskvis.se"), deadline, now) : null,
+    !opts.only || opts.only === "vinnatur" ? vinNaturFeed(knownIds(existing, "vinnatur.shop"), deadline, now) : null,
+    !opts.only || opts.only === "flaskvis" ? flaskvisFeed(knownIds(existing, "flaskvis.se"), deadline, now) : null,
+    !opts.only || opts.only === "philipson" ? philipsonFeed(knownIds(existing, "philipsonwine.se"), deadline, now) : null,
   ]);
   const { wines, reports, alerts } = applySync(existing, feeds.filter((f) => f !== null), now);
 

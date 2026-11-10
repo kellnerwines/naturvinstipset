@@ -8,11 +8,13 @@ import type { FeedItem, ShopFeed } from "./apply";
 import {
   REGION_COUNTRY, deriveWineType, findGrapes, flaskvisWineType, heuristicProfile, htmlText, isVinNaturWine,
   parseFlaskvisPage, parseVinNaturPage, splitOrigin, tagList, vinNaturVariant, wooPrice,
-  type ShopifyProduct, type WooProduct,
+  PHILIPSON_TAX_TEXT, isPhilipsonBottle, philipsonName, philipsonProducer, philipsonWineType,
+  type PhilipsonProduct, type ShopifyProduct, type WooProduct,
 } from "./parse";
 
 export const VIN_NATUR = "Vin & Natur";
 export const FLASKVIS = "Flaskvis";
+export const PHILIPSON = "Philipson Wine";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -174,3 +176,60 @@ export async function flaskvisFeed(known: Set<string>, deadline: number, now: st
 }
 
 const decodeName = (s: string) => htmlText(s);
+
+// ─── Philipson Wine ──────────────────────────────────────────────────────────
+
+const PHILIPSON_CATEGORY = "https://philipsonwine.se/vin/vinkategorier/typ/naturvin";
+
+/**
+ * Kategorin Naturvin som JSON i ett enda anrop (PageSize, eftersom robots.txt inte
+ * tillåter PageNum). Skattetexten kontrolleras på kategorisidan, som gäller alla priser.
+ */
+export async function philipsonFeed(known: Set<string>, deadline: number, now: string): Promise<ShopFeed> {
+  const feed: ShopFeed = { shop: PHILIPSON, source: "philipsonwine.se", complete: false, items: [], errors: [] };
+  let taxIncluded: boolean | undefined;
+  try {
+    taxIncluded = PHILIPSON_TAX_TEXT.test(htmlText(await (await politeFetch(PHILIPSON_CATEGORY, deadline)).text()));
+  } catch (e) {
+    feed.errors.push(`Kategorisidan: ${(e as Error).message}`);
+  }
+  let products: PhilipsonProduct[] = [];
+  try {
+    const res = await politeFetch(`${PHILIPSON_CATEGORY}?feed=true&redirect=false&HideDefaultFacets=True&feedtype=productListOnly&PageSize=500`, deadline, "application/json");
+    const data = (await res.json()) as { totalProductsCount: number; ProductsContainer: { Product: PhilipsonProduct[] }[] }[];
+    products = data[0].ProductsContainer.map((c) => c.Product[0]).filter(Boolean);
+    feed.complete = products.length >= data[0].totalProductsCount;
+    if (!feed.complete) feed.errors.push(`Fick ${products.length} av ${data[0].totalProductsCount} produkter`);
+  } catch (e) {
+    feed.errors.push(`Produktlistan: ${(e as Error).message}`);
+  }
+
+  for (const p of products.filter(isPhilipsonBottle)) {
+    const sourceId = p.link.replace(/\/+$/, "").split("/").pop()!;
+    const url = p.schemaUrlFull ?? `https://philipsonwine.se${p.link}`;
+    const inStock = p.availableForPurchase && !/slut|ej i lager|tillfälligt/i.test(p.stockText);
+    if (!known.has(sourceId) && !inStock) continue;
+    const item: FeedItem = { sourceId, url, price: Math.round(p.priceDouble), inStock, taxIncluded };
+    feed.items.push(item);
+    if (known.has(sourceId)) continue;
+
+    const text = htmlText(p.productDescription || p.description || "");
+    const producer = philipsonProducer(p);
+    const wineType = philipsonWineType(p, text);
+    if (!producer || !wineType) {
+      feed.errors.push(`${sourceId}: kunde inte avgöra ${!producer ? "producent" : "färg"}, skapas inte`);
+      continue;
+    }
+    const grapes = [p.primaryGrape, p.secondaryGrape].filter((g): g is string => !!g && g.trim() !== "");
+    const region = p.area && p.area !== p.country ? p.area : undefined;
+    const id = `ph-${sourceId}`;
+    item.newWine = {
+      ...baseWine(now), ...heuristicProfile(text, wineType),
+      id, slug: id, name: philipsonName(p, producer), year: p.year || "NV", producer, region, country: p.country,
+      grape: grapes.join(", "), wineType, price: String(Math.round(p.priceDouble)), shop: PHILIPSON, shopUrl: url,
+      description: describe(wineType, region ?? p.country, grapes),
+      primaryImageUrl: p.image, source: `philipsonwine.se (synk ${now.slice(0, 10)})`, sourceId, autoProfile: true,
+    };
+  }
+  return feed;
+}

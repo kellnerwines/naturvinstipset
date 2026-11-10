@@ -12,7 +12,7 @@ const FAQS = [
   {
     question: "Var kan man köpa naturvin online i Sverige?",
     answer:
-      "Du kan beställa naturvin från webbutiker med hemleverans, till exempel Vin & Natur och Flaskvis, eller hämta det på Systembolaget. Vinkompassen här på Naturvinstipset visar viner från båda. Vi listar bara webbutiker som säljer till Sverige med svensk alkoholskatt inräknad i priset, så att priset du ser är det du betalar för vinet.",
+      "Du kan beställa naturvin från webbutiker med hemleverans, till exempel Vin & Natur, Flaskvis och Philipson Wine, eller hämta det på Systembolaget. Vinkompassen här på Naturvinstipset visar viner från båda. Vi listar bara webbutiker som säljer till Sverige med svensk alkoholskatt inräknad i priset, så att priset du ser är det du betalar för vinet.",
   },
   {
     question: "Ingår alkoholskatten när man köper vin från en webbutik i EU?",

@@ -3,7 +3,8 @@ import type { Wine } from "../blob";
 import { applySync, TAX_HIDDEN, type ShopFeed } from "./apply";
 import {
   deriveWineType, findGrapes, flaskvisScale, parseFlaskvisPage, parseVinNaturPage, splitOrigin, vinNaturVariant,
-  type ShopifyProduct,
+  isPhilipsonBottle, philipsonName, philipsonProducer, philipsonWineType,
+  type PhilipsonProduct, type ShopifyProduct,
 } from "./parse";
 
 const NOW = "2026-12-01T02:00:00.000Z";
@@ -69,6 +70,31 @@ describe("tolkning", () => {
     expect(splitOrigin("Sydafrika - Western Cape")).toEqual({ country: "Sydafrika", region: "Western Cape" });
     expect(splitOrigin("Terra Alta")).toEqual({ country: "Spanien", region: "Terra Alta" });
     expect(splitOrigin("Lissabon")).toEqual({ country: "Portugal", region: "Lissabon" });
+  });
+});
+
+describe("Philipson Wine", () => {
+  const p = (o: Partial<PhilipsonProduct>): PhilipsonProduct => ({
+    name: "2023 Rethink Riesling Mosel Schmitt Söhne", link: "/produkter/rethink-riesling", priceDouble: 189.95,
+    stockText: "På lager", availableForPurchase: true, type: "Vitt vin", country: "Tyskland", area: "Mosel",
+    year: "2023", bottleSizeCl: "75", googleImpression: JSON.stringify({ brand: "Schmitt Söhne" }), ...o,
+  });
+  it("namn utan årgång och producent", () => {
+    const x = p({});
+    expect(philipsonProducer(x)).toBe("Schmitt Söhne");
+    expect(philipsonName(x, "Schmitt Söhne")).toBe("Rethink Riesling Mosel");
+  });
+  it("vintyp, orange ur beskrivningen och pet nat ur namnet", () => {
+    expect(philipsonWineType(p({}), "frisk citrus")).toBe("Vitt");
+    expect(philipsonWineType(p({}), "två veckors skalkontakt")).toBe("Orange");
+    expect(philipsonWineType(p({ type: "Rött vin" }), "")).toBe("Rött");
+    expect(philipsonWineType(p({ type: "Mousserende", name: "PET' NAT' Pétillant Naturel" }), "")).toBe("Pét Nat");
+    expect(philipsonWineType(p({ type: "Champagne" }), "")).toBe("Mousserande");
+    expect(philipsonWineType(p({ type: "Rött vin", name: "2023 Sanctum Pet Nat, Pinot Noir" }), "")).toBe("Pét Nat");
+  });
+  it("bara 75 cl", () => {
+    expect(isPhilipsonBottle(p({}))).toBe(true);
+    expect(isPhilipsonBottle(p({ bottleSizeCl: "150" }))).toBe(false);
   });
 });
 

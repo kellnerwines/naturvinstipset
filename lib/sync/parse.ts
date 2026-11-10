@@ -277,3 +277,40 @@ export function flaskvisWineType(style: string[], grapes: string[], text: string
   if (s.includes("vitt")) return "Vitt";
   return deriveWineType(text, [], grapes);
 }
+
+// ─── Philipson Wine (Dynamicweb) ─────────────────────────────────────────────
+
+export type PhilipsonProduct = {
+  name: string; link: string; schemaUrlFull?: string; priceDouble: number; stockText: string; stockLevel?: string;
+  availableForPurchase: boolean; type: string; country: string; area: string; primaryGrape?: string; secondaryGrape?: string;
+  year: string; bottleSizeCl: string; productDescription?: string; description?: string; image?: string; googleImpression?: string;
+};
+
+export const PHILIPSON_TAX_TEXT = /inklusive\s+moms\s+och\s+svensk\s+alkoholskatt/i;
+
+/** Producenten ur Googles produktdata (brand). */
+export function philipsonProducer(p: PhilipsonProduct): string | undefined {
+  try { return JSON.parse(p.googleImpression ?? "{}").brand || undefined; } catch { return undefined; }
+}
+
+/** "2023 Rethink Riesling Mosel Schmitt Söhne" → "Rethink Riesling Mosel" (årgång och producent bort). */
+export function philipsonName(p: PhilipsonProduct, producer: string | undefined): string {
+  let n = decodeEntities(p.name).replace(/^(19|20)\d{2}\s+/, "").trim();
+  if (producer && n.toLowerCase().endsWith(producer.toLowerCase())) n = n.slice(0, -producer.length).replace(/[\s,–-]+$/, "").trim();
+  return n || decodeEntities(p.name);
+}
+
+export function philipsonWineType(p: PhilipsonProduct, text: string): string | undefined {
+  const t = p.type.toLowerCase();
+  // Pet nat i namnet går före butikens typ ("Sanctum Pet Nat, Pinot Noir" står som rött vin).
+  if (/pet[ '’]*nat|pétillant naturel/i.test(p.name)) return "Pét Nat";
+  if (/mousser|champagne|cava|crémant|cremant/.test(t)) return /pet[ '’]*nat|pétillant naturel|ancestral/i.test(text) ? "Pét Nat" : "Mousserande";
+  if (/ros[ée]/.test(t)) return "Rosé";
+  if (/orange/.test(t)) return "Orange";
+  if (/vitt|hvid/.test(t)) return /skalkontakt|skalmacer|maceration|macerat|orangevin|orange wine/i.test(text) ? "Orange" : "Vitt";
+  if (/rött|rød/.test(t)) return "Rött";
+  return undefined;
+}
+
+/** Bara 75 cl-flaskor som går att köpa. */
+export const isPhilipsonBottle = (p: PhilipsonProduct) => p.bottleSizeCl === "75" && p.priceDouble > 0;

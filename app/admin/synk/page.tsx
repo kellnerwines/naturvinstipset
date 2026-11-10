@@ -32,7 +32,7 @@ export default async function SynkPage() {
       <div className="max-w-5xl mx-auto px-6 py-8 space-y-8">
         <form action="/api/cron/sync" method="post" className={`${card} flex flex-wrap items-center justify-between gap-4`}>
           <div className="max-w-xl">
-            <h2 className="font-bold">Vin &amp; Natur och Flaskvis</h2>
+            <h2 className="font-bold">Vin &amp; Natur, Flaskvis och Philipson Wine</h2>
             <p className="text-sm text-[var(--muted)] mt-1">
               Synken körs automatiskt den 1:a varje månad. Den uppdaterar pris och lagerstatus, lägger till nya viner och markerar
               slutsålda. Låsta fält skrivs aldrig över. Det tar några minuter.
