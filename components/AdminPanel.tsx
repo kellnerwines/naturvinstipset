@@ -368,7 +368,18 @@ export default function AdminPanel() {
           <div>
             <div className="flex items-center justify-between mb-6">
               <h2 className="text-xl font-bold text-[var(--green-dark)]">Blogginlägg</h2>
-              <button onClick={() => setEditBlog(emptyBlog())} className="bg-[var(--green)] text-white px-4 py-2 text-sm font-semibold rounded-lg hover:bg-[var(--green-dark)]">+ Nytt inlägg</button>
+              <div className="flex gap-2">
+                <button
+                  onClick={async () => {
+                    const res = await fetch("/api/seed?bara=blogg", { method: "POST" });
+                    const d = res.ok ? await res.json() : null;
+                    flash(d ? `${d.blogsAdded} nya inlägg hämtade.` : "Kunde inte hämta inläggen.", d ? undefined : "err");
+                    if (d) fetchAll();
+                  }}
+                  className="border border-[var(--green)] text-[var(--green-dark)] px-4 py-2 text-sm font-semibold rounded-lg hover:bg-[var(--green-light)]"
+                >Hämta nya inlägg</button>
+                <button onClick={() => setEditBlog(emptyBlog())} className="bg-[var(--green)] text-white px-4 py-2 text-sm font-semibold rounded-lg hover:bg-[var(--green-dark)]">+ Nytt inlägg</button>
+              </div>
             </div>
 
             {editBlog && (
@@ -397,8 +408,14 @@ export default function AdminPanel() {
                     <p className="font-semibold text-[var(--green-dark)] truncate">{b.title}</p>
                     <p className="text-xs text-black/40">{new Date(b.publishedAt).toLocaleDateString("sv-SE")}</p>
                   </div>
-                  <span className={`text-xs px-2 py-1 rounded-full shrink-0 ${b.published ? "bg-green-100 text-green-700" : "bg-gray-100 text-gray-500"}`}>{b.published ? "Publicerad" : "Utkast"}</span>
+                  {(() => {
+                    // Publicerade inlägg med framtida datum är schemalagda och syns på sajten först den dagen.
+                    const scheduled = b.published && b.publishedAt.slice(0, 10) > new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/Stockholm" });
+                    const [cls, label] = scheduled ? ["bg-amber-100 text-amber-700", "Schemalagd"] : b.published ? ["bg-green-100 text-green-700", "Publicerad"] : ["bg-gray-100 text-gray-500", "Utkast"];
+                    return <span className={`text-xs px-2 py-1 rounded-full shrink-0 ${cls}`}>{label}</span>;
+                  })()}
                   <div className="flex gap-2 shrink-0">
+                    <a href={`/blogg/${b.slug}`} target="_blank" rel="noopener" className="text-xs text-black/50 hover:underline">Visa</a>
                     <button onClick={() => setEditBlog(b)} className="text-xs text-[var(--green)] hover:underline">Redigera</button>
                     <button onClick={() => del("/api/blogs", b.id, `Ta bort "${b.title}"?`)} className="text-xs text-red-400 hover:text-red-600">Ta bort</button>
                   </div>

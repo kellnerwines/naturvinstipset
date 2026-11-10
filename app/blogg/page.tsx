@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import Image from "next/image";
-import { getBlogs } from "@/lib/blob";
+import { getBlogs, isPostLive } from "@/lib/blob";
 
 export const dynamic = "force-dynamic";
 
@@ -14,7 +14,7 @@ export const metadata: Metadata = {
 export default async function BloggPage() {
   const blogs = await getBlogs();
   const published = blogs
-    .filter((b) => b.published)
+    .filter((b) => isPostLive(b))
     .sort((a, b) => new Date(b.publishedAt).getTime() - new Date(a.publishedAt).getTime());
 
   return (

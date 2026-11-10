@@ -79,7 +79,16 @@ export type BlogPost = {
   imageUrl?: string;
   publishedAt: string;
   published: boolean;
+  /** Vinkompassens parametrar för en vinlista som hämtas live när inlägget visas (t.ex. { mat: "ost" }). */
+  wineQuery?: Record<string, string>;
+  wineHeading?: string;
 };
+
+/** Publicerat och publiceringsdagen har kommit (svensk tid). Inlägg med framtida datum syns först då. */
+export function isPostLive(b: Pick<BlogPost, "published" | "publishedAt">, now = new Date()): boolean {
+  const today = now.toLocaleDateString("sv-SE", { timeZone: "Europe/Stockholm" });
+  return b.published && b.publishedAt.slice(0, 10) <= today;
+}
 
 export type BlogInteraction = {
   id: string;

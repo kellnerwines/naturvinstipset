@@ -1,5 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
-import { getBlogs, saveBlogs, BlogPost, toSlug } from "@/lib/blob";
+import { getBlogs, saveBlogs, BlogPost, toSlug, isPostLive } from "@/lib/blob";
 import { isAuthenticated } from "@/lib/auth";
 import { randomUUID } from "crypto";
 import { revalidatePath } from "next/cache";
@@ -8,7 +8,8 @@ export const dynamic = "force-dynamic";
 
 export async function GET() {
   const blogs = await getBlogs();
-  return NextResponse.json(blogs);
+  // Inlägg med framtida publiceringsdatum visas bara för admin.
+  return NextResponse.json((await isAuthenticated()) ? blogs : blogs.filter((b) => isPostLive(b)));
 }
 
 export async function POST(req: NextRequest) {

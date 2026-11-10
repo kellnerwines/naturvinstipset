@@ -2,7 +2,10 @@ import type { Metadata } from "next";
 import Image from "next/image";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getBlogs, getBlogInteractions } from "@/lib/blob";
+import { getBlogs, getBlogInteractions, getWines, isPostLive } from "@/lib/blob";
+import { answer, compassLink } from "@/lib/answers";
+import { isAuthenticated } from "@/lib/auth";
+import OwnImportBadge from "@/components/OwnImportBadge";
 import BlogLikeButton from "@/components/BlogLikeButton";
 import BlogComments from "@/components/BlogComments";
 
@@ -11,7 +14,7 @@ export const dynamic = "force-dynamic";
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const blogs = await getBlogs();
-  const post = blogs.find((b) => b.slug === slug && b.published);
+  const post = blogs.find((b) => b.slug === slug && isPostLive(b));
   if (!post) return { title: "Artikel" };
   return {
     title: post.title,
@@ -30,8 +33,13 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function BlogPostPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const [blogs, allInteractions] = await Promise.all([getBlogs(), getBlogInteractions()]);
-  const post = blogs.find((b) => b.slug === slug && b.published);
+  // Kommande inlägg kan förhandsgranskas av admin innan publiceringsdagen.
+  const found = blogs.find((b) => b.slug === slug && b.published);
+  const preview = !!found && !isPostLive(found) && (await isAuthenticated());
+  const post = found && (isPostLive(found) || preview) ? found : undefined;
   if (!post) notFound();
+  // Vinlistan hämtas live med kompassens motor, så att inlägget alltid visar viner som finns i lager.
+  const live = post.wineQuery ? answer(await getWines(), post.wineQuery, 6) : null;
 
   const postInteractions = allInteractions.filter((i) => i.blogId === post.id);
   const likeCount = postInteractions.filter((i) => i.type === "like").length;
@@ -65,6 +73,11 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
   return (
     <article>
+      {preview ? (
+        <p className="bg-[var(--amber-light)] text-sm text-center px-4 py-2">
+          Förhandsvisning: inlägget publiceras {new Date(post.publishedAt).toLocaleDateString("sv-SE", { day: "numeric", month: "long", year: "numeric" })} och syns bara för dig som är inloggad.
+        </p>
+      ) : null}
       {/* ── Hero with title overlay ─────────────────────────────────────── */}
       <div className="relative w-full" style={{ height: "clamp(420px, 65vh, 720px)" }}>
         {post.imageUrl ? (
@@ -130,6 +143,34 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
             return <p key={i}>{parseInline(block)}</p>;
           })}
         </div>
+
+        {live && live.results.length ? (
+          <section className="mt-14 border-t border-[var(--rule)] pt-10">
+            <h2 className="text-base font-bold text-[var(--fg)] tracking-tight mb-1">{post.wineHeading ?? "Viner som passar just nu"}</h2>
+            <p className="text-xs text-[var(--muted)] mb-5">Vinkompassens förslag, uppdaterade med lagerstatus och pris inklusive svensk alkoholskatt.</p>
+            <ol className="space-y-3">
+              {live.results.map((r) => (
+                <li key={r.url} className="border border-[var(--rule)] rounded-lg p-4">
+                  <p className="font-bold leading-snug">
+                    <a href={r.url.replace("https://www.naturvinstipset.se", "")} className="hover:opacity-60">{r.name}</a>
+                    {r.vintage && r.vintage !== "NV" ? ` ${r.vintage}` : ""}
+                    {r.ownImport ? <OwnImportBadge className="ml-2 align-middle" /> : null}
+                  </p>
+                  <p className="text-sm text-[var(--muted)] mt-0.5">{[r.producer, r.type, r.country].filter(Boolean).join(" · ")}</p>
+                  <p className="text-sm mt-1.5">
+                    ca {r.price} kr hos {r.shop} ·{" "}
+                    <a href={r.buyUrl.replace("https://www.naturvinstipset.se", "")} rel="nofollow noopener" target="_blank" className="underline underline-offset-2">
+                      {r.shop === "Systembolaget" ? "Se vinet hos Systembolaget" : `Köp hos ${r.shop}`} →
+                    </a>
+                  </p>
+                </li>
+              ))}
+            </ol>
+            <Link href={compassLink(post.wineQuery!)} className="inline-block mt-5 text-sm font-semibold underline underline-offset-4">
+              Finjustera i Vinkompassen →
+            </Link>
+          </section>
+        ) : null}
 
         {/* Like + Comments */}
         <div className="mt-14">
