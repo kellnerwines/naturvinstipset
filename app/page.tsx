@@ -52,24 +52,26 @@ export default async function HomePage() {
     <div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      {/* ── Vinkompassen: video i toppen, chatten som ett kort som går upp i bilden ── */}
-      <section className="relative overflow-hidden bg-[var(--hero-dark)] text-white">
-        <HeroVideo src="/hero-video.mp4" />
-        <div className="absolute inset-0" style={{ background: "rgba(42,36,32,0.58)" }} aria-hidden="true" />
-        <div className="relative max-w-2xl mx-auto px-4 pt-14 pb-28 md:pt-24 md:pb-36">
-          <p className="text-[11px] font-semibold tracking-[0.2em] uppercase text-white/60 mb-3">Vinkompassen</p>
-          <h1 className="text-4xl md:text-6xl font-extrabold leading-[1.05] tracking-tight mb-5">
-            Vilket naturvin passar dig?
-          </h1>
-          <p className="text-base md:text-lg text-white/80 leading-relaxed max-w-xl">
-            Bland {count} naturviner på Systembolaget eller från webbutiker med hemleverans. Tryck på dina svar eller skriv fritt.
-            Efter fyra frågor får du ett förslag. Sedan kan du finjustera tills det sitter.
-          </p>
+      {/* ── Vinkompassen: videon fyller första skärmen, rubriken i vitt och chattens början ligger på videon ── */}
+      <section className="relative">
+        <div className="absolute inset-x-0 top-0 h-[calc(100svh-3.5rem)] overflow-hidden bg-[var(--hero-dark)]" aria-hidden="true">
+          <HeroVideo src="/hero-video.mp4" />
+          <div className="absolute inset-0" style={{ background: "rgba(42,36,32,0.64)" }} />
         </div>
-      </section>
-      <section className="relative max-w-2xl mx-auto px-4 -mt-16 md:-mt-20">
-        <div className="bg-[var(--card)] border border-[var(--rule)] rounded-xl px-4 pt-6 md:pt-8">
-          <Vinkompassen wines={compassWines} compensation={settings.retailerCompensation} />
+        <div className="relative max-w-2xl mx-auto px-4">
+          <div className="min-h-[calc(52svh-3.5rem)] flex flex-col justify-end pt-12 pb-8 md:pb-10 text-white">
+            <p className="text-[11px] font-semibold tracking-[0.2em] uppercase text-white/60 mb-3">Vinkompassen</p>
+            <h1 className="text-4xl md:text-6xl font-extrabold leading-[1.05] tracking-tight mb-5">
+              Vilket naturvin passar dig?
+            </h1>
+            <p className="text-base md:text-lg text-white/80 leading-relaxed max-w-xl">
+              Bland {count} naturviner på Systembolaget eller från webbutiker med hemleverans. Tryck på dina svar eller skriv fritt.
+              Efter fyra frågor får du ett förslag. Sedan kan du finjustera tills det sitter.
+            </p>
+          </div>
+          <div className="bg-[var(--card)] border border-[var(--rule)] rounded-xl px-4 pt-6 md:pt-8">
+            <Vinkompassen wines={compassWines} compensation={settings.retailerCompensation} />
+          </div>
         </div>
       </section>
 

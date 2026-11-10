@@ -54,11 +54,8 @@ export default async function Topp100Page() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
-      <section className="relative overflow-hidden">
-        {/* Background video */}
-        <video autoPlay muted loop playsInline className="absolute inset-0 w-full h-full object-cover object-center">
-          <source src="/hero-video.mp4" type="video/mp4" />
-        </video>
+      {/* Videon ligger bara på startsidan; här räcker den mörka bakgrunden. */}
+      <section className="relative overflow-hidden bg-[var(--hero-dark)]">
 
         <div className="relative flex flex-col md:flex-row min-h-[520px]">
           {/* Left: beige overlay + headline */}
