@@ -1,7 +1,7 @@
 import { NextResponse } from "next/server";
 import { readFile } from "fs/promises";
 import path from "path";
-import { getWines, saveWines, getRatings, saveRatings, getBlogs, saveBlogs, Wine, Rating, BlogPost } from "@/lib/blob";
+import { getWines, saveWines, getRatings, saveRatings, getBlogs, saveBlogs, backupWines, Wine, Rating, BlogPost } from "@/lib/blob";
 import { isAuthenticated } from "@/lib/auth";
 import { buildCatalog, type FoodEntry } from "@/lib/wineData";
 import { revalidatePath } from "next/cache";
@@ -53,6 +53,8 @@ export async function POST() {
   const newRatings = seedRatings.filter((r) => !existingRatingIds.has(r.id));
   const newBlogs   = seedBlogs.filter((b) => !existingBlogIds.has(b.id));
 
+  // Spara nuvarande vinlista innan seeden skriver, så att det går att återställa.
+  if (winesChanged) await backupWines("seed");
   await Promise.all([
     winesChanged      && saveWines(catalog.wines),
     newRatings.length > 0 && saveRatings([...existingRatings, ...newRatings]),
