@@ -93,7 +93,10 @@ export type BlogInteraction = {
 
 // ─── Storage backends ─────────────────────────────────────────────────────────
 
-const useBlob = !!process.env.BLOB_READ_WRITE_TOKEN;
+// Blob används med en läs- och skrivtoken (lokalt och i skript) eller med Vercels
+// OIDC-koppling, där lagringen anges med BLOB_STORE_ID (produktionen).
+export const hasBlobCredentials = () => !!(process.env.BLOB_READ_WRITE_TOKEN || process.env.BLOB_STORE_ID);
+const useBlob = hasBlobCredentials();
 const DATA_DIR = path.join(process.cwd(), "data");
 
 async function fsRead<T>(filename: string): Promise<T[]> {

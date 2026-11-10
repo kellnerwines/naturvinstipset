@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAuthenticated } from "@/lib/auth";
+import { hasBlobCredentials } from "@/lib/blob";
 import { writeFile, mkdir } from "fs/promises";
 import path from "path";
 import { randomUUID } from "crypto";
@@ -17,7 +18,7 @@ export async function POST(req: NextRequest) {
   const ext = file.type.split("/")[1]?.replace("jpeg", "jpg") || "jpg";
   const filename = `${randomUUID()}.${ext}`;
 
-  if (process.env.BLOB_READ_WRITE_TOKEN) {
+  if (hasBlobCredentials()) {
     const { put } = await import("@vercel/blob");
     const blob = await put(`naturvin/uploads/${filename}`, buffer, {
       access: "private",
