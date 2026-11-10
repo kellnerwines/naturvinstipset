@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import HeroVideo from "@/components/HeroVideo";
 import { getWines, getRatings, combinedRating, getSettings, type Wine } from "@/lib/blob";
 import { toCompassWine, type CompassWine } from "@/lib/compass/engine";
 import Vinkompassen from "@/components/compass/Vinkompassen";
@@ -51,17 +52,25 @@ export default async function HomePage() {
     <div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      {/* ── Vinkompassen ─────────────────────────────────────────────────── */}
-      <section className="max-w-2xl mx-auto px-4 pt-10 md:pt-16">
-        <p className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[var(--muted)] mb-3">Vinkompassen</p>
-        <h1 className="text-3xl md:text-5xl font-extrabold leading-[1.08] tracking-tight mb-4">
-          Vilket naturvin passar dig?
-        </h1>
-        <p className="text-base text-[var(--muted)] leading-relaxed mb-10 max-w-xl">
-          Bland {count} naturviner på Systembolaget eller från webbutiker med hemleverans. Tryck på dina svar eller skriv fritt.
-          Efter fyra frågor får du ett förslag. Sedan kan du finjustera tills det sitter.
-        </p>
-        <Vinkompassen wines={compassWines} compensation={settings.retailerCompensation} />
+      {/* ── Vinkompassen: video i toppen, chatten som ett kort som går upp i bilden ── */}
+      <section className="relative overflow-hidden bg-[var(--hero-dark)] text-white">
+        <HeroVideo src="/hero-video.mp4" />
+        <div className="absolute inset-0" style={{ background: "rgba(42,36,32,0.58)" }} aria-hidden="true" />
+        <div className="relative max-w-2xl mx-auto px-4 pt-14 pb-28 md:pt-24 md:pb-36">
+          <p className="text-[11px] font-semibold tracking-[0.2em] uppercase text-white/60 mb-3">Vinkompassen</p>
+          <h1 className="text-4xl md:text-6xl font-extrabold leading-[1.05] tracking-tight mb-5">
+            Vilket naturvin passar dig?
+          </h1>
+          <p className="text-base md:text-lg text-white/80 leading-relaxed max-w-xl">
+            Bland {count} naturviner på Systembolaget eller från webbutiker med hemleverans. Tryck på dina svar eller skriv fritt.
+            Efter fyra frågor får du ett förslag. Sedan kan du finjustera tills det sitter.
+          </p>
+        </div>
+      </section>
+      <section className="relative max-w-2xl mx-auto px-4 -mt-16 md:-mt-20">
+        <div className="bg-[var(--card)] border border-[var(--rule)] rounded-xl px-4 pt-6 md:pt-8">
+          <Vinkompassen wines={compassWines} compensation={settings.retailerCompensation} />
+        </div>
       </section>
 
       {/* ── SEO-text ─────────────────────────────────────────────────────── */}
