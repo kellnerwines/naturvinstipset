@@ -5,7 +5,7 @@
 
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  ADV_TARGET, AXES, FOOD, QUESTIONS, TAGS, answerText, emptyState, foodsSel, label, matching, pick, relaxLabel, relaxMessage,
+  ADV_QUESTION, ADV_TARGET, AXES, FOOD, QUESTIONS, TAGS, answerText, emptyState, foodsSel, label, matching, pick, relaxLabel, relaxMessage,
   type AxisKey, type CompassState, type CompassWine, type Question, type QuestionKey,
 } from "@/lib/compass/engine";
 import { applyParsed, missingTail, reflect, regexInterpreter, understood } from "@/lib/compass/parse";
@@ -25,9 +25,9 @@ type Item =
 
 type NewItem = Item extends infer T ? (T extends Item ? Omit<T, "id"> : never) : never;
 
-type PanelKey = "shop" | "prof" | "tags" | "dfood" | "country" | "grape" | "like";
+type PanelKey = "adv" | "shop" | "prof" | "tags" | "dfood" | "country" | "grape" | "like";
 const PANELS: [PanelKey, string][] = [
-  ["shop", "Hur vill du få vinet?"], ["prof", "Smakprofil"], ["tags", "Smak"], ["dfood", "Mat"],
+  ["adv", "Hur vilt får det smaka?"], ["shop", "Hur vill du få vinet?"], ["prof", "Smakprofil"], ["tags", "Smak"], ["dfood", "Mat"],
   ["country", "Land"], ["grape", "Druva"], ["like", "Liknar ett vin jag gillar"],
 ];
 const S0 = ["Något kryddigt till solnedgången på balkongen", "Ett vitt till skaldjur under 300 kr", "Något funkigt och orange", "Ett rött till lammgryta", "Bubbel till mingel", "Från Portugal"];
@@ -111,7 +111,9 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
   const W = wines;
   const [S, setS] = useState<CompassState>(emptyState);
   const [answered, setAnswered] = useState<QuestionKey[]>([]);
-  const [items, setItems] = useState<Item[]>([{ id: 1, kind: "q", k: "color" }]);
+  // Chatten börjar först när man trycker "Starta Vinkompassen" (eller kommer via en delad länk).
+  const [started, setStarted] = useState(false);
+  const [items, setItems] = useState<Item[]>([]);
   const [done, setDone] = useState(false);
   const [busy, setBusy] = useState(false);
   const [shownN, setShownN] = useState(FIRST_SHOWN);
@@ -125,8 +127,8 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
   // Refs för den asynkrona flödeslogiken (alltid senaste värdet).
   // Uppdateras i samma setters som state (setState, setAns, setBusyB, push …).
   const R = useRef({
-    S: emptyState(), answered: [] as QuestionKey[], done: false, busy: false, cur: 0, nextId: 2,
-    items: [{ id: 1, kind: "q", k: "color" }] as Item[], interacted: false,
+    S: emptyState(), answered: [] as QuestionKey[], done: false, busy: false, cur: 0, nextId: 1,
+    items: [] as Item[], interacted: false,
   });
   const autoT = useRef<ReturnType<typeof setTimeout> | null>(null);
   const endRef = useRef<HTMLDivElement>(null);
@@ -240,7 +242,8 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
     const fs = foodsSel(St);
     const plan: [string, string][] = [
       [`Går igenom ${W.length} naturviner på Systembolaget eller från webbutiker med hemleverans`, `${colors}, ${St.budget && St.budget !== "9999" ? "upp till " + St.budget + " kr" : "alla prisnivåer"}`],
-      ["Matchar funk-nivån mot hur vilt det får smaka", St.adv ? label("adv", St.adv) : "Ingen preferens"],
+      // Funk-steget visas bara när man själv valt hur vilt det får smaka (under Finjustera eller i fritext).
+      ...(St.adv ? [["Matchar funk-nivån mot hur vilt det får smaka", label("adv", St.adv)] as [string, string]] : []),
       ["Kollar matförslagen", fs.length ? fs.map((f) => FOOD[f].toLowerCase()).join(", ") : "Vinet ska vara gott på egen hand"],
       ["Rangordnar efter smakprofil", `${list.length} viner kvar${relax.length ? ", släppte " + relaxLabel(relax) : ""}${raised ? `, höjde budgeten till ${raised} kr` : ""}`],
     ];
@@ -395,6 +398,7 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
     if (![...p.keys()].length) return;
     const { state, answered: a } = paramsToState(p);
     if (!a.length && JSON.stringify(state) === JSON.stringify(emptyState())) return;
+    setStarted(true);
     setState(state); setAns(a);
     const qItems: Item[] = QUESTIONS.filter((q) => a.includes(q.k)).map((q, i) => ({ id: 100 + i, kind: "q", k: q.k, left: W.length }));
     setOwners(Object.fromEntries(qItems.map((it) => [(it as { k: QuestionKey }).k, it.id])));
@@ -418,7 +422,6 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
 
   // ── Härledda värden ──
   const result = useMemo(() => pick(S, W), [S, W]);
-  const initialCount = W.length;
   const top = result.list[0];
   const stateQs = useMemo(() => stateToParams(S, answered).toString(), [S, answered]);
   const targets = { s: S.ax.s || undefined, f: S.ax.f || undefined, st: S.ax.st || undefined, fu: S.ax.fu || (S.adv ? ADV_TARGET[S.adv] : undefined) };
@@ -436,7 +439,6 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
   // ── Rendering ──
   const renderQuestion = (item: Extract<Item, { kind: "q" }>) => {
     const q = QUESTIONS.find((x) => x.k === item.k)!;
-    const n = QUESTIONS.indexOf(q) + 1;
     const value = S[q.k] as string | string[] | null;
     const isSel = (v: string) => (Array.isArray(value) ? value.includes(v) : value === v);
     const cd = countdown?.item === item.id ? countdown : null;
@@ -461,7 +463,7 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
               <p className="text-xs text-[var(--muted)] mt-1.5 min-h-[1rem]">{cd ? "Välj fler om du vill, annars går jag vidare" : ""}</p>
             </>
           ) : null}
-          <p className="text-[11px] text-[var(--muted)] mt-2">Fråga {n} av 4 · {item.left ?? initialCount} viner i urvalet just nu</p>
+
         </AgentRow>
         {showBubble ? <UserBubble text={answerText(q, S)} /> : null}
       </div>
@@ -532,6 +534,18 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
             <div className="flex flex-wrap gap-2">
               {([["", "Spelar ingen roll"], ["sb", "Hämta på Systembolaget"], ["web", "Hemleverans från webbutik"]] as const).map(([v, l]) => (
                 <button key={v} type="button" className={chipCls(S.shop === v)} aria-pressed={S.shop === v} onClick={() => change({ ...S, shop: v })}>{l}</button>
+              ))}
+            </div>
+          </div>
+        );
+      case "adv":
+        return (
+          <div key={k} className={box}>{h("Hur vilt får det smaka?")}
+            <p className="text-xs text-[var(--muted)] -mt-1 mb-3">{ADV_QUESTION.s}</p>
+            <div className="flex flex-wrap gap-2">
+              {ADV_QUESTION.o.map(([v, l]) => (
+                <button key={v} type="button" className={chipCls(S.adv === v)} aria-pressed={S.adv === v}
+                  onClick={() => change({ ...S, adv: (S.adv === v ? null : v) as CompassState["adv"] })}>{l}</button>
               ))}
             </div>
           </div>
@@ -650,6 +664,16 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
     }
   };
 
+  const start = (focusInput = false) => {
+    R.current.interacted = true;
+    setStarted(true);
+    track({ type: "panel", panel: focusInput ? "start-fritext" : "start" });
+    ask(0, 250);
+    if (focusInput) setTimeout(() => document.getElementById("compass-input")?.focus(), 400);
+  };
+
+  const qDone = QUESTIONS.filter((q) => answered.includes(q.k)).length;
+
   const submit = (e: React.FormEvent) => {
     e.preventDefault();
     const v = input;
@@ -657,8 +681,43 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
     void freeText(v);
   };
 
+  if (!started) {
+    return (
+      // Startläget fyller resten av första skärmen, så att videon täcker hela vyn innan man startar.
+      <div className="max-w-md min-h-[calc(48svh-6rem)]">
+        <button type="button" onClick={() => start()}
+          className="w-full rounded-full bg-white text-[var(--hero-dark)] text-base md:text-lg font-semibold py-4 hover:opacity-90 transition-opacity focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+          Starta Vinkompassen
+        </button>
+        <button type="button" onClick={() => start(true)}
+          className="block mx-auto mt-4 text-sm text-white/75 underline underline-offset-4 hover:text-white">
+          eller skriv vad du är sugen på
+        </button>
+      </div>
+    );
+  }
+
   return (
-    <div className="relative">
+    // Halvgenomskinlig över videon; den grå texten görs mörkare här så att kontrasten räcker.
+    <div
+      className="relative bg-white/55 backdrop-blur-sm border border-white/40 rounded-xl px-4 pt-6 md:pt-8"
+      style={{ "--muted": "rgba(13, 13, 13, 0.8)", "--faint": "rgba(13, 13, 13, 0.6)" } as React.CSSProperties}
+    >
+      {!done ? (
+        <div className="sticky top-14 z-20 -mx-4 -mt-6 md:-mt-8 mb-6 px-4 py-3 bg-white/70 backdrop-blur-sm rounded-t-xl border-b border-[var(--rule)]"
+          role="progressbar" aria-label="Vinkompassen" aria-valuemin={0} aria-valuemax={QUESTIONS.length} aria-valuenow={qDone}>
+          <div className="flex items-center gap-3">
+            <div className="flex gap-1.5 flex-1">
+              {QUESTIONS.map((q, i) => (
+                <span key={q.k} className={`h-1 flex-1 rounded-full transition-colors duration-500 ${i < qDone ? "bg-[var(--fg)]" : "bg-[var(--rule)]"}`} />
+              ))}
+            </div>
+            <span className="text-xs text-[var(--muted)] tabular-nums whitespace-nowrap">
+              {qDone < QUESTIONS.length ? `Fråga ${Math.min(qDone + 1, QUESTIONS.length)} av ${QUESTIONS.length}` : "Letar fram dina viner"}
+            </span>
+          </div>
+        </div>
+      ) : null}
       <div className="space-y-6 pb-8" aria-live="polite" aria-busy={busy}>
         {items.map(renderItem)}
         <div ref={endRef} />

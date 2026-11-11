@@ -72,12 +72,15 @@ export type Question = {
   o: [value: string, label: string, colorVar?: string][];
 };
 
+/** Hur vilt det får smaka: ställs inte i flödet utan finns under Finjustera (beslut 2026-11-11). */
+export const ADV_QUESTION: Question = { k: "adv", h: "Hur vilt får det smaka?", s: "Naturvin kan smaka precis som vanligt vin eller vara riktigt funky.",
+  o: [["1", "Som ett vanligt vin"], ["2", "Överraska mig lite"], ["3", "Ge mig något funky"]] };
+
+/** Frågorna i chatten: tre stycken, sedan kommer förslagen. */
 export const QUESTIONS: Question[] = [
   { k: "color", h: "Vilken färg är du sugen på?", s: "Välj en eller flera.", multi: true,
     o: (["Rött", "Vitt", "Orange", "Rosé", "Bubbel"] as Color[]).map((c) => [c, c, COLOR_VAR[c]]) },
   { k: "budget", h: "Hur mycket vill du lägga?", o: [["199", "Under 199 kr"], ["299", "Upp till 299 kr"], ["400", "Upp till 400 kr"]] },
-  { k: "adv", h: "Hur vilt får det smaka?", s: "Naturvin kan smaka precis som vanligt vin eller vara riktigt funky.",
-    o: [["1", "Som ett vanligt vin"], ["2", "Överraska mig lite"], ["3", "Ge mig något funky"]] },
   { k: "food", h: "Ska vinet passa till mat?", s: "Välj en eller flera.", multi: true, none: "none",
     o: [["none", "Nej, bara dricka"], ...(Object.entries(FOOD) as [FoodCategory, string][]).filter(([k]) => k !== "aperitif")] },
 ];
@@ -268,7 +271,7 @@ export function relaxMessage(keys: RelaxKey[], budget?: Budget): string {
 // ─── Etiketter ────────────────────────────────────────────────────────────────
 
 export function label(k: QuestionKey, v: string): string {
-  const o = QUESTIONS.find((q) => q.k === k)?.o.find((x) => x[0] === v);
+  const o = [...QUESTIONS, ADV_QUESTION].find((q) => q.k === k)?.o.find((x) => x[0] === v);
   if (o) return o[1];
   if (k === "budget" && v === "9999") return "Spelar ingen roll";
   return v;

@@ -51,99 +51,95 @@ export default function CompassCard({
 }) {
   const { w, sc, hits, fh } = scored;
   const [imgFailed, setImgFailed] = useState(false);
+  // Kortet visar bara bild, namn, producent, pris och köplänk. Resten fälls ut med "Visa mer".
+  const [open, setOpen] = useState(false);
   const hitSet = new Set(hits);
   const isSb = w.shop === "Systembolaget";
+  const detailsId = `vin-${w.id}-detaljer`;
 
   return (
-    <article
-      className={`bg-[var(--card)] border ${first ? "border-[var(--fg)]" : "border-[var(--rule)]"} rounded-md p-4 grid grid-cols-[56px_1fr_auto] gap-x-4 gap-y-3`}
-    >
-      <Link href={`/viner/${w.slug}`} className="row-span-2 flex items-start justify-center" tabIndex={-1} aria-hidden="true">
-        {w.img && !imgFailed ? (
-          // eslint-disable-next-line @next/next/no-img-element
-          <img src={w.img} alt="" loading="lazy" className="w-[56px] h-[120px] object-contain" onError={() => setImgFailed(true)} />
-        ) : (
-          <BottleSvg type={typeOf(w)} className="w-[34px] h-[74px] mt-2" />
-        )}
-      </Link>
+    <article className={`bg-[var(--card)] border ${first ? "border-[var(--fg)]" : "border-[var(--rule)]"} rounded-lg p-4`}>
+      <div className="grid grid-cols-[72px_1fr] sm:grid-cols-[88px_1fr] gap-x-4">
+        <Link href={`/viner/${w.slug}`} className="flex items-center justify-center bg-[var(--surface)] rounded-md h-[132px] sm:h-[150px]" tabIndex={-1} aria-hidden="true">
+          {w.img && !imgFailed ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img src={w.img} alt="" loading="lazy" className="h-[120px] w-[66px] sm:h-[136px] sm:w-[80px] object-contain" onError={() => setImgFailed(true)} />
+          ) : (
+            <BottleSvg type={typeOf(w)} className="w-[40px] h-[96px]" />
+          )}
+        </Link>
 
-      <div className="min-w-0">
-        <p className="text-[10px] tracking-[0.12em] uppercase text-[var(--muted)] mb-1">
-          {w.t} · {w.c}
-          {w.y && w.y !== "NV" ? ` · ${w.y}` : ""}
-          {w.own ? <OwnImportBadge className="ml-2" /> : null}
-        </p>
-        <h3 className="text-base font-bold leading-tight tracking-tight">
-          <Link href={`/viner/${w.slug}`} className="hover:opacity-60 transition-opacity">{w.n}</Link>
-        </h3>
-        <p className="text-xs text-[var(--muted)] mt-0.5">
-          {w.p}{w.g ? ` · ${w.g}` : ""}
-        </p>
+        <div className="min-w-0 flex flex-col">
+          <h3 className="text-lg font-bold leading-tight tracking-tight">
+            <Link href={`/viner/${w.slug}`} className="hover:opacity-60 transition-opacity">{w.n}</Link>
+          </h3>
+          <p className="text-sm text-[var(--muted)] mt-1">
+            {w.p} · ca {w.pr} kr
+          </p>
+          {w.own ? <p className="mt-1.5"><OwnImportBadge /></p> : null}
+
+          <div className="mt-auto pt-3 flex flex-wrap items-center gap-x-4 gap-y-2">
+            <a
+              href={buyHref(w.slug, w.shop, { source: "kompassen", path: "/", state: stateQs })}
+              target="_blank"
+              rel={buyRel(w.shop, compensation)}
+              onClick={() => track({ type: "buy", wineId: w.id, shop: w.shop, price: w.pr })}
+              className="inline-flex items-center whitespace-nowrap rounded-full bg-[var(--fg)] text-[var(--bg)] text-[13px] sm:text-sm font-semibold px-3.5 sm:px-4 py-2 hover:opacity-80 transition-opacity"
+            >
+              {isSb ? "Se hos Systembolaget" : `Köp hos ${w.shop}`}
+            </a>
+            <button
+              type="button"
+              aria-expanded={open}
+              aria-controls={detailsId}
+              onClick={() => setOpen((o) => !o)}
+              className="text-sm text-[var(--muted)] hover:text-[var(--fg)] inline-flex items-center gap-1"
+            >
+              {open ? "Visa mindre" : "Visa mer"}
+              <svg className={`w-3 h-3 transition-transform ${open ? "rotate-180" : ""}`} viewBox="0 0 12 12" fill="none" aria-hidden="true"><path d="M2.5 4.5L6 8l3.5-3.5" stroke="currentColor" strokeWidth="1.5" /></svg>
+            </button>
+          </div>
+        </div>
       </div>
 
-      <div className="text-right">
-        <p className="text-lg font-bold leading-none">{sc} %</p>
-        <p className="text-[10px] text-[var(--muted)] mt-1">matchning</p>
-      </div>
-
-      <div className="col-span-2 space-y-1.5">
-        <Axis name="Syra" value={w.s} target={targets.s} />
-        <Axis name="Fyllighet" value={w.f} target={targets.f} />
-        <Axis name="Strävhet" value={w.st} target={targets.st} />
-        <Axis name="Funk" value={w.fu} target={targets.fu} />
-      </div>
-
-      <div className="col-span-3 text-sm leading-relaxed">
-        {w.foodText ? (
-          <p><span className="font-semibold">Passar till:</span> {w.foodText}</p>
-        ) : null}
-        {w.auto ? (
-          <p className="text-[11px] text-[var(--muted)] mt-1">Smakprofilen är uppskattad automatiskt från butikens beskrivning.</p>
-        ) : null}
-      </div>
-
-      <div className="col-span-3 flex flex-wrap gap-1.5">
-        {[...hitSet].map((h) => (
-          <span key={`h-${h}`} className="text-[11px] px-2 py-0.5 rounded-full bg-[var(--fg)] text-[var(--bg)]">{h}</span>
-        ))}
-        {fh.map((f) => (
-          <span key={`f-${f}`} className="text-[11px] px-2 py-0.5 rounded-full bg-[var(--fg)] text-[var(--bg)]">{FOOD[f]}</span>
-        ))}
-        {w.tags.filter((t) => !hitSet.has(t)).map((t) => (
-          <span key={`t-${t}`} className="text-[11px] px-2 py-0.5 rounded-full bg-[var(--surface)] text-[var(--fg)]">{t}</span>
-        ))}
-      </div>
-
-      <div className="col-span-3 flex flex-wrap items-baseline justify-between gap-x-4 gap-y-2 pt-3 border-t border-[var(--rule)]">
-        <p className="text-sm">
-          <span className="font-semibold">ca {w.pr} kr</span>
-          {!isSb ? <span className="text-xs text-[var(--muted)]"> · webbutik, hemleverans, svensk skatt ingår</span> : null}
-        </p>
-        <div className="flex flex-col items-end gap-1">
-          <a
-            href={buyHref(w.slug, w.shop, { source: "kompassen", path: "/", state: stateQs })}
-            target="_blank"
-            rel={buyRel(w.shop, compensation)}
-            onClick={() => track({ type: "buy", wineId: w.id, shop: w.shop, price: w.pr })}
-            className="text-sm font-semibold underline underline-offset-4 decoration-[var(--faint)] hover:decoration-[var(--fg)]"
-          >
-            {isSb ? "Se vinet hos Systembolaget" : `Köp hos ${w.shop}`} →
-          </a>
+      {open ? (
+        <div id={detailsId} className="mt-4 pt-4 border-t border-[var(--rule)] space-y-3 text-sm">
+          <p className="text-[11px] tracking-[0.12em] uppercase text-[var(--muted)]">
+            {w.t} · {w.c}{w.y && w.y !== "NV" ? ` · ${w.y}` : ""}{w.g ? ` · ${w.g}` : ""} · {sc} % matchning
+          </p>
+          <div className="space-y-1.5">
+            <Axis name="Syra" value={w.s} target={targets.s} />
+            <Axis name="Fyllighet" value={w.f} target={targets.f} />
+            <Axis name="Strävhet" value={w.st} target={targets.st} />
+            <Axis name="Funk" value={w.fu} target={targets.fu} />
+          </div>
+          {w.foodText ? <p className="leading-relaxed"><span className="font-semibold">Passar till:</span> {w.foodText}</p> : null}
+          <div className="flex flex-wrap gap-1.5">
+            {[...hitSet].map((h) => (
+              <span key={`h-${h}`} className="text-[11px] px-2 py-0.5 rounded-full bg-[var(--fg)] text-[var(--bg)]">{h}</span>
+            ))}
+            {fh.map((f) => (
+              <span key={`f-${f}`} className="text-[11px] px-2 py-0.5 rounded-full bg-[var(--fg)] text-[var(--bg)]">{FOOD[f]}</span>
+            ))}
+            {w.tags.filter((t) => !hitSet.has(t)).map((t) => (
+              <span key={`t-${t}`} className="text-[11px] px-2 py-0.5 rounded-full bg-[var(--surface)] text-[var(--fg)]">{t}</span>
+            ))}
+          </div>
+          {!isSb ? <p className="text-xs text-[var(--muted)]">Webbutik med hemleverans, svensk alkoholskatt ingår i priset.</p> : null}
           {w.alt ? (
             <a
               href={buyHref(w.slug, w.alt.shop, { source: "kompassen", path: "/", state: stateQs })}
               target="_blank"
               rel={buyRel(w.alt.shop, compensation)}
               onClick={() => track({ type: "buy", wineId: w.id, shop: w.alt!.shop, price: w.alt!.pr })}
-              className="text-xs text-[var(--muted)] underline underline-offset-4 decoration-[var(--faint)] hover:text-[var(--fg)]"
+              className="inline-block text-sm underline underline-offset-4 decoration-[var(--faint)] hover:decoration-[var(--fg)]"
             >
-              {w.alt.shop === "Systembolaget"
-                ? `Eller hos Systembolaget, ${w.alt.pr} kr →`
-                : `Eller hemleverans hos ${w.alt.shop}, ${w.alt.pr} kr →`}
+              {w.alt.shop === "Systembolaget" ? `Finns även hos Systembolaget, ${w.alt.pr} kr →` : `Finns även med hemleverans hos ${w.alt.shop}, ${w.alt.pr} kr →`}
             </a>
           ) : null}
+          {w.auto ? <p className="text-[11px] text-[var(--muted)]">Smakprofilen är uppskattad automatiskt från butikens beskrivning.</p> : null}
         </div>
-      </div>
+      ) : null}
     </article>
   );
 }
