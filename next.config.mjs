@@ -12,7 +12,7 @@ const nextConfig = {
       { source: "/basta-pet-nat-systembolaget", destination: "/pet-nat", permanent: true },
       // Barguiden gäller hela Sverige sedan 2026-11-11.
       { source: "/basta-naturvinsbarer-stockholm", destination: "/naturvinsbarer#stockholm", permanent: true },
-      ...["matbaren-mathias-dahlgren-stockholm", "tranan-stockholm", "bar-oas-stockholm", "fabelbar-stockholm", "stockholm-ost-chark"]
+      ...["tranan-stockholm", "stockholm-ost-chark"]
         .map((slug) => ({ source: `/naturvinsbarer/${slug}`, destination: "/naturvinsbarer", permanent: true })),
     ];
   },

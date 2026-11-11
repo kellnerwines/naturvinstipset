@@ -116,6 +116,24 @@ export const bars: Bar[] = [
     description: "Bar, restaurang och delikatessbutik på Östermalm, med naturvin på listan.",
   },
   {
+    slug: "matbaren-mathias-dahlgren-stockholm", name: "Matbaren Mathias Dahlgren", city: "Stockholm", address: "Södra Blasieholmshamnen 6", neighborhood: "Blasieholmen",
+    lat: 59.32932, lng: 18.07622, website: "https://mathiasdahlgren.se/matbaren/", instagram: "bymathiasdahlgren",
+    type: "Restaurang", wine_focus: "Naturvin till smårätter", food: true,
+    description: "Mathias Dahlgrens matbar på Grand Hôtel, med Bib Gourmand i Michelinguiden. Små rätter från ett kök med mycket grönsaker, och naturvin på glas vid baren.",
+  },
+  {
+    slug: "bar-oas-stockholm", name: "Bar Oas", city: "Stockholm", address: "Drottninggatan 73C", neighborhood: "City",
+    lat: 59.33265, lng: 18.06263,
+    type: "Vinbar", wine_focus: "Naturvin och cava", food: true,
+    description: "Liten, hemtrevlig vinbar mitt på Drottninggatan. Naturviner, cava och smårätter i tapasstil, en lugn oas mitt i city.",
+  },
+  {
+    slug: "fabelbar-stockholm", name: "Fabelbar", city: "Stockholm", address: "Hägerstensvägen 132", neighborhood: "Aspudden",
+    lat: 59.30567, lng: 18.00058, website: "https://fabelbar.se", instagram: "_fabelbar_",
+    type: "Bar", wine_focus: "Naturvin och smårätter", food: true,
+    description: "Kvartersbar i Aspudden sedan 2018 med naturvin, drinkar och smårätter. Ett mysigt häng för par och kompisar söder om Liljeholmen.",
+  },
+  {
     slug: "bar-la-lune-goteborg", name: "Bar La Lune", city: "Göteborg", address: "Vasa Kyrkogata 1", neighborhood: "Vasastaden",
     lat: 57.69651, lng: 11.97168, website: "https://barlalune.se", instagram: "barlalune",
     type: "Vinbar", wine_focus: "Handplockat naturvin", food: true,
