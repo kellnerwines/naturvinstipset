@@ -5,6 +5,7 @@
 
 import type { Offer, Wine } from "../blob";
 import { isLocked, matchKey, mergeWines } from "../wineData";
+import { sbNumber } from "./systembolaget";
 
 export type FeedItem = {
   /** Butikens handle/slug. */
@@ -43,6 +44,12 @@ export type ShopReport = {
 };
 
 export const TAX_HIDDEN = "Skattetexten saknas på butikens produktsida";
+export const STOCK_HIDDEN = "Slut i alla butiker";
+
+const SB = "Systembolaget";
+/** Systembolaget-länk utan kontrollerat erbjudande: lagret är okänt, så vinet döljs inte. */
+const sbUnknown = (w: Wine) => !!w.systembolagetUrl && !(w.offers ?? []).some((o) => o.shop === SB);
+
 
 const normUrl = (u: string) => u.replace(/^https?:\/\/(www\.)?/, "").replace(/[?#].*$/, "").replace(/\/+$/, "").toLowerCase();
 
@@ -50,6 +57,11 @@ function findExisting(wines: Wine[], feed: ShopFeed, item: FeedItem): number {
   const url = normUrl(item.url);
   const byOffer = wines.findIndex((w) => w.offers?.some((o) => o.shop === feed.shop && normUrl(o.url) === url));
   if (byOffer > -1) return byOffer;
+  // Systembolaget: samma artikelnummer i den gamla länken eller i erbjudandet.
+  if (feed.shop === SB) {
+    const byNr = wines.findIndex((w) => [w.systembolagetUrl, w.offers?.find((o) => o.shop === SB)?.url].some((u) => sbNumber(u) === item.sourceId));
+    if (byNr > -1) return byNr;
+  }
   const bySource = wines.findIndex((w) => w.sourceId === item.sourceId && (w.source ?? "").startsWith(feed.source));
   if (bySource > -1) return bySource;
   return item.newWine ? wines.findIndex((w) => w.id === item.newWine!.id) : -1;
@@ -103,6 +115,14 @@ export function applySync(existing: Wine[], feeds: ShopFeed[], now: string): { w
       let w = wine;
       let fieldChanged = false;
       if (item.importer && w.importer !== item.importer && !isLocked(w, "importer")) { w = { ...w, importer: item.importer }; fieldChanged = true; }
+      // Systembolaget: länken följer omdirigeringen och priset följer Systembolaget.
+      if (feed.shop === SB && w.systembolagetUrl && normUrl(w.systembolagetUrl) !== normUrl(item.url) && item.inStock && !isLocked(w, "systembolagetUrl")) {
+        w = { ...w, systembolagetUrl: item.url }; fieldChanged = true;
+      }
+      if (feed.shop === SB) w = { ...w, sbCheckedAt: now };
+      if (feed.shop === SB && (!w.shop || w.shop === SB) && item.price > 0 && String(item.price) !== w.price && !isLocked(w, "price")) {
+        w = { ...w, price: String(item.price) }; fieldChanged = true;
+      }
       if (changed || fieldChanged) r.changed.push(w.slug);
       if (was?.inStock && !item.inStock) r.outOfStock.push(w.slug);
       if (was && !was.inStock && item.inStock) r.backInStock.push(w.slug);
@@ -134,6 +154,27 @@ export function applySync(existing: Wine[], feeds: ShopFeed[], now: string): { w
 
     reports.push(r);
   }
+
+  // Webbutiksviner som är slut överallt döljs och visas igen när något säljställe har dem (beslut 2026-11-11).
+  // Viner med Systembolaget-länk som ännu inte har kontrollerats rörs inte.
+  const report = (w: Wine) => reports.find((r) => r.shop === w.shop) ?? reports[0];
+  wines = wines.map((w) => {
+    if (!w.offers?.length || sbUnknown(w) || isLocked(w, "published") || !report(w)) return w;
+    const inStock = w.offers.some((o) => o.inStock);
+    if (!inStock && w.published) {
+      report(w).unpublished.push(w.slug);
+      return { ...w, published: false, syncHidden: STOCK_HIDDEN };
+    }
+    if (inStock && w.syncHidden === STOCK_HIDDEN) {
+      report(w).republished.push(w.slug);
+      const next = { ...w, published: true };
+      delete next.syncHidden;
+      return next;
+    }
+    return w;
+  });
+  const hidden = reports.reduce((n, r) => n + r.unpublished.filter((slug) => wines.find((w) => w.slug === slug)?.syncHidden === STOCK_HIDDEN).length, 0);
+  if (hidden) alerts.push(`${hidden} viner dolda eftersom de är slut i alla butiker`);
 
   return { wines, reports, alerts };
 }

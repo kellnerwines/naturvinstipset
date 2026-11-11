@@ -10,11 +10,13 @@ import {
   parseFlaskvisPage, parseVinNaturPage, splitOrigin, tagList, vinNaturVariant, wooPrice,
   PHILIPSON_TAX_TEXT, isPhilipsonBottle, philipsonName, philipsonProducer, philipsonWineType,
   type PhilipsonProduct, type ShopifyProduct, type WooProduct,
+  VIN_NATUR_TAX_TEXT, isWineTradeBottle, parseWineTradeProduct,
 } from "./parse";
 
 export const VIN_NATUR = "Vin & Natur";
 export const FLASKVIS = "Flaskvis";
 export const PHILIPSON = "Philipson Wine";
+export const WINE_TRADE = "Wine Trade";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -231,5 +233,60 @@ export async function philipsonFeed(known: Set<string>, deadline: number, now: s
       primaryImageUrl: p.image, source: `philipsonwine.se (synk ${now.slice(0, 10)})`, sourceId, autoProfile: true,
     };
   }
+  return feed;
+}
+
+// ─── Wine Trade ──────────────────────────────────────────────────────────────
+
+/**
+ * Naturvinsimportören Wine Trades egen webbutik (Shopify, skickas med svensk skatt).
+ * Viner märkta "Systemet" säljs på Systembolaget och inte i butiken. Skattetexten
+ * kontrolleras på varje produktsida, ett anrop i taget.
+ */
+export async function wineTradeFeed(known: Set<string>, deadline: number, now: string): Promise<ShopFeed> {
+  const feed: ShopFeed = { shop: WINE_TRADE, source: "winetrade.se", complete: false, items: [], errors: [] };
+  const products: ShopifyProduct[] = [];
+  try {
+    for (let page = 1; page <= 5; page++) {
+      const res = await politeFetch(`https://winetrade.se/products.json?limit=250&page=${page}`, deadline, "application/json");
+      const batch = ((await res.json()) as { products: ShopifyProduct[] }).products ?? [];
+      if (!batch.length) { feed.complete = true; break; }
+      products.push(...batch);
+    }
+  } catch (e) {
+    feed.errors.push(`Produktlistan: ${(e as Error).message}`);
+  }
+
+  const wines = products.filter((p) => isWineTradeBottle(p) && !tagList(p.tags).includes("Systemet") && (known.has(p.handle) || p.variants[0].available));
+  feed.items = await mapLimit(wines, 1, async (p): Promise<FeedItem> => {
+    const v = p.variants[0];
+    const url = `https://winetrade.se/products/${p.handle}`;
+    const item: FeedItem = { sourceId: p.handle, url, price: Math.round(Number(v.price)), inStock: v.available };
+    try {
+      await sleep(400);
+      item.taxIncluded = VIN_NATUR_TAX_TEXT.test(htmlText(await (await politeFetch(url, deadline)).text()));
+    } catch (e) {
+      feed.errors.push(`${p.handle}: produktsidan ${(e as Error).message}`);
+      if (!known.has(p.handle)) return item; // nya viner skapas bara när skattetexten är kontrollerad
+    }
+    if (known.has(p.handle)) return item;
+
+    const w = parseWineTradeProduct(p);
+    if (!w.producer || !w.wineType || !w.country) {
+      feed.errors.push(`${p.handle}: kunde inte avgöra ${[!w.producer && "producent", !w.wineType && "färg", !w.country && "land"].filter(Boolean).join(", ")}, skapas inte`);
+      return item;
+    }
+    const text = htmlText(p.body_html ?? "");
+    const id = `wt-${p.handle}`;
+    item.newWine = {
+      ...baseWine(now), ...heuristicProfile(text, w.wineType),
+      id, slug: id, name: w.name, year: w.year, producer: w.producer, region: w.region, country: w.country,
+      grape: w.grapes.join(", "), wineType: w.wineType, price: String(item.price), shop: WINE_TRADE, shopUrl: url,
+      description: describe(w.wineType, w.region ?? w.country, w.grapes),
+      primaryImageUrl: p.images?.[0]?.src, importer: WINE_TRADE,
+      source: `winetrade.se (synk ${now.slice(0, 10)})`, sourceId: p.handle, autoProfile: true,
+    };
+    return item;
+  });
   return feed;
 }
