@@ -68,17 +68,10 @@ export default async function HomePage() {
               Vilket naturvin passar dig?
             </h1>
             <p className="text-base md:text-lg text-white/80 leading-relaxed max-w-xl">
-              Bland {count} naturviner på Systembolaget eller från webbutiker med hemleverans. Tryck på dina svar eller skriv fritt.
-              Efter fyra frågor får du ett förslag. Sedan kan du finjustera tills det sitter.
+              Bland {count} naturviner på Systembolaget eller från webbutiker med hemleverans. Tre frågor, sedan dina förslag.
             </p>
           </div>
-          {/* Halvgenomskinlig över videon; den grå texten görs mörkare här så att kontrasten räcker. */}
-          <div
-            className="bg-white/55 backdrop-blur-sm border border-white/40 rounded-xl px-4 pt-6 md:pt-8"
-            style={{ "--muted": "rgba(13, 13, 13, 0.8)", "--faint": "rgba(13, 13, 13, 0.6)" } as React.CSSProperties}
-          >
-            <Vinkompassen wines={compassWines} compensation={settings.retailerCompensation} />
-          </div>
+          <Vinkompassen wines={compassWines} compensation={settings.retailerCompensation} />
         </div>
       </section>
 

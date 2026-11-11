@@ -153,12 +153,13 @@ describe("fritext", () => {
     expect(picked).toEqual(expect.arrayContaining(["Vitt", "Orange", "Gott på egen hand", "Kryddig ton"]));
     expect(s.tags).toContain("Kryddig");
     const missing = QUESTIONS.map((q) => q.k).filter((k) => !answered.includes(k));
-    expect(missing).toEqual(["budget", "adv"]);
+    // Sedan 2026-11-11 är frågorna färg, budget och mat; hur vilt det får smaka ligger under Finjustera.
+    expect(missing).toEqual(["budget"]);
     const reply = reflect(o, text, W) + missingTail(missing, false);
     expect(reply).toBe(
       "Solnedgång på balkongen, det låter som en fin kväll. Ett lättdrucket och friskt vitt med lite kryddighet i doften. "
       + "Eftersom du nämner skalkontakt tar jag med orangeviner också, det är vita druvor som fått ligga på skalen. "
-      + "Några snabba frågor till, så hittar jag rätt flaska.",
+      + "En fråga till, så har du ditt förslag.",
     );
   });
 
