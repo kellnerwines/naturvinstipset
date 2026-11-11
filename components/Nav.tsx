@@ -9,7 +9,7 @@ const links = [
   { href: "/", label: "Vinkompassen" },
   { href: "/topp-100", label: "Topp 100" },
   { href: "/vad-ar-naturvin", label: "Vad är naturvin?" },
-  { href: "/basta-naturvinsbarer-stockholm", label: "Barer i Stockholm" },
+  { href: "/naturvinsbarer", label: "Naturvinsbarer" },
   { href: "/om-listan", label: "Om listan" },
   { href: "/blogg", label: "Blogg" },
   { href: "/om-oss", label: "Om oss" },

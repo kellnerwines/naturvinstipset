@@ -1,140 +1,74 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
-import { getBarBySlug, bars } from "@/lib/bars";
-
-const priceLabels: Record<string, string> = {
-  $: "$ — Budgetvänligt",
-  $$: "$$ — Mellanklass",
-  $$$: "$$$ — Premium",
-};
+import { bars, citySlug, getBarBySlug, getBarsByCity, instagramUrl, mapsUrl } from "@/lib/bars";
 
 export async function generateStaticParams() {
   return bars.map((b) => ({ slug: b.slug }));
 }
 
-export async function generateMetadata({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}): Promise<Metadata> {
+export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const bar = getBarBySlug(slug);
-  if (!bar) return { title: "Vinbar" };
+  if (!bar) return { title: "Naturvinsbar" };
+  const title = `${bar.name} – naturvinsbar i ${bar.city}`;
   return {
-    title: `${bar.name} – Naturvinsbar i ${bar.city}`,
+    title,
     description: bar.description,
-    openGraph: {
-      title: `${bar.name} – Naturvinsbar i ${bar.city}`,
-      description: bar.description,
-      url: `https://www.naturvinstipset.se/naturvinsbarer/${slug}`,
-    },
+    openGraph: { title, description: bar.description, url: `https://www.naturvinstipset.se/naturvinsbarer/${slug}` },
   };
 }
 
-export default async function BarPage({
-  params,
-}: {
-  params: Promise<{ slug: string }>;
-}) {
+export default async function BarPage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const bar = getBarBySlug(slug);
   if (!bar) notFound();
 
-  const citySlug = `basta-naturvinsbarer-${bar.city.toLowerCase()}`;
-
+  const nearby = getBarsByCity(bar.city).filter((b) => b.slug !== bar.slug);
   const jsonLd = {
     "@context": "https://schema.org",
-    "@type": "BarOrPub",
+    "@type": bar.type === "Restaurang" ? "Restaurant" : "BarOrPub",
     name: bar.name,
     description: bar.description,
-    address: {
-      "@type": "PostalAddress",
-      streetAddress: bar.address,
-      addressLocality: bar.city,
-      addressCountry: bar.country,
-    },
-    geo: {
-      "@type": "GeoCoordinates",
-      latitude: bar.lat,
-      longitude: bar.lng,
-    },
-    servesCuisine: "Natural Wine",
-    priceRange: bar.price_level,
+    address: { "@type": "PostalAddress", streetAddress: bar.address, addressLocality: bar.city, addressCountry: "SE" },
+    geo: { "@type": "GeoCoordinates", latitude: bar.lat, longitude: bar.lng },
     ...(bar.website ? { url: bar.website } : {}),
-    ...(bar.instagram ? { sameAs: [`https://instagram.com/${bar.instagram}`] } : {}),
+    ...(bar.instagram ? { sameAs: [instagramUrl(bar.instagram)] } : {}),
   };
-
-  const faqJsonLd = {
-    "@context": "https://schema.org",
-    "@type": "FAQPage",
-    mainEntity: [
-      {
-        "@type": "Question",
-        name: `Är ${bar.name} en bra naturvinsbar i ${bar.city}?`,
-        acceptedAnswer: { "@type": "Answer", text: bar.faq_is_good },
-      },
-      {
-        "@type": "Question",
-        name: `Har ${bar.name} naturvin på glas?`,
-        acceptedAnswer: { "@type": "Answer", text: bar.faq_glass_pours },
-      },
-      {
-        "@type": "Question",
-        name: `Måste man boka bord på ${bar.name}?`,
-        acceptedAnswer: { "@type": "Answer", text: bar.faq_booking },
-      },
-    ],
-  };
+  const link = "inline-flex items-center text-sm font-semibold border border-[var(--fg)] rounded-full px-4 py-2 hover:bg-[var(--fg)] hover:text-[var(--bg)] transition-colors";
 
   return (
     <div className="max-w-2xl mx-auto px-5 py-12">
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
-      />
-      <script
-        type="application/ld+json"
-        dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }}
-      />
+      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <Link
-        href={`/${citySlug}`}
-        className="text-sm text-black/40 hover:text-[var(--green)] mb-8 inline-block"
-      >
-        ← Bästa naturvinsbarerna i {bar.city}
+      <Link href={`/naturvinsbarer#${citySlug(bar.city)}`} className="text-sm text-[var(--muted)] hover:text-[var(--fg)] mb-8 inline-block">
+        ← Naturvinsbarer i {bar.city}
       </Link>
 
-      <div className="mb-3 flex items-center gap-2">
-        <span className="text-xs font-medium px-2.5 py-1 rounded-full bg-[var(--green-light)] text-[var(--green-dark)]">
-          {bar.type}
-        </span>
-        <span className="text-xs text-[var(--muted)]">{bar.neighborhood} · {bar.city}</span>
+      <p className="text-[11px] font-semibold tracking-[0.15em] uppercase text-[var(--muted)] mb-3">
+        {bar.type} · {bar.neighborhood}, {bar.city}
+      </p>
+      <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight leading-tight mb-5">{bar.name}</h1>
+      <p className="text-[var(--muted)] leading-relaxed mb-8 text-[16px]">{bar.description}</p>
+
+      <div className="flex flex-wrap gap-3 mb-10">
+        {bar.website ? <a href={bar.website} target="_blank" rel="noopener" className={link}>Webbplats</a> : null}
+        {bar.instagram ? <a href={instagramUrl(bar.instagram)} target="_blank" rel="noopener" className={link}>Instagram @{bar.instagram}</a> : null}
+        <a href={mapsUrl(bar)} target="_blank" rel="noopener" className={link}>Vägbeskrivning</a>
       </div>
 
-      <h1 className="text-3xl md:text-4xl font-bold text-[var(--green-dark)] leading-tight mb-6">
-        {bar.name}
-      </h1>
-
-      <p className="text-black/70 leading-relaxed mb-8 text-[15px]">
-        {bar.description}
-      </p>
-
-      {/* Specs */}
-      <div className="border border-black/8 rounded-xl overflow-hidden mb-10">
+      <div className="border border-[var(--rule)] rounded-xl overflow-hidden mb-12">
         <table className="w-full text-sm">
           <tbody>
             {[
-              ["Adress", bar.address],
+              ["Adress", `${bar.address}, ${bar.city}`],
               ["Stadsdel", bar.neighborhood],
               ["Typ", bar.type],
-              ["Prisnivå", priceLabels[bar.price_level]],
-              ["Mat", bar.food ? "Ja" : "Nej"],
-              ["Naturvin på glas", bar.glass_pours ? "Ja" : "Nej"],
-              ["Rekommenderas för", bar.recommended_for],
+              ["Vinet", bar.wine_focus],
+              ["Mat", bar.food ? "Ja" : "Snacks eller ingen mat"],
             ].map(([label, value]) => (
-              <tr key={label} className="border-b border-black/5 last:border-0">
-                <td className="px-4 py-2.5 text-black/40 whitespace-nowrap w-40">{label}</td>
+              <tr key={label} className="border-b border-[var(--rule)] last:border-0">
+                <td className="px-4 py-2.5 text-[var(--muted)] whitespace-nowrap w-32">{label}</td>
                 <td className="px-4 py-2.5 font-medium">{value}</td>
               </tr>
             ))}
@@ -142,52 +76,23 @@ export default async function BarPage({
         </table>
       </div>
 
-      {/* Our review */}
-      <div className="bg-[var(--green-light)] rounded-xl p-6 mb-12">
-        <p className="text-xs font-semibold tracking-[0.15em] uppercase text-[var(--muted)] mb-3">
-          Naturvinstipsets omdöme
-        </p>
-        <p className="text-[15px] text-[var(--fg)] leading-relaxed">{bar.our_review}</p>
-      </div>
+      <p className="text-sm text-[var(--muted)] mb-12">
+        Öppettider och vinlista ändras ofta. Kolla {bar.instagram ? "Instagram" : "webbplatsen"} innan du går dit.
+      </p>
 
-      {/* FAQ */}
-      <div className="border-t border-black/8 pt-10">
-        <h2 className="text-lg font-bold text-[var(--green-dark)] mb-8">Vanliga frågor</h2>
-        <div className="space-y-8">
-          <div>
-            <h3 className="font-semibold text-[var(--green-dark)] mb-2">
-              Är {bar.name} en bra naturvinsbar i {bar.city}?
-            </h3>
-            <p className="text-sm text-black/70 leading-relaxed">{bar.faq_is_good}</p>
-          </div>
-          <div>
-            <h3 className="font-semibold text-[var(--green-dark)] mb-2">
-              Har {bar.name} naturvin på glas?
-            </h3>
-            <p className="text-sm text-black/70 leading-relaxed">{bar.faq_glass_pours}</p>
-          </div>
-          <div>
-            <h3 className="font-semibold text-[var(--green-dark)] mb-2">
-              Måste man boka bord på {bar.name}?
-            </h3>
-            <p className="text-sm text-black/70 leading-relaxed">{bar.faq_booking}</p>
-          </div>
+      {nearby.length ? (
+        <div className="border-t border-[var(--rule)] pt-10">
+          <h2 className="text-lg font-bold mb-5">Fler naturvinsbarer i {bar.city}</h2>
+          <ul className="grid gap-x-6 gap-y-3 sm:grid-cols-2">
+            {nearby.map((b) => (
+              <li key={b.slug}>
+                <Link href={`/naturvinsbarer/${b.slug}`} className="font-semibold hover:opacity-60 transition-opacity">{b.name}</Link>
+                <span className="text-sm text-[var(--muted)]"> · {b.neighborhood}</span>
+              </li>
+            ))}
+          </ul>
         </div>
-      </div>
-
-      {/* CTA */}
-      <div className="border-t border-black/8 mt-16 pt-12 flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-        <div>
-          <p className="font-semibold text-[var(--fg)] mb-1">Köp hem naturvin</p>
-          <p className="text-sm text-black/50">Vår rankning av de bästa naturvinerna på Systembolaget.</p>
-        </div>
-        <Link
-          href="/topp-100"
-          className="shrink-0 text-sm font-semibold text-[var(--fg)] border border-[var(--fg)] px-5 py-3 hover:bg-[var(--fg)] hover:text-[var(--bg)] transition-colors"
-        >
-          Se Topp 100 →
-        </Link>
-      </div>
+      ) : null}
     </div>
   );
 }
