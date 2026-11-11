@@ -31,7 +31,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   ];
 
   const barCityRoutes: MetadataRoute.Sitemap = [
-    { url: `${BASE}/basta-naturvinsbarer-stockholm`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
+    { url: `${BASE}/naturvinsbarer`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
   ];
 
   const barRoutes: MetadataRoute.Sitemap = bars.map((b) => ({
