@@ -62,7 +62,7 @@ export default async function HomePage() {
           <div className="absolute inset-0" style={{ background: "rgba(42,36,32,0.64)" }} />
         </div>
         <div className="relative max-w-2xl mx-auto px-4 pb-16 md:pb-24">
-          <div className="min-h-[calc(52svh-3.5rem)] flex flex-col justify-end pt-12 pb-8 md:pb-10 text-white">
+          <div className="min-h-[calc(52svh-3.5rem)] flex flex-col justify-end md:items-center md:text-center pt-12 pb-8 md:pb-10 text-white">
             <p className="text-[11px] font-semibold tracking-[0.2em] uppercase text-white/60 mb-3">Vinkompassen</p>
             <h1 className="text-4xl md:text-6xl font-extrabold leading-[1.05] tracking-tight mb-5">
               Vilket naturvin passar dig?
