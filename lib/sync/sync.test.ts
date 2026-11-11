@@ -1,6 +1,6 @@
 import { describe, expect, it } from "vitest";
 import type { Wine } from "../blob";
-import { applySync, TAX_HIDDEN, type ShopFeed } from "./apply";
+import { applySync, STOCK_HIDDEN, TAX_HIDDEN, type ShopFeed } from "./apply";
 import { deriveFoodCategories, fillFoodCategories } from "./food";
 import {
   deriveWineType, findGrapes, flaskvisScale, parseFlaskvisPage, parseVinNaturPage, splitOrigin, vinNaturVariant,
@@ -185,6 +185,22 @@ describe("synkregler", () => {
     const manual = existing.map((w) => (w.id === "vn-fxaus-2024" ? { ...w, published: false } : w));
     const { wines } = applySync(manual, [feed()], LATER);
     expect(wines.find((w) => w.id === "vn-fxaus-2024")!.published).toBe(false);
+  });
+
+  it("slut i alla butiker döljs, och visas igen när det finns i lager", () => {
+    const first = applySync(existing, [feed()], LATER);
+    expect(first.wines.find((w) => w.slug === "vn-gone")).toMatchObject({ published: false, syncHidden: STOCK_HIDDEN });
+    expect(first.reports[0].unpublished).toEqual(["vn-gone"]);
+    expect(first.wines.find((w) => w.slug === "sb")!.published).toBe(true);
+    const back = feed({ items: [...feed().items, { sourceId: "gone", url: "https://vinnatur.shop/products/gone", price: 199, inStock: true }] });
+    const second = applySync(first.wines, [back], LATER);
+    expect(second.wines.find((w) => w.slug === "vn-gone")).toMatchObject({ published: true });
+    expect(second.wines.find((w) => w.slug === "vn-gone")!.syncHidden).toBeUndefined();
+    expect(second.reports[0].republished).toEqual(["vn-gone"]);
+  });
+  it("slut i webbutiken men kvar på Systembolaget döljs inte", () => {
+    const both = existing.map((w) => (w.slug === "vn-gone" ? { ...w, systembolagetUrl: "https://www.systembolaget.se/produkt/vin/x-1/" } : w));
+    expect(applySync(both, [feed()], LATER).wines.find((w) => w.slug === "vn-gone")!.published).toBe(true);
   });
 
   it("nytt vin som redan finns hos Systembolaget får ett extra erbjudande i stället för en dubblett", () => {

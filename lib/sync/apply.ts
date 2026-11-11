@@ -43,6 +43,9 @@ export type ShopReport = {
 };
 
 export const TAX_HIDDEN = "Skattetexten saknas på butikens produktsida";
+export const STOCK_HIDDEN = "Slut i alla butiker";
+
+const atSystembolaget = (w: Wine) => !!w.systembolagetUrl || (w.offers ?? []).some((o) => o.shop === "Systembolaget");
 
 const normUrl = (u: string) => u.replace(/^https?:\/\/(www\.)?/, "").replace(/[?#].*$/, "").replace(/\/+$/, "").toLowerCase();
 
@@ -134,6 +137,27 @@ export function applySync(existing: Wine[], feeds: ShopFeed[], now: string): { w
 
     reports.push(r);
   }
+
+  // Webbutiksviner som är slut överallt döljs och visas igen när något säljställe har dem (beslut 2026-11-11).
+  // Viner på Systembolaget rörs inte, eftersom synken inte ser Systembolagets lager.
+  const report = (w: Wine) => reports.find((r) => r.shop === w.shop) ?? reports[0];
+  wines = wines.map((w) => {
+    if (!w.offers?.length || atSystembolaget(w) || isLocked(w, "published") || !report(w)) return w;
+    const inStock = w.offers.some((o) => o.inStock);
+    if (!inStock && w.published) {
+      report(w).unpublished.push(w.slug);
+      return { ...w, published: false, syncHidden: STOCK_HIDDEN };
+    }
+    if (inStock && w.syncHidden === STOCK_HIDDEN) {
+      report(w).republished.push(w.slug);
+      const next = { ...w, published: true };
+      delete next.syncHidden;
+      return next;
+    }
+    return w;
+  });
+  const hidden = reports.reduce((n, r) => n + r.unpublished.filter((slug) => wines.find((w) => w.slug === slug)?.syncHidden === STOCK_HIDDEN).length, 0);
+  if (hidden) alerts.push(`${hidden} viner dolda eftersom de är slut i alla butiker`);
 
   return { wines, reports, alerts };
 }
