@@ -33,6 +33,8 @@ const PANELS: [PanelKey, string][] = [
 const S0 = ["Något kryddigt till solnedgången på balkongen", "Ett vitt till skaldjur under 300 kr", "Något funkigt och orange", "Ett rött till lammgryta", "Bubbel till mingel", "Från Portugal"];
 const S1 = ["Mer mineraliskt", "Från Portugal", "Lite mer funk", "Till kryddig mat", "Börja om"];
 const FIRST_SHOWN = 5;
+/** Bästa förslaget tar en hel rad på desktop, så jämna steg ger fulla rader två och två. */
+const MORE_SHOWN = 6;
 
 const prefersReducedMotion = () =>
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -507,9 +509,9 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
         <p className="text-base leading-relaxed">
           {top ? `Mitt bästa förslag är ${top.w.n} från ${top.w.p}. Här är de som passar dig bäst.` : "Jag hittade inget som passar, prova att ändra ett svar."}
         </p>
-        <div key={flashKey} className={`mt-4 space-y-3 ${flashKey ? css.flash : ""}`}>
+        <div key={flashKey} className={`mt-4 grid gap-3 md:grid-cols-2 items-start ${flashKey ? css.flash : ""}`}>
           {result.relax.length || result.budget ? (
-            <p className="text-sm border border-[var(--rule)] rounded-md px-3 py-2 text-[var(--muted)]">
+            <p className="md:col-span-2 text-sm border border-[var(--rule)] rounded-md px-3 py-2 text-[var(--muted)]">
               {relaxMessage(result.relax, result.budget)}
             </p>
           ) : null}
@@ -517,8 +519,8 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
             <CompassCard key={sc.w.id} scored={sc} first={i === 0} targets={targets} stateQs={stateQs} compensation={compensation} />
           ))}
           {result.list.length > shownN ? (
-            <button type="button" className={`${chipCls(false)} w-full justify-center`} onClick={() => setShownN((n) => n + 7)}>
-              Visa {Math.min(result.list.length - shownN, 7)} till ({result.list.length} passar)
+            <button type="button" className={`${chipCls(false)} md:col-span-2 w-full justify-center`} onClick={() => setShownN((n) => n + MORE_SHOWN)}>
+              Visa {Math.min(result.list.length - shownN, MORE_SHOWN)} till ({result.list.length} passar)
             </button>
           ) : null}
         </div>
