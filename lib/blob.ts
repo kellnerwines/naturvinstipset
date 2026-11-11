@@ -44,6 +44,7 @@ export type Wine = {
   sourceImageUrl?: string;       // butikens originalbild, innan den flyttats till Blob (5.1)
   lockedFields?: string[];       // fält som admin ändrat – importen får inte skriva över dem
   importer?: string;             // svensk importör enligt webbutiken, t.ex. "Wine Rebels" (Flaskvis)
+  sbCheckedAt?: string;          // när synken senast läste vinets sida hos Systembolaget (ISO)
   syncHidden?: string;           // varför synken avpublicerade vinet (6.1); publiceras igen när orsaken är borta
 };
 

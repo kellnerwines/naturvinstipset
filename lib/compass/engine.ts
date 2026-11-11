@@ -115,7 +115,8 @@ const clampAxis = (v: number | undefined) => Math.max(1, Math.min(5, Math.round(
 export function toCompassWine(w: Wine): CompassWine | null {
   if (!w.published) return null;
   const offers = (w.offers ?? []).filter((o) => o.inStock && o.url);
-  if (!offers.length && w.systembolagetUrl) {
+  // Gamla viner med bara en Systembolaget-länk; ett kontrollerat erbjudande som är slut ersätts inte.
+  if (!offers.length && w.systembolagetUrl && !(w.offers ?? []).some((o) => o.shop === "Systembolaget")) {
     offers.push({ shop: "Systembolaget", url: w.systembolagetUrl, price: Number(w.price) || 0, inStock: true, lastSyncedAt: "" });
   }
   if (!offers.length) return null;
