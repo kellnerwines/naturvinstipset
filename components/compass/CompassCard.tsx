@@ -58,10 +58,10 @@ export default function CompassCard({
   const detailsId = `vin-${w.id}-detaljer`;
 
   return (
-    // På desktop ligger korten två och två med den stående flaskbilden överst; bästa förslaget tar hela bredden.
-    <article className={`bg-[var(--card)] border ${first ? "border-[var(--fg)] md:col-span-2" : "border-[var(--rule)]"} rounded-lg p-4`}>
-      <div className={`grid grid-cols-[72px_1fr] sm:grid-cols-[88px_1fr] gap-x-4 ${first ? "md:grid-cols-[150px_1fr] md:gap-x-6" : "md:grid-cols-1 md:gap-y-4"}`}>
-        <Link href={`/viner/${w.slug}`} className={`flex items-center justify-center bg-[var(--surface)] rounded-md h-[132px] sm:h-[150px] ${first ? "md:h-[220px]" : "md:h-[240px]"}`} tabIndex={-1} aria-hidden="true">
+    // På desktop ligger korten två och två med den stående flaskbilden överst.
+    <article className={`bg-[var(--card)] border ${first ? "border-[var(--fg)]" : "border-[var(--rule)]"} rounded-lg p-4`}>
+      <div className="grid grid-cols-[72px_1fr] sm:grid-cols-[88px_1fr] md:grid-cols-1 gap-x-4 md:gap-y-4">
+        <Link href={`/viner/${w.slug}`} className="flex items-center justify-center bg-[var(--surface)] rounded-md h-[132px] sm:h-[150px] md:h-[240px]" tabIndex={-1} aria-hidden="true">
           {w.img && !imgFailed ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={w.img} alt="" loading="lazy" className="h-[120px] w-[66px] sm:h-[136px] sm:w-[80px] md:h-[85%] md:w-auto object-contain" onError={() => setImgFailed(true)} />

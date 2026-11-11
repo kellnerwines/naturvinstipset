@@ -32,8 +32,8 @@ const PANELS: [PanelKey, string][] = [
 ];
 const S0 = ["Något kryddigt till solnedgången på balkongen", "Ett vitt till skaldjur under 300 kr", "Något funkigt och orange", "Ett rött till lammgryta", "Bubbel till mingel", "Från Portugal"];
 const S1 = ["Mer mineraliskt", "Från Portugal", "Lite mer funk", "Till kryddig mat", "Börja om"];
-const FIRST_SHOWN = 5;
-/** Bästa förslaget tar en hel rad på desktop, så jämna steg ger fulla rader två och två. */
+/** Sex åt gången, så att korten fyller raderna två och två på desktop. */
+const FIRST_SHOWN = 6;
 const MORE_SHOWN = 6;
 
 const prefersReducedMotion = () =>
