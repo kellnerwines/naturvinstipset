@@ -4,7 +4,7 @@ import { applySync, STOCK_HIDDEN, TAX_HIDDEN, type ShopFeed } from "./apply";
 import { deriveFoodCategories, fillFoodCategories } from "./food";
 import {
   deriveWineType, findGrapes, flaskvisScale, parseFlaskvisPage, parseVinNaturPage, splitOrigin, vinNaturVariant,
-  isPhilipsonBottle, philipsonName, philipsonProducer, philipsonWineType,
+  isPhilipsonBottle, philipsonName, philipsonProducer, philipsonWineType, isWineTradeBottle, parseWineTradeProduct,
   type PhilipsonProduct, type ShopifyProduct,
 } from "./parse";
 
@@ -97,6 +97,32 @@ describe("Philipson Wine", () => {
   it("bara 75 cl", () => {
     expect(isPhilipsonBottle(p({}))).toBe(true);
     expect(isPhilipsonBottle(p({ bottleSizeCl: "150" }))).toBe(false);
+  });
+});
+
+describe("Wine Trade", () => {
+  const p = (o: Partial<ShopifyProduct>): ShopifyProduct => ({
+    handle: "x", title: "Dard & Ribo, Crozes-Hermitage 2024", product_type: "Rött", tags: [],
+    body_html: "<p>Crozes-Hermitages, Dard &amp; Ribo, Rhône, Frankrike<br>Syrah</p><p>Även de vita vinerna på Marsanne och Roussanne.</p>",
+    variants: [{ title: "Default Title", price: "549.00", available: true }], ...o,
+  });
+  it("producent ur listan, druvor bara ur första stycket", () => {
+    expect(parseWineTradeProduct(p({}))).toMatchObject({ producer: "Dard & Ribo", name: "Crozes-Hermitage", year: "2024", region: "Rhône", country: "Frankrike", wineType: "Rött", grapes: ["Syrah"] });
+  });
+  it("producent sist i titeln, region och land tas bort ur namnet", () => {
+    const x = parseWineTradeProduct(p({ title: "Samodia, Rosato Frizzante, Emilia-Romagna", product_type: "", body_html: "<p>Samodia, Rosato Frizzante, Emilia-Romagna</p>" }));
+    expect(x).toMatchObject({ producer: "Samodia", name: "Rosato Frizzante", country: "Italien", wineType: "Mousserande" });
+  });
+  it("färg ur Rouge och Tinto när druvorna inte räcker", () => {
+    expect(parseWineTradeProduct(p({ title: "Benje Tinto, Envinate", product_type: "", body_html: "<p>Benje Tinto 2022, Envinate, Teneriffa, Spanien</p>" }))).toMatchObject({ producer: "Envinate", wineType: "Rött", country: "Spanien" });
+  });
+  it("okänd producent ger ingen producent", () => {
+    expect(parseWineTradeProduct(p({ title: "Okänd, Vin 2024", body_html: "<p>Okänd</p>" })).producer).toBeUndefined();
+  });
+  it("lådor och trepack är inte enskilda viner", () => {
+    expect(isWineTradeBottle(p({}))).toBe(true);
+    expect(isWineTradeBottle(p({ title: "Höstlåda #1" }))).toBe(false);
+    expect(isWineTradeBottle(p({ title: "Champagne 3 pack", variants: [{ title: "Default Title", price: "3790.00", available: true }] }))).toBe(false);
   });
 });
 
