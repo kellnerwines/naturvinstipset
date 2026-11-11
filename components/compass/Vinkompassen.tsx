@@ -32,7 +32,9 @@ const PANELS: [PanelKey, string][] = [
 ];
 const S0 = ["Något kryddigt till solnedgången på balkongen", "Ett vitt till skaldjur under 300 kr", "Något funkigt och orange", "Ett rött till lammgryta", "Bubbel till mingel", "Från Portugal"];
 const S1 = ["Mer mineraliskt", "Från Portugal", "Lite mer funk", "Till kryddig mat", "Börja om"];
-const FIRST_SHOWN = 5;
+/** Sex åt gången, så att korten fyller raderna två och två på desktop. */
+const FIRST_SHOWN = 6;
+const MORE_SHOWN = 6;
 
 const prefersReducedMotion = () =>
   typeof window !== "undefined" && window.matchMedia("(prefers-reduced-motion: reduce)").matches;
@@ -139,11 +141,13 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
   // Mjuk scroll med inbromsning (ungefär en sekund) i stället för webbläsarens snabba
   // standard. Avbryts direkt om användaren själv scrollar.
   const anim = useRef<number | null>(null);
+  const progressRef = useRef<HTMLDivElement>(null);
   const glideTo = useCallback((el: Element | null | undefined, align: "start" | "end" = "start") => {
     if (!el) return;
     const r = el.getBoundingClientRect();
-    // "start": under menyn; "end": ovanför det fasta skrivfältet längst ner.
-    const target = align === "start" ? window.scrollY + r.top - 80 : window.scrollY + r.bottom - window.innerHeight + 150;
+    // "start": under menyn och progressbaren; "end": ovanför det fasta skrivfältet längst ner.
+    const top = 56 + (progressRef.current?.offsetHeight ?? 0) + 24;
+    const target = align === "start" ? window.scrollY + r.top - top : window.scrollY + r.bottom - window.innerHeight + 150;
     const to = Math.max(0, Math.min(document.documentElement.scrollHeight - window.innerHeight, target));
     const from = window.scrollY;
     if (Math.abs(to - from) < 4) return;
@@ -505,9 +509,9 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
         <p className="text-base leading-relaxed">
           {top ? `Mitt bästa förslag är ${top.w.n} från ${top.w.p}. Här är de som passar dig bäst.` : "Jag hittade inget som passar, prova att ändra ett svar."}
         </p>
-        <div key={flashKey} className={`mt-4 space-y-3 ${flashKey ? css.flash : ""}`}>
+        <div key={flashKey} className={`mt-4 grid gap-3 md:grid-cols-2 items-start ${flashKey ? css.flash : ""}`}>
           {result.relax.length || result.budget ? (
-            <p className="text-sm border border-[var(--rule)] rounded-md px-3 py-2 text-[var(--muted)]">
+            <p className="md:col-span-2 text-sm border border-[var(--rule)] rounded-md px-3 py-2 text-[var(--muted)]">
               {relaxMessage(result.relax, result.budget)}
             </p>
           ) : null}
@@ -515,8 +519,8 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
             <CompassCard key={sc.w.id} scored={sc} first={i === 0} targets={targets} stateQs={stateQs} compensation={compensation} />
           ))}
           {result.list.length > shownN ? (
-            <button type="button" className={`${chipCls(false)} w-full justify-center`} onClick={() => setShownN((n) => n + 7)}>
-              Visa {Math.min(result.list.length - shownN, 7)} till ({result.list.length} passar)
+            <button type="button" className={`${chipCls(false)} md:col-span-2 w-full justify-center`} onClick={() => setShownN((n) => n + MORE_SHOWN)}>
+              Visa {Math.min(result.list.length - shownN, MORE_SHOWN)} till ({result.list.length} passar)
             </button>
           ) : null}
         </div>
@@ -684,7 +688,7 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
   if (!started) {
     return (
       // Startläget fyller resten av första skärmen, så att videon täcker hela vyn innan man startar.
-      <div className="max-w-md min-h-[calc(48svh-6rem)]">
+      <div className="max-w-md md:mx-auto min-h-[calc(48svh-6rem)]">
         <button type="button" onClick={() => start()}
           className="w-full rounded-full bg-white text-[var(--hero-dark)] text-base md:text-lg font-semibold py-4 hover:opacity-90 transition-opacity focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
           Starta Vinkompassen
@@ -704,7 +708,7 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
       style={{ "--muted": "rgba(13, 13, 13, 0.8)", "--faint": "rgba(13, 13, 13, 0.6)" } as React.CSSProperties}
     >
       {!done ? (
-        <div className="sticky top-14 z-20 -mx-4 -mt-6 md:-mt-8 mb-6 px-4 py-3 bg-white/70 backdrop-blur-sm rounded-t-xl border-b border-[var(--rule)]"
+        <div ref={progressRef} className="sticky top-14 z-20 -mx-4 -mt-6 md:-mt-8 mb-6 px-4 py-3 bg-white/70 backdrop-blur-sm rounded-t-xl border-b border-[var(--rule)]"
           role="progressbar" aria-label="Vinkompassen" aria-valuemin={0} aria-valuemax={QUESTIONS.length} aria-valuenow={qDone}>
           <div className="flex items-center gap-3">
             <div className="flex gap-1.5 flex-1">
