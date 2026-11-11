@@ -4,7 +4,7 @@
 import { backupWines, getSyncLog, getWines, putWineImage, saveSyncLog, saveWines, type Wine } from "../blob";
 import { downloadImage, imageKey, mapLimit, needsImageMigration, processBottleImage } from "../wineImages";
 import { applySync, type ShopReport } from "./apply";
-import { flaskvisFeed, philipsonFeed, vinNaturFeed } from "./feeds";
+import { flaskvisFeed, philipsonFeed, vinNaturFeed, wineTradeFeed } from "./feeds";
 import { fillFoodCategories } from "./food";
 
 export type SyncLogEntry = {
@@ -20,11 +20,14 @@ export type SyncLogEntry = {
 
 const LOG_KEEP = 24;
 
+export const SYNC_SHOPS = ["vinnatur", "flaskvis", "philipson", "winetrade"] as const;
+export type SyncShop = (typeof SYNC_SHOPS)[number];
+
 const knownIds = (wines: Wine[], source: string) =>
   new Set(wines.filter((w) => (w.source ?? "").startsWith(source) && w.sourceId).map((w) => w.sourceId!));
 
 /** `only` begränsar körningen till en butik, t.ex. för en snabb torrkörning. */
-export async function runSync(opts: { trigger: "cron" | "admin"; dryRun?: boolean; budgetMs?: number; only?: "vinnatur" | "flaskvis" | "philipson" }): Promise<SyncLogEntry> {
+export async function runSync(opts: { trigger: "cron" | "admin"; dryRun?: boolean; budgetMs?: number; only?: SyncShop }): Promise<SyncLogEntry> {
   const started = new Date();
   const now = started.toISOString();
   // Lämna tid åt bilder och sparning innan funktionen stängs (maxDuration 300 s).
@@ -35,6 +38,7 @@ export async function runSync(opts: { trigger: "cron" | "admin"; dryRun?: boolea
     !opts.only || opts.only === "vinnatur" ? vinNaturFeed(knownIds(existing, "vinnatur.shop"), deadline, now) : null,
     !opts.only || opts.only === "flaskvis" ? flaskvisFeed(knownIds(existing, "flaskvis.se"), deadline, now) : null,
     !opts.only || opts.only === "philipson" ? philipsonFeed(knownIds(existing, "philipsonwine.se"), deadline, now) : null,
+    !opts.only || opts.only === "winetrade" ? wineTradeFeed(knownIds(existing, "winetrade.se"), deadline, now) : null,
   ]);
   const { wines, reports, alerts } = applySync(existing, feeds.filter((f) => f !== null), now);
   // Viner utan matkategorier får dem ur vintyp, druva och land, så att kompassens matfilter hittar dem.

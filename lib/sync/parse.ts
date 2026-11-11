@@ -319,3 +319,72 @@ export function philipsonWineType(p: PhilipsonProduct, text: string): string | u
 
 /** Bara 75 cl-flaskor som går att köpa. */
 export const isPhilipsonBottle = (p: PhilipsonProduct) => p.bottleSizeCl === "75" && p.priceDouble > 0;
+
+// ─── Wine Trade (Shopify) ────────────────────────────────────────────────────
+
+/**
+ * Wine Trades producenter med land. Butiken skriver producent och vinnamn i olika
+ * ordning, så producenten hittas i den här listan. Okända producenter skapas inte
+ * utan syns i synkloggen, och läggs då till här.
+ */
+export const WINE_TRADE_PRODUCERS: Record<string, string> = {
+  "Dard & Ribo": "Frankrike", "Domaine Marcel Lapierre": "Frankrike", "Domaine Lapierre": "Frankrike", "Lapierre": "Frankrike",
+  "Jean Foillard": "Frankrike", "Alex Foillard": "Frankrike", "Domaine Julien Meyer": "Frankrike", "Julien Meyer": "Frankrike",
+  "Calvez-Bobinet": "Frankrike", "Sebastien Brunet": "Frankrike", "Buronfosse": "Frankrike", "Domaine de la Borde": "Frankrike",
+  "Château d'Arlay": "Frankrike", "Arnaud Combier": "Frankrike", "Raisins et l'Ange": "Frankrike", "Bruno Dûchene": "Frankrike",
+  "Vadin-Plateau": "Frankrike", "Larmandier-Bernier": "Frankrike",
+  "Podere le Boncie": "Italien", "Arianna Occhipinti": "Italien", "Calabretta": "Italien", "Camillo Donati": "Italien",
+  "C.O.S": "Italien", "Samodia": "Italien", "KOI": "Italien", "Foradori": "Italien", "Vino di Anna": "Italien",
+  "Trinchero": "Italien", "La Biancara": "Italien",
+  "Comando G": "Spanien", "Envinate": "Spanien", "Forjas del Salnes": "Spanien", "Celler Mir": "Spanien",
+  "El Serralet": "Spanien", "Viticola Mentridana": "Spanien",
+  "Filipa Pato": "Portugal", "Weingut Schödl": "Österrike", "Schödl": "Österrike", "Testalonga": "Sydafrika",
+};
+
+const WT_REGIONS: Record<string, string> = {
+  ...REGION_COUNTRY, Etna: "Italien", Vittoria: "Italien", Trentino: "Italien", Dolomiterna: "Italien",
+  "Emilia-Romagna": "Italien", "Emilia Romagna": "Italien", Weinviertel: "Österrike", Saumur: "Frankrike",
+  Vouvray: "Frankrike", Arbois: "Frankrike",
+};
+const WT_REGION_NAMES = Object.keys(WT_REGIONS).sort((a, b) => b.length - a.length);
+const WT_PRODUCER_NAMES = Object.keys(WINE_TRADE_PRODUCERS).sort((a, b) => b.length - a.length);
+const WT_TYPES: Record<string, string> = { "rött": "Rött", vitt: "Vitt", orange: "Orange", "rosé": "Rosé", mousserande: "Mousserande" };
+
+/** Lådor, trepack och liknande är inte enskilda viner. */
+export const isWineTradeBottle = (p: ShopifyProduct) =>
+  !/låda|lådan|pack|box|kartong/i.test(p.title) && Number(p.variants[0]?.price) > 0 && Number(p.variants[0]?.price) < 1000;
+
+const COLOUR_WORDS: [RegExp, string][] = [
+  [/(^|[^\p{L}])(rouge|rosso|tinto|negre)($|[^\p{L}])/iu, "Rött"],
+  [/(^|[^\p{L}])(blanc|bianco|blanco|branco)($|[^\p{L}])/iu, "Vitt"],
+];
+
+/**
+ * Producent, vinnamn, år, region och land ur titeln och beskrivningens första stycke
+ * (ursprung och druvor). Druvor letas bara där, eftersom resten av texten ofta
+ * handlar om producentens andra viner; finns inga där tas nästa stycke.
+ */
+export function parseWineTradeProduct(p: ShopifyProduct): { producer?: string; name: string; year: string; region?: string; country: string; wineType?: string; grapes: string[] } {
+  const paras = (p.body_html ?? "").split(/<\/p>/i).map(htmlText).filter(Boolean);
+  const lead = paras[0] ?? "";
+  const lower = (x: string) => x.toLowerCase();
+  const producer = WT_PRODUCER_NAMES.find((n) => lower(p.title).includes(lower(n))) ?? WT_PRODUCER_NAMES.find((n) => lower(lead).includes(lower(n)));
+  const year = p.title.match(/(?:19|20)\d{2}/)?.[0] ?? lead.match(/(?:19|20)\d{2}/)?.[0] ?? "NV";
+  const region = WT_REGION_NAMES.find((r) => wordRe(r).test(lead));
+  const country = COUNTRIES.find((c) => wordRe(c).test(lead)) ?? (region && WT_REGIONS[region]) ?? (producer && WINE_TRADE_PRODUCERS[producer]) ?? "";
+
+  // Vinnamnet är titeln utan producent, år, region och land.
+  let name = p.title;
+  if (producer) name = name.replace(new RegExp(producer.replace(/[.*+?^${}()|[\]\\]/g, "\\$&"), "i"), "");
+  name = name.replace(/(?:19|20)\d{2}/, "").replace(/^\s*(weingut|domaine)\s+/i, "")
+    .split(",").map((x) => x.trim().replace(/\s+x$/i, "")).filter((x) => x && !WT_REGIONS[x] && !COUNTRIES.includes(x)).join(", ")
+    .replace(/\s{2,}/g, " ").trim();
+
+  const grapes = findGrapes(`${p.title} ${lead}`).length ? findGrapes(`${p.title} ${lead}`) : findGrapes(paras[1] ?? "");
+  const t = `${p.title} ${lead}`;
+  const colour = (/frizzante/i.test(t) ? "Mousserande" : undefined)
+    ?? deriveWineType(t, tagList(p.tags), grapes)
+    ?? COLOUR_WORDS.find(([re]) => re.test(p.title))?.[1]
+    ?? WT_TYPES[lower(p.product_type)];
+  return { producer, name: name || p.title, year, region, country, wineType: colour, grapes };
+}
