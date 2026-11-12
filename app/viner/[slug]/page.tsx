@@ -13,6 +13,7 @@ import { buyLinks, hasAnyOffer, retailerNote, whereSentence } from "@/lib/buyLin
 import { FOOD } from "@/lib/compass/engine";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbJsonLd } from "@/lib/seo";
+import { countrySlug, grapeSlug, grapesOf, producerName, producerSlug } from "@/lib/entities";
 import type { Wine } from "@/lib/blob";
 
 const TYPE_WORD: Record<string, string> = { "Rött": "rött", "Vitt": "vitt", Orange: "orange", "Rosé": "rosé", Mousserande: "mousserande", "Pét Nat": "pét-nat" };
@@ -114,11 +115,13 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
   const links = buyLinks(wine, { source: "vinsida", path: `/viner/${wine.slug}` }, settings.retailerCompensation);
   const inTopList = !!wine.systembolagetUrl || (wine.offers ?? []).some((o) => o.shop === "Systembolaget");
 
-  const specs = [
-    { label: "Producent", value: wine.producer },
-    { label: "Land", value: wine.country },
+  // Producent, land och druvor länkar till sina egna sidor.
+  const grapes = grapesOf(wine);
+  const specs: { label: string; value?: string; links?: { href: string; label: string }[] }[] = [
+    { label: "Producent", value: wine.producer, links: wine.producer ? [{ href: `/producenter/${producerSlug(wine.producer)}`, label: producerName(wine.producer) }] : undefined },
+    { label: "Land", value: wine.country, links: wine.country ? [{ href: `/land/${countrySlug(wine.country)}`, label: wine.country }] : undefined },
     { label: "Region", value: wine.region },
-    { label: "Druva", value: wine.grape },
+    { label: grapes.length > 1 ? "Druvor" : "Druva", value: wine.grape, links: grapes.length ? grapes.map((g) => ({ href: `/druvor/${grapeSlug(g)}`, label: g })) : undefined },
     { label: "Vintyp", value: wine.wineType },
     { label: "Årgång", value: wine.year },
     { label: "Pris", value: wine.price ? `${wine.price} kr` : undefined },
@@ -129,7 +132,7 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
   const food = foodList(wine);
 
   const producerWines = wine.producer
-    ? wines.filter((w) => w.published && w.id !== wine.id && w.producer === wine.producer).slice(0, 4)
+    ? wines.filter((w) => w.published && w.id !== wine.id && !!w.producer && producerSlug(w.producer) === producerSlug(wine.producer)).slice(0, 4)
     : [];
 
   const regionalWines = (wine.region || wine.country)
@@ -207,7 +210,16 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
             {specs.map((s) => (
               <div key={s.label} className="flex justify-between text-sm gap-4">
                 <dt className="text-black/40 shrink-0">{s.label}</dt>
-                <dd className="font-medium text-right">{s.value}</dd>
+                <dd className="font-medium text-right">
+                  {s.links
+                    ? s.links.map((l, i) => (
+                        <span key={l.href}>
+                          {i > 0 && ", "}
+                          <Link href={l.href} className="underline underline-offset-2 decoration-black/20 hover:text-[var(--green)]">{l.label}</Link>
+                        </span>
+                      ))
+                    : s.value}
+                </dd>
               </div>
             ))}
           </dl>
@@ -397,7 +409,7 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
       {/* Related: same producer */}
       {producerWines.length > 0 && (
         <div className="mt-14 max-w-2xl border-t border-black/8 pt-12">
-          <h2 className="text-lg font-bold text-[var(--green-dark)] mb-6">Fler viner från {wine.producer}</h2>
+          <h2 className="text-lg font-bold text-[var(--green-dark)] mb-6">Fler viner från {producerName(wine.producer)}</h2>
           <ul className="space-y-3">
             {producerWines.map((w) => (
               <li key={w.id}>
@@ -413,6 +425,9 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
               </li>
             ))}
           </ul>
+          <Link href={`/producenter/${producerSlug(wine.producer)}`} className="inline-block mt-6 text-sm underline underline-offset-2 hover:text-[var(--green)]">
+            Alla viner från {producerName(wine.producer)}
+          </Link>
         </div>
       )}
 
@@ -437,6 +452,11 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
               </li>
             ))}
           </ul>
+          {wine.country && (
+            <Link href={`/land/${countrySlug(wine.country)}`} className="inline-block mt-6 text-sm underline underline-offset-2 hover:text-[var(--green)]">
+              Alla naturviner från {wine.country}
+            </Link>
+          )}
         </div>
       )}
     </div>

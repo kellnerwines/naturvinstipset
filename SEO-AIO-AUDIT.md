@@ -83,3 +83,11 @@ Börja med etapp A. Den rör inga adresser eller data, går att göra i en PR oc
 - Vinsidor: titel som "BRQA 2023 – rött naturvin från Portugal, 186 kr", beskrivning med producent, ursprung, druvor, säljställe, mat och smak; faktarutan som `<dl>` med "Passar till" och "Pris kontrollerat"; matsvaret i FAQ byggs av vinets egna matkategorier och regionala mattext.
 - llms.txt: guider, smakprofiler, naturvinsbarer, data per vin och betygsmetod. "Fyra frågor" rättat till tre i metadata och llms.txt.
 - Delade hjälpare: `lib/seo.ts`, `components/JsonLd.tsx` (escapar `<`), `components/GuideSeo.tsx`.
+
+## Genomfört: etapp B (2026-11-12)
+- `lib/entities.ts`: aliastabell för producenter (t.ex. Julien Meyer → Domaine Julien Meyer) och druvor (Pinot Grigio → Pinot Gris, Garnacha → Grenache, Weissburgunder → Pinot Blanc med flera). Druvfältet delas upp i druvor; procent, beskrivande text och "Okänd druva" tas bort. Lagrad data ändras inte.
+- Nya sidor: `/producenter`, `/producenter/[slug]`, `/druvor`, `/druvor/[slug]`, `/land`, `/land/[slug]`. Varje sida har intro uträknad ur vinerna, fakta med länkar, vinlistan efter betyg, ItemList, brödsmulor och vanliga frågor. Druvsidorna för de 20 vanligaste druvorna har en kort text om druvan.
+- `noindex, follow` och ingen plats i sitemap för producenter och druvor med ett vin och länder med färre än fem viner.
+- Vinsidan länkar producent, land och varje druva i faktarutan, plus "Alla viner från …" under relaterade viner.
+- Sidfoten länkar till översiktssidorna; llms.txt listar länder, de vanligaste druvorna och antalet producentsidor.
+- Datafel att rätta i admin: regionen "Biera Interior" (ska vara Beira Interior) hos Barroca da Malhada.
