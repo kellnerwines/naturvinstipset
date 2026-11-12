@@ -91,20 +91,26 @@ describe("poängmotorn", () => {
     }
   });
 
-  it("släpper filter i ordningen druva, land, butik … och färg bara vid 0 träffar", () => {
+  it("släpper filter i ordningen druva, butik, mat, budget … och land och färg bara vid 0 träffar", () => {
     const X = [
       cw({ id: "1", t: "Rött", c: "Portugal", g: "Baga" }),
       cw({ id: "2", t: "Rött", c: "Frankrike", g: "Gamay" }),
       cw({ id: "3", t: "Rött", c: "Frankrike", g: "Gamay" }),
       cw({ id: "4", t: "Vitt", c: "Frankrike", g: "Chenin" }),
     ];
-    // 0 träffar → druva släpps (1 träff) → land släpps (3 träffar)
+    // 0 träffar → druva släpps (1 träff); landet behålls trots < 3 träffar
     const a = pick(state({ color: ["Rött"], country: "Portugal", grape: "Gamay" }), X);
-    expect(a.relax).toEqual(["grape", "country"]);
-    expect(a.list).toHaveLength(3);
-    // två röda finns, så färgen släpps inte trots < 3 träffar
+    expect(a.relax).toEqual(["grape"]);
+    expect(a.list.map((s) => s.w.c)).toEqual(["Portugal"]);
+    // två röda från Frankrike räcker, inget släpps
     const b = pick(state({ color: ["Rött"], country: "Frankrike" }), X);
-    expect(b.relax).toEqual(["country"]);
+    expect(b.relax).toEqual([]);
+    // inget vin alls från landet → då släpps landet
+    expect(pick(state({ color: ["Rött"], country: "Chile" }), X).relax).toEqual(["country"]);
+    // mat släpps före landet
+    const d = pick(state({ color: ["Rött"], country: "Portugal", food: ["fisk"] }), X);
+    expect(d.relax).toEqual(["food"]);
+    expect(d.list.map((s) => s.w.c)).toEqual(["Portugal"]);
     const c = pick(state({ color: ["Rosé"] }), X);
     expect(c.relax).toEqual(["color"]);
   });
