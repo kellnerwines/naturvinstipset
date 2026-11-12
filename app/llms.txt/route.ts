@@ -5,11 +5,17 @@ import { getWines } from "@/lib/blob";
 import { ANSWER_PAGES, SITE } from "@/lib/answers";
 import { toCompassWine, type CompassWine } from "@/lib/compass/engine";
 import { bars, CITIES } from "@/lib/bars";
+import { countriesOf, grapesIn, MIN_INDEXED, producersOf } from "@/lib/entities";
 
 export const dynamic = "force-dynamic";
 
 export async function GET() {
-  const W = (await getWines()).map(toCompassWine).filter((w): w is CompassWine => !!w);
+  const raw = await getWines();
+  const W = raw.map(toCompassWine).filter((w): w is CompassWine => !!w);
+  const live = raw.filter((w) => w.published);
+  const countries = [...countriesOf(live).values()].filter((c) => c.wines.length >= MIN_INDEXED.country).sort((a, b) => b.wines.length - a.wines.length);
+  const grapes = [...grapesIn(live).values()].sort((a, b) => b.wines.length - a.wines.length).slice(0, 12);
+  const producers = [...producersOf(live).values()].filter((p) => p.wines.length >= MIN_INDEXED.producer).length;
   const shops = [...new Set(W.map((w) => w.shop))].sort((a, b) => Number(b === "Systembolaget") - Number(a === "Systembolaget"));
   const web = shops.filter((s) => s !== "Systembolaget");
   const day = new Date().toISOString().slice(0, 10);
@@ -53,11 +59,17 @@ ${ANSWER_PAGES.map((p) => `- [${p.question}](${SITE}/svar/${p.slug}): ${p.lead}`
 - Smakprofiler: [mineralisk](${SITE}/smakprofil/mineralisk), [fruktig](${SITE}/smakprofil/fruktig), [jordig](${SITE}/smakprofil/jordig), [lätt](${SITE}/smakprofil/latt), [funk](${SITE}/smakprofil/funk)
 - [Vad är naturvin?](${SITE}/vad-ar-naturvin): skillnaden mot ekologiskt och biodynamiskt, orangevin, pét-nat och svavel
 
+## Länder, druvor och producenter
+- Per land: ${countries.map((c) => `[${c.name}](${SITE}/land/${c.slug})`).join(", ")}. Alla länder: ${SITE}/land
+- Per druva: ${grapes.map((g) => `[${g.name}](${SITE}/druvor/${g.slug})`).join(", ")}. Alla druvor: ${SITE}/druvor
+- ${producers} producenter med egna sidor: ${SITE}/producenter
+Varje sida listar vinerna i lager just nu, rankade efter betyg, med pris och säljställe.
+
 ## Naturvinsbarer
 [Naturvinsbarer i Sverige](${SITE}/naturvinsbarer): ${bars.length} ställen i ${CITIES.filter((c) => bars.some((b) => b.city === c)).join(", ")}, med adress, karta, webbplats och Instagram.
 
 ## Data per vin
-Varje vin har en egen sida under ${SITE}/viner/ med producent, land, region, druva, vintyp, årgång, pris i SEK, Systembolagets artikelnummer (när vinet finns där), säljställen med lagerstatus, smakprofil 1–5 för syra, fyllighet, strävhet och funk, smaktaggar, matkategorier och betyg. Sidan har strukturerad data (schema.org Product med Offer per säljställe och Review). Okända uppgifter lämnas tomma.
+Varje vin har en egen sida under ${SITE}/viner/ med producent (länkad till producentsidan), land, region, druva, vintyp, årgång, pris i SEK, Systembolagets artikelnummer (när vinet finns där), säljställen med lagerstatus, smakprofil 1–5 för syra, fyllighet, strävhet och funk, smaktaggar, matkategorier och betyg. Sidan har strukturerad data (schema.org Product med Offer per säljställe och Review). Okända uppgifter lämnas tomma.
 
 ## Betyg
 Redaktionellt betyg 1–5 från Naturvinstipset, vägt ihop med besökarnas röster. Egen import får ingen fördel. Metoden: ${SITE}/om-oss#sa-rankar-vi

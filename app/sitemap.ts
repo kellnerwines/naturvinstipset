@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { getWines, getBlogs, isPostLive } from "@/lib/blob";
 import { bars } from "@/lib/bars";
 import { ANSWER_PAGES } from "@/lib/answers";
+import { countriesOf, grapesIn, MIN_INDEXED, producersOf } from "@/lib/entities";
 
 const BASE = "https://www.naturvinstipset.se";
 
@@ -52,6 +53,18 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
       return { url: `${BASE}/viner/${w.slug}`, lastModified: new Date(last), changeFrequency: "weekly" as const, priority: 0.8 };
     });
 
+  // Producenter, druvor och länder med tillräckligt många viner; övriga har noindex och utelämnas.
+  const live = wines.filter((w) => w.published);
+  const entityRoutes: MetadataRoute.Sitemap = [
+    ...["producenter", "druvor", "land"].map((p) => ({ url: `${BASE}/${p}`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.7 })),
+    ...[...countriesOf(live).values()].filter((e) => e.wines.length >= MIN_INDEXED.country)
+      .map((e) => ({ url: `${BASE}/land/${e.slug}`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 })),
+    ...[...grapesIn(live).values()].filter((e) => e.wines.length >= MIN_INDEXED.grape)
+      .map((e) => ({ url: `${BASE}/druvor/${e.slug}`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.7 })),
+    ...[...producersOf(live).values()].filter((e) => e.wines.length >= MIN_INDEXED.producer)
+      .map((e) => ({ url: `${BASE}/producenter/${e.slug}`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.7 })),
+  ];
+
   const blogRoutes = blogs
     .filter((b) => isPostLive(b))
     .map((b) => ({ url: `${BASE}/blogg/${b.slug}`, lastModified: new Date(), changeFrequency: "monthly" as const, priority: 0.7 }));
@@ -61,5 +74,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...ANSWER_PAGES.map((p) => ({ url: `${BASE}/svar/${p.slug}`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 })),
   ];
 
-  return [...staticRoutes, ...answerRoutes, ...barCityRoutes, ...barRoutes, ...wineRoutes, ...blogRoutes];
+  return [...staticRoutes, ...answerRoutes, ...barCityRoutes, ...barRoutes, ...entityRoutes, ...wineRoutes, ...blogRoutes];
 }
