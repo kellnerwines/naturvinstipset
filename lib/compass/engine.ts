@@ -96,7 +96,7 @@ export const TAGS = ["Fruktig", "Mineralisk", "Komplex", "Krispig", "Lättsam", 
 export type RelaxKey = "shop" | "grape" | "country" | "food" | "budget" | "color";
 /** Ordningen filter släpps i vid för få träffar (4.3). */
 export const RELAX: [RelaxKey, string][] = [
-  ["grape", "druva"], ["country", "land"], ["shop", "butik"], ["food", "mat"], ["budget", "budget"], ["color", "färg"],
+  ["grape", "druva"], ["shop", "butik"], ["food", "mat"], ["budget", "budget"], ["country", "land"], ["color", "färg"],
 ];
 
 export const ADV_TARGET: Record<Adventure, number> = { "1": 1.5, "2": 2.5, "3": 3.5 };
@@ -227,7 +227,8 @@ const nextBudget = (b: Budget | null): Budget | null =>
 
 /**
  * Hårda filter, och om färre än 3 viner matchar släpps ett filter i taget i
- * RELAX-ordning – bara om det ger fler träffar. Färg släpps bara vid 0 träffar.
+ * RELAX-ordning – bara om det ger fler träffar. Land och färg är uttryckliga val och
+ * släpps bara vid 0 träffar (beslut 2026-11-12: Portugal ska ge portugisiska viner).
  * Budgeten höjs ett steg i taget (199 → 299 → 400) innan den släpps helt, och
  * viner som uppfyller alla val visas alltid före de som kom med när ett filter släpptes.
  */
@@ -239,7 +240,7 @@ export function pick(S: CompassState, W: CompassWine[]): { list: Scored[]; relax
     const useful = RELAX.find(([k]) => {
       if (relax.has(k) || !isActive(cur, k)) return false;
       const t = new Set(relax); t.add(k);
-      return matching(cur, W, t).length > list.length && (k !== "color" || list.length === 0);
+      return matching(cur, W, t).length > list.length && ((k !== "color" && k !== "country") || list.length === 0);
     });
     if (!useful) break;
     if (useful[0] === "budget") {
