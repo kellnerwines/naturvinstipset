@@ -7,6 +7,8 @@ import WineGrid from "@/components/WineGrid";
 import HomeFaq from "@/components/HomeFaq";
 import { OWN_IMPORT_HREF } from "@/components/OwnImportBadge";
 import { retailerNote } from "@/lib/buyLinks";
+import JsonLd from "@/components/JsonLd";
+import { breadcrumbJsonLd, wineItemListJsonLd } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -41,7 +43,7 @@ export default async function Topp100Page() {
 
   return (
     <div>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd data={[jsonLd, wineItemListJsonLd("Topp 100 naturviner", "/topp-100", entries.map((e) => e.wine)), breadcrumbJsonLd([{ name: "Topp 100", path: "/topp-100" }])]} />
 
       {/* ── Hero ──────────────────────────────────────────────────────────── */}
       {/* Videon ligger bara på startsidan; här räcker den mörka bakgrunden. */}

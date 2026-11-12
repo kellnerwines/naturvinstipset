@@ -4,6 +4,8 @@ import "./globals.css";
 import SiteShell from "@/components/SiteShell";
 import { getSettings } from "@/lib/blob";
 import CookieBanner from "@/components/CookieBanner";
+import JsonLd from "@/components/JsonLd";
+import { siteJsonLd } from "@/lib/seo";
 
 /*
   Outfit — clean geometric sans, upright proportions (not wide like Syne).
@@ -24,7 +26,7 @@ export const metadata: Metadata = {
     template: "%s – Naturvinstipset",
   },
   description:
-    "Svara på fyra snabba frågor och få naturvin som passar din smak, din budget och din mat. På Systembolaget eller från webbutiker med hemleverans, med smakprofiler, matförslag och köptips.",
+    "Svara på tre snabba frågor och få naturvin som passar din smak, din budget och din mat. På Systembolaget eller från webbutiker med hemleverans, med smakprofiler, matförslag och köptips.",
   keywords: [
     "naturvin", "systembolaget", "naturvinstips", "vinbetyg", "ekologiskt vin", "biodynamiskt vin",
     "naturvin online", "köpa naturvin", "naturvin hemleverans", "orange vin", "vinkompass", "vilket vin passar",
@@ -43,7 +45,7 @@ export const metadata: Metadata = {
     locale: "sv_SE",
     siteName: "Naturvinstipset",
     title: "Naturvinstipset – hitta rätt naturvin på Systembolaget eller från webbutiker med hemleverans",
-    description: "Svara på fyra snabba frågor och få naturvin som passar din smak, din budget och din mat. På Systembolaget eller från webbutiker med hemleverans, med smakprofiler, matförslag och köptips.",
+    description: "Svara på tre snabba frågor och få naturvin som passar din smak, din budget och din mat. På Systembolaget eller från webbutiker med hemleverans, med smakprofiler, matförslag och köptips.",
     images: [{ url: "/og-image.png", width: 1200, height: 630 }],
   },
 };
@@ -53,6 +55,7 @@ export default async function RootLayout({ children }: { children: React.ReactNo
   return (
     <html lang="sv" className={`${outfit.variable} h-full`}>
       <body className="min-h-full flex flex-col antialiased">
+        <JsonLd data={siteJsonLd} />
         <SiteShell retailerCompensation={settings.retailerCompensation}>{children}</SiteShell>
         <CookieBanner />
       </body>

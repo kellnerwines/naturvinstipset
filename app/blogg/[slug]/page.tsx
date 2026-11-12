@@ -8,6 +8,8 @@ import { isAuthenticated } from "@/lib/auth";
 import OwnImportBadge from "@/components/OwnImportBadge";
 import BlogLikeButton from "@/components/BlogLikeButton";
 import BlogComments from "@/components/BlogComments";
+import JsonLd from "@/components/JsonLd";
+import { SITE, breadcrumbJsonLd, publisherRef } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
@@ -19,6 +21,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title: post.title,
     description: post.excerpt,
+    alternates: { canonical: `/blogg/${slug}` },
     openGraph: {
       title: post.title,
       description: post.excerpt,
@@ -71,8 +74,22 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
     return parts;
   }
 
+  const postJsonLd = {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    headline: post.title,
+    description: post.excerpt,
+    url: `${SITE}/blogg/${post.slug}`,
+    datePublished: post.publishedAt,
+    inLanguage: "sv-SE",
+    ...(post.imageUrl ? { image: post.imageUrl.startsWith("http") ? post.imageUrl : `${SITE}${post.imageUrl}` } : {}),
+    author: publisherRef,
+    publisher: publisherRef,
+  };
+
   return (
     <article>
+      {preview ? null : <JsonLd data={[postJsonLd, breadcrumbJsonLd([{ name: "Blogg", path: "/blogg" }, { name: post.title, path: `/blogg/${post.slug}` }])]} />}
       {preview ? (
         <p className="bg-[var(--amber-light)] text-sm text-center px-4 py-2">
           Förhandsvisning: inlägget publiceras {new Date(post.publishedAt).toLocaleDateString("sv-SE", { day: "numeric", month: "long", year: "numeric" })} och syns bara för dig som är inloggad.

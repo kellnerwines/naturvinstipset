@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import GuideSeo from "@/components/GuideSeo";
 import { notFound } from "next/navigation";
 import { getWines, getRatings, combinedRating } from "@/lib/blob";
 
@@ -58,6 +59,7 @@ export async function generateMetadata({
   return {
     title: `${data.label} naturvin på Systembolaget eller från webbutiker med hemleverans`,
     description: data.description,
+    alternates: { canonical: `/smakprofil/${profil}` },
     openGraph: {
       title: `${data.label} naturvin på Systembolaget eller från webbutiker med hemleverans`,
       description: data.description,
@@ -183,6 +185,9 @@ export default async function SmakprofilPage({
             </div>
           </>
         )}
+
+        <GuideSeo name={`${data.label} naturvin`} path={`/smakprofil/${profil}`} crumbs={[{ name: `${data.label} naturvin`, path: `/smakprofil/${profil}` }]}
+          wines={matchingWines} nouns={{ best: `${data.label.toLowerCase()} naturvinet`, one: `${data.label.toLowerCase()} naturvin`, many: `${data.label.toLowerCase()} naturviner` }} />
 
         {/* Other profiles */}
         <div className="mt-16 pt-12 border-t border-[var(--rule)]">

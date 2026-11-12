@@ -10,23 +10,63 @@ import OwnImportBadge from "@/components/OwnImportBadge";
 import { buildWineProductJsonLd, getArticleNumber } from "@/lib/wineJsonLd";
 import { kellnerProducerUrl } from "@/lib/kellnerLinks";
 import { buyLinks, hasAnyOffer, retailerNote, whereSentence } from "@/lib/buyLinks";
+import { FOOD } from "@/lib/compass/engine";
+import JsonLd from "@/components/JsonLd";
+import { breadcrumbJsonLd } from "@/lib/seo";
+import type { Wine } from "@/lib/blob";
 
-export const dynamic = "force-dynamic";
+const TYPE_WORD: Record<string, string> = { "Rött": "rött", "Vitt": "vitt", Orange: "orange", "Rosé": "rosé", Mousserande: "mousserande", "Pét Nat": "pét-nat" };
+
+/** Matkategorierna som text, t.ex. "fisk och skaldjur, fågel samt vegetariskt" ("samt" eftersom flera kategorier själva innehåller "och"). */
+function foodList(w: Wine): string {
+  const items = (w.foodCategories ?? []).map((c) => FOOD[c]?.toLowerCase()).filter(Boolean);
+  return items.length > 1 ? `${items.slice(0, -1).join(", ")} samt ${items[items.length - 1]}` : items[0] ?? "";
+}
+
+/** Senaste gången pris och lager kontrollerades hos något säljställe. */
+function checkedDate(w: Wine): string | undefined {
+  const d = [w.sbCheckedAt, ...(w.offers ?? []).map((o) => o.lastSyncedAt)].filter((x): x is string => !!x).sort().pop();
+  return d ? new Date(d).toLocaleDateString("sv-SE", { day: "numeric", month: "long", year: "numeric" }) : undefined;
+}
+
+/** "Fleurie 2024 – rött naturvin från Frankrike, 439 kr" */
+function wineHeadline(w: Wine): string {
+  const name = `${w.name}${w.year && w.year !== "NV" ? ` ${w.year}` : ""}`;
+  return `${name} – ${TYPE_WORD[w.wineType] ?? ""} naturvin${w.country ? ` från ${w.country}` : ""}${w.price ? `, ${w.price} kr` : ""}`;
+}
+
+/** Beskrivning för sökmotorer: producent, stil, druva, smak, mat och var den finns. Delar läggs till i prioritetsordning så länge texten ryms. */
+function wineMetaDescription(w: Wine): string {
+  const origin = [w.region, w.country].filter(Boolean).join(", ");
+  const grapes = (w.grape ?? "").split(/,\s*/).filter(Boolean);
+  const grapeText = grapes.length ? ` på ${grapes.slice(0, 3).join(", ")}${grapes.length > 3 ? " med flera" : ""}` : "";
+  const parts = [
+    `${w.name} från ${w.producer} är ett ${TYPE_WORD[w.wineType] ?? ""} naturvin${origin ? ` från ${origin}` : ""}${grapeText}.`,
+    whereSentence(w),
+    foodList(w) ? `Passar till ${foodList(w)}.` : "",
+    w.flavorTags?.length ? `Smak: ${w.flavorTags.join(", ").toLowerCase()}.` : "",
+  ].filter(Boolean);
+  let text = parts[0];
+  for (const p of parts.slice(1)) if (`${text} ${p}`.length <= 160) text = `${text} ${p}`;
+  return text;
+}
 
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const wines = await getWines();
   const wine = wines.find((w) => w.slug === slug && w.published);
   if (!wine) return { title: "Vin" };
-  const pageTitle = `${wine.name}${wine.year ? ` ${wine.year}` : ""}`;
+  const pageTitle = wineHeadline(wine);
   const ogTitle = `${pageTitle} – Naturvinstipset`;
+  const description = wineMetaDescription(wine);
   const ogImageAlt = `${pageTitle}${wine.wineType ? ` ${wine.wineType.toLowerCase()} naturvin` : " naturvin"}${wine.country ? ` från ${wine.country}` : ""}`;
   return {
     title: pageTitle,
-    description: wine.description,
+    description,
+    alternates: { canonical: `/viner/${slug}` },
     openGraph: {
       title: ogTitle,
-      description: wine.description,
+      description,
       url: `https://www.naturvinstipset.se/viner/${slug}`,
       images: wine.primaryImageUrl
         ? [{ url: wine.primaryImageUrl, alt: ogImageAlt }]
@@ -83,7 +123,10 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
     { label: "Årgång", value: wine.year },
     { label: "Pris", value: wine.price ? `${wine.price} kr` : undefined },
     { label: "Systembolaget art.nr", value: articleNumber },
+    { label: "Passar till", value: foodList(wine) ? foodList(wine)[0].toUpperCase() + foodList(wine).slice(1) : undefined },
+    { label: "Pris kontrollerat", value: checkedDate(wine) },
   ].filter((s) => s.value);
+  const food = foodList(wine);
 
   const producerWines = wine.producer
     ? wines.filter((w) => w.published && w.id !== wine.id && w.producer === wine.producer).slice(0, 4)
@@ -96,6 +139,13 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
         .slice(0, 4)
     : [];
 
+  // Matsvaret byggs av vinets egna matkategorier och regionala mattext, inte av färgen.
+  const foodAnswer = wine.foodPairing
+    ? `${wine.name} passar till ${food || "mat"}. ${wine.foodPairing}`
+    : food
+    ? `${wine.name} passar till ${food}.`
+    : `${wine.name} är ett ${TYPE_WORD[wine.wineType] ?? ""} naturvin som fungerar som matvin.`;
+
   const jsonLd = buildWineProductJsonLd(wine, {
     combinedRating: score,
     communityCount: wineRatings.length,
@@ -103,7 +153,10 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
 
   return (
     <div className="max-w-3xl mx-auto px-5 py-12">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd data={[jsonLd, breadcrumbJsonLd([
+        ...(inTopList ? [{ name: "Topp 100", path: "/topp-100" }] : []),
+        { name: `${wine.name}${wine.year && wine.year !== "NV" ? ` ${wine.year}` : ""}`, path: `/viner/${wine.slug}` },
+      ])]} />
 
       <Link href={inTopList ? "/topp-100" : "/"} className="text-sm text-black/40 hover:text-[var(--green)] mb-8 inline-block">
         {inTopList ? "← Tillbaka till listan" : "← Till Vinkompassen"}
@@ -149,15 +202,15 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
             </div>
           )}
 
-          {/* Specs */}
-          <div className="border-t border-black/8 pt-4 space-y-2 mb-6">
+          {/* Faktaruta som definitionslista, så att varje uppgift har en tydlig etikett */}
+          <dl className="border-t border-black/8 pt-4 space-y-2 mb-6">
             {specs.map((s) => (
               <div key={s.label} className="flex justify-between text-sm gap-4">
-                <span className="text-black/40 shrink-0">{s.label}</span>
-                <span className="font-medium text-right">{s.value}</span>
+                <dt className="text-black/40 shrink-0">{s.label}</dt>
+                <dd className="font-medium text-right">{s.value}</dd>
               </div>
             ))}
-          </div>
+          </dl>
 
           {/* CTA – ett per säljställe med vinet i lager */}
           {links.map((l, i) => (
@@ -306,13 +359,7 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
                 name: `Vad passar ${wine.name} till?`,
                 acceptedAnswer: {
                   "@type": "Answer",
-                  text: wine.wineType === "Orange"
-                    ? `${wine.name} passar utmärkt till kryddiga rätter, ostar och grönsaker tack vare sin skalkontakt och komplexa smakprofil.`
-                    : wine.wineType === "Pét Nat" || wine.wineType === "Mousserande"
-                    ? `${wine.name} är ett mousserande vin som passar till aperitif, skaldjur och lättare rätter.`
-                    : wine.wineType === "Rött"
-                    ? `${wine.name} passar till kött och mörkare rätter.${wine.stravhet != null && wine.stravhet <= 2 ? " Med låg strävhet kan det serveras kylt och fungerar nästan som ett vitt." : ""}`
-                    : `${wine.name} passar till ljusare rätter och fungerar som ett klassiskt matvin.`,
+                  text: foodAnswer,
                 },
               },
             ],
@@ -341,13 +388,7 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
           <div>
             <h3 className="font-semibold text-[var(--green-dark)] mb-2">Vad passar {wine.name} till?</h3>
             <p className="text-sm text-black/70 leading-relaxed">
-              {wine.wineType === "Orange"
-                ? `${wine.name} passar utmärkt till kryddiga rätter, ostar och grönsaker tack vare sin skalkontakt och komplexa smakprofil.`
-                : wine.wineType === "Pét Nat" || wine.wineType === "Mousserande"
-                ? `${wine.name} är ett mousserande vin som passar till aperitif, skaldjur och lättare rätter.`
-                : wine.wineType === "Rött"
-                ? `${wine.name} passar till kött och mörkare rätter.${wine.stravhet != null && wine.stravhet <= 2 ? " Med låg strävhet kan det serveras kylt och fungerar nästan som ett vitt." : ""}`
-                : `${wine.name} passar till ljusare rätter och fungerar som ett klassiskt matvin.`}
+              {foodAnswer}
             </p>
           </div>
         </div>

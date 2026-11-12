@@ -1,6 +1,8 @@
 import Link from "next/link";
+import { publisherRef } from "@/lib/seo";
 import { getWines, getRatings, combinedRating } from "@/lib/blob";
 import GuideWineList from "@/components/GuideWineList";
+import GuideSeo, { type GuideNouns } from "@/components/GuideSeo";
 
 type GuideLink = { href: string; label: string };
 
@@ -13,6 +15,8 @@ type Props = {
   nounSingular: string;     // e.g. "rött vin"
   nounPlural: string;       // e.g. "röda viner"
   guideLinks: GuideLink[];  // "Fler guider" cross-links (excluding self)
+  faqNouns: GuideNouns;     // ordformer för vanliga frågor, t.ex. "röda naturvinet"
+  crumb: string;            // kort namn i brödsmulorna, t.ex. "Rött naturvin"
 };
 
 export default async function CategoryGuidePage({
@@ -24,6 +28,8 @@ export default async function CategoryGuidePage({
   nounSingular,
   nounPlural,
   guideLinks,
+  faqNouns,
+  crumb,
 }: Props) {
   const [wines, ratings] = await Promise.all([getWines(), getRatings()]);
 
@@ -39,7 +45,7 @@ export default async function CategoryGuidePage({
     name: title,
     description,
     url: `https://www.naturvinstipset.se${path}`,
-    publisher: { "@type": "Organization", name: "Naturvinstipset" },
+    publisher: publisherRef,
   };
 
   return (
@@ -80,6 +86,8 @@ export default async function CategoryGuidePage({
           {filtered.length} {filtered.length === 1 ? nounSingular : nounPlural} på listan
         </p>
         <GuideWineList wines={filtered} ratings={ratings} />
+
+        <GuideSeo name={title} path={path} crumbs={[{ name: crumb, path }]} wines={filtered} nouns={faqNouns} />
 
         {guideLinks.length > 0 && (
           <div className="mt-16 pt-12 border-t border-[var(--rule)]">

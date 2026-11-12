@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getWines, getRatings, combinedRating } from "@/lib/blob";
 import GuideWineList from "@/components/GuideWineList";
+import GuideSeo from "@/components/GuideSeo";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/basta-naturvin-for-nyborjare" },
   title: "Bästa naturvinet för nybörjare på Systembolaget eller från webbutiker med hemleverans",
   description:
     "Ny till naturvin? Här är de bästa, mest tillgängliga naturvinerna för nybörjare, på Systembolaget eller från webbutiker med hemleverans — med låg funk och tydliga smakprofiler.",
@@ -64,6 +66,8 @@ export default async function BastaNaturvinNyborjarePage() {
           {filtered.length} vin{filtered.length !== 1 ? "er" : ""} lämpliga för nybörjare
         </p>
         <GuideWineList wines={filtered} ratings={ratings} />
+        <GuideSeo name="Bästa naturvinet för nybörjare" path="/basta-naturvin-for-nyborjare" crumbs={[{ name: "Naturvin för nybörjare", path: "/basta-naturvin-for-nyborjare" }]}
+          wines={filtered} nouns={{ best: "naturvinet för nybörjare", one: "naturvin för nybörjare", many: "naturviner för nybörjare" }} />
 
         <div className="mt-16 pt-12 border-t border-[var(--rule)]">
           <h2 className="text-lg font-bold text-[var(--fg)] mb-4">

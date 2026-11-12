@@ -6,6 +6,7 @@ import { getBlogs, isPostLive } from "@/lib/blob";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/blogg" },
   title: "Blogg",
   description: "Artiklar om naturvin, vinkultur och tips för nybörjare. Lär dig mer om vad som gör naturvin unikt.",
   openGraph: { url: "https://naturvinstipset.se/blogg" },
