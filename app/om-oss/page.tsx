@@ -4,6 +4,7 @@ import Link from "next/link";
 import { getSettings } from "@/lib/blob";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/om-oss" },
   title: "Om oss",
   description:
     "Vi gör det enklare att hitta naturvin du faktiskt gillar. Ärliga betyg, smart filtrering och en community för alla som älskar naturvin — nybörjare som experter.",

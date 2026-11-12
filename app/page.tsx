@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 const TITLE = "Naturvinstipset – hitta rätt naturvin på Systembolaget eller från webbutiker med hemleverans";
 const DESCRIPTION =
-  "Svara på fyra snabba frågor och få naturvin som passar din smak, din budget och din mat. På Systembolaget eller från webbutiker med hemleverans, med smakprofiler, matförslag och köptips.";
+  "Svara på tre snabba frågor och få naturvin som passar din smak, din budget och din mat. På Systembolaget eller från webbutiker med hemleverans, med smakprofiler, matförslag och köptips.";
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
@@ -22,15 +22,6 @@ export const metadata: Metadata = {
     url: "https://www.naturvinstipset.se",
     images: [{ url: "/og-logo.png", width: 1200, height: 630, alt: "Naturvinstipset" }],
   },
-};
-
-const jsonLd = {
-  "@context": "https://schema.org",
-  "@type": "WebSite",
-  name: "Naturvinstipset",
-  url: "https://naturvinstipset.se",
-  description: "Hitta rätt naturvin på Systembolaget eller från webbutiker med hemleverans, med smakprofiler, matförslag och köptips.",
-  inLanguage: "sv",
 };
 
 const atSystembolaget = (w: Wine) =>
@@ -50,7 +41,6 @@ export default async function HomePage() {
 
   return (
     <div>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
       {/* ── Vinkompassen: videon ligger fast bakom rubriken och hela chatten medan man scrollar ──
           Videolagret är sticky och lika högt som skärmen; den negativa marginalen gör att innehållet

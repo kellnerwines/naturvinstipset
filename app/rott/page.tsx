@@ -4,6 +4,7 @@ import CategoryGuidePage from "@/components/CategoryGuidePage";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/rott" },
   title: "Bästa röda naturvinet på Systembolaget eller från webbutiker med hemleverans",
   description:
     "De bästa röda naturvinerna på Systembolaget eller från webbutiker med hemleverans — ofiltrerade, saftiga och gjorda med vilda jästar. Handplockade av Naturvinstipset med direktlänkar.",
@@ -23,6 +24,8 @@ export default function RottPage() {
       wineTypes={["Rött"]}
       nounSingular="rött vin"
       nounPlural="röda viner"
+      faqNouns={{ best: "röda naturvinet", one: "rött naturvin", many: "röda naturviner" }}
+      crumb="Rött naturvin"
       guideLinks={[
         { href: "/vitt", label: "Bästa vita naturvinet" },
         { href: "/orange", label: "Bästa orangevinet" },

@@ -4,6 +4,7 @@ import CategoryGuidePage from "@/components/CategoryGuidePage";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/vitt" },
   title: "Bästa vita naturvinet på Systembolaget eller från webbutiker med hemleverans",
   description:
     "De bästa vita naturvinerna på Systembolaget eller från webbutiker med hemleverans — friska, mineraliska och gjorda med minimal inblandning. Handplockade av Naturvinstipset med direktlänkar.",
@@ -23,6 +24,8 @@ export default function VittPage() {
       wineTypes={["Vitt"]}
       nounSingular="vitt vin"
       nounPlural="vita viner"
+      faqNouns={{ best: "vita naturvinet", one: "vitt naturvin", many: "vita naturviner" }}
+      crumb="Vitt naturvin"
       guideLinks={[
         { href: "/rott", label: "Bästa röda naturvinet" },
         { href: "/orange", label: "Bästa orangevinet" },

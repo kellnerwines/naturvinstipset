@@ -1,6 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { notFound } from "next/navigation";
+import JsonLd from "@/components/JsonLd";
+import { breadcrumbJsonLd } from "@/lib/seo";
 import { bars, citySlug, getBarBySlug, getBarsByCity, instagramUrl, mapsUrl } from "@/lib/bars";
 
 export async function generateStaticParams() {
@@ -15,6 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
   return {
     title,
     description: bar.description,
+    alternates: { canonical: `/naturvinsbarer/${slug}` },
     openGraph: { title, description: bar.description, url: `https://www.naturvinstipset.se/naturvinsbarer/${slug}` },
   };
 }
@@ -39,7 +42,7 @@ export default async function BarPage({ params }: { params: Promise<{ slug: stri
 
   return (
     <div className="max-w-2xl mx-auto px-5 py-12">
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      <JsonLd data={[jsonLd, breadcrumbJsonLd([{ name: "Naturvinsbarer", path: "/naturvinsbarer" }, { name: bar.name, path: `/naturvinsbarer/${bar.slug}` }])]} />
 
       <Link href={`/naturvinsbarer#${citySlug(bar.city)}`} className="text-sm text-[var(--muted)] hover:text-[var(--fg)] mb-8 inline-block">
         ← Naturvinsbarer i {bar.city}

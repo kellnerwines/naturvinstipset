@@ -4,6 +4,7 @@ import CategoryGuidePage from "@/components/CategoryGuidePage";
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/pet-nat" },
   title: "Bästa pét nat på Systembolaget eller från webbutiker med hemleverans",
   description:
     "De bästa pét nat-vinerna på Systembolaget eller från webbutiker med hemleverans — naturligt mousserande, friska och levande. Handplockade av Naturvinstipset med direktlänkar.",
@@ -23,6 +24,8 @@ export default function PetNatPage() {
       wineTypes={["Pét Nat"]}
       nounSingular="pét nat-vin"
       nounPlural="pét nat-viner"
+      faqNouns={{ best: "pét-naten", one: "pét-nat", many: "pét-nats" }}
+      crumb="Pét-nat"
       guideLinks={[
         { href: "/rott", label: "Bästa röda naturvinet" },
         { href: "/vitt", label: "Bästa vita naturvinet" },

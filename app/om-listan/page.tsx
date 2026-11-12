@@ -2,6 +2,7 @@ import type { Metadata } from "next";
 import Link from "next/link";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/om-listan" },
   title: "Om listan – Hur vi betygsätter naturvin",
   description:
     "Alla viner på Naturvinstipsets lista håller hög kvalitet. Vi betygsätter på fyra parametrar: syra, fyllighet, strävhet och funk — så att du hittar rätt stil, inte bara ett generiskt bra vin.",

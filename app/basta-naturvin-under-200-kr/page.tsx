@@ -2,10 +2,12 @@ import type { Metadata } from "next";
 import Link from "next/link";
 import { getWines, getRatings, combinedRating } from "@/lib/blob";
 import GuideWineList from "@/components/GuideWineList";
+import GuideSeo from "@/components/GuideSeo";
 
 export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
+  alternates: { canonical: "/basta-naturvin-under-200-kr" },
   title: "Bästa naturvinet under 200 kr på Systembolaget eller från webbutiker med hemleverans",
   description:
     "Vi har samlat de bästa naturvinerna under 200 kr på Systembolaget eller från webbutiker med hemleverans. Handplockade av Sveriges seriösaste naturvinsimportörer — med direktlänkar och smakparametrar.",
@@ -68,6 +70,8 @@ export default async function BastaNaturvinUnder200Page() {
           {filtered.length} vin{filtered.length !== 1 ? "er" : ""} under 200 kr
         </p>
         <GuideWineList wines={filtered} ratings={ratings} />
+        <GuideSeo name="Bästa naturvinet under 200 kr" path="/basta-naturvin-under-200-kr" crumbs={[{ name: "Naturvin under 200 kr", path: "/basta-naturvin-under-200-kr" }]}
+          wines={filtered} nouns={{ best: "naturvinet under 200 kr", one: "naturvin under 200 kr", many: "naturviner under 200 kr" }} />
 
         <div className="mt-16 pt-12 border-t border-[var(--rule)]">
           <p className="text-sm font-semibold text-[var(--muted)] mb-4 uppercase tracking-wider">
