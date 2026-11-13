@@ -64,7 +64,7 @@ export default function CompassCard({
         <Link href={`/viner/${w.slug}`} className="flex items-center justify-center h-[132px] sm:h-[150px] md:h-[240px] border-2 border-[var(--ink)]" style={{ backgroundColor: `var(${COLOR_VAR[typeOf(w) as Color] ?? "--surface"})` }} tabIndex={-1} aria-hidden="true">
           {w.img && !imgFailed ? (
             // eslint-disable-next-line @next/next/no-img-element
-            <img src={w.img} alt="" loading="lazy" className="h-[120px] w-[66px] sm:h-[136px] sm:w-[80px] md:h-[85%] md:w-auto object-contain mix-blend-multiply" onError={() => setImgFailed(true)} />
+            <img src={w.img} alt="" loading="lazy" className="h-[120px] w-[66px] sm:h-[136px] sm:w-[80px] md:h-[85%] md:w-auto object-contain" onError={() => setImgFailed(true)} />
           ) : (
             <BottleSvg type={typeOf(w)} className="w-[40px] h-[96px] md:w-[60px] md:h-[144px]" />
           )}

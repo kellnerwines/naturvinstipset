@@ -64,7 +64,7 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
               src={wine.primaryImageUrl}
               alt={`${wine.name}${wine.year ? ` ${wine.year}` : ""}${wine.wineType ? ` ${wine.wineType.toLowerCase()} naturvin` : " naturvin"}${wine.country ? ` från ${wine.country}` : ""}`}
               fill
-              className="object-contain object-bottom p-4 pt-10 mix-blend-multiply group-hover:scale-[1.03] transition-transform duration-500"
+              className="object-contain object-bottom p-4 pt-10 group-hover:scale-[1.03] transition-transform duration-500"
               unoptimized
             />
           ) : (

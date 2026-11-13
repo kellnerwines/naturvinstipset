@@ -53,7 +53,7 @@ export default function WineLibrary({ wines, ratings, initial, lockShop }: {
                 <span className="shrink-0 w-12 h-16 flex items-center justify-center border-2 border-[var(--ink)]" style={{ backgroundColor: TYPE_FIELD[w.wineType] ?? "var(--surface)" }}>
                   {w.primaryImageUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={w.primaryImageUrl} alt="" loading="lazy" className="max-h-14 w-auto object-contain mix-blend-multiply" />
+                    <img src={w.primaryImageUrl} alt="" loading="lazy" className="max-h-14 w-auto object-contain" />
                   ) : null}
                 </span>
                 <span className="flex-1 min-w-0">

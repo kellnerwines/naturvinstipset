@@ -56,7 +56,7 @@ export default async function HomePage() {
           <div className="absolute -right-32 top-16 w-72 h-72 md:-right-16 md:w-[420px] md:h-[420px] rounded-full bg-[var(--accent)] opacity-90" />
         </div>
         <div className="relative max-w-2xl mx-auto px-4 pb-16 md:pb-24">
-          <div className="min-h-[calc(52svh-3.5rem)] flex flex-col justify-end md:items-center md:text-center pt-12 pb-8 md:pb-10 text-[var(--paper)]">
+          <div className="min-h-[calc(52svh-3.5rem)] flex flex-col justify-end items-center text-center pt-12 pb-8 md:pb-10 text-[var(--paper)]">
             <h1 className="text-6xl md:text-[112px] mb-5 text-[var(--paper)]">
               Vilket naturvin passar dig?
             </h1>

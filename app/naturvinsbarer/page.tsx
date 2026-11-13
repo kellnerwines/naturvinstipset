@@ -36,14 +36,14 @@ const FAQ = [
 function BarCard({ bar }: { bar: Bar }) {
   const link = "text-sm font-semibold text-[var(--fg)] underline underline-offset-4 decoration-[var(--rule)] hover:decoration-[var(--fg)]";
   return (
-    <article className="border border-[var(--rule)] rounded-xl p-5 bg-[var(--card)]">
-      <p className="text-xs font-semibold text-[var(--muted)] mb-1.5">
+    <article className="border-[3px] border-[var(--ink)] p-5 bg-[var(--paper)]">
+      <p className="text-sm font-bold text-[var(--accent)] mb-1.5">
         {bar.type} · {bar.neighborhood}
       </p>
-      <h3 className="text-xl font-bold leading-tight tracking-tight mb-2">
-        <Link href={`/naturvinsbarer/${bar.slug}`} className="hover:opacity-60 transition-opacity">{bar.name}</Link>
+      <h3 className="font-[family-name:var(--font-display)] font-black uppercase text-[34px] leading-[0.95] mb-2">
+        <Link href={`/naturvinsbarer/${bar.slug}`} className="hover:text-[var(--accent)] transition-colors">{bar.name}</Link>
       </h3>
-      <p className="text-[15px] text-[var(--muted)] leading-relaxed mb-3">{bar.description}</p>
+      <p className="text-[16px] leading-relaxed mb-3">{bar.description}</p>
       <p className="text-sm text-[var(--muted)] mb-4">
         {bar.address}, {bar.city} · <span className="text-[var(--fg)]">{bar.wine_focus}</span>
       </p>
@@ -89,7 +89,7 @@ export default function Naturvinsbarer() {
         <div className="max-w-3xl mx-auto">
           <p className="inline-block self-start bg-[var(--accent)] text-[var(--fg)] border-2 border-[var(--ink)] text-sm font-bold px-2 py-0.5 mb-4">Guide · Hela Sverige</p>
           <h1 className="text-5xl md:text-7xl mb-4">Naturvinsbarer i Sverige</h1>
-          <p className="text-base text-[var(--muted)] leading-relaxed max-w-xl">
+          <p className="text-lg leading-relaxed max-w-xl">
             {bars.length} ställen i {cities.length} städer där naturvinet står i centrum. Vinbarer, bistroer och ett par pizzerior,
             alla med länk till webbplats och Instagram så att du ser vad som är på gång just nu.
           </p>
@@ -104,7 +104,7 @@ export default function Naturvinsbarer() {
       <div className="max-w-3xl mx-auto px-6 py-12 space-y-14">
         {cities.map((city) => (
           <section key={city} id={citySlug(city)} className="scroll-mt-24">
-            <h2 className="text-2xl md:text-3xl font-bold tracking-tight mb-1">{city}</h2>
+            <h2 className="text-5xl md:text-6xl mb-1">{city}</h2>
             <p className="text-sm text-[var(--muted)] mb-6">{getBarsByCity(city).length} naturvinsbarer</p>
             <div className="grid gap-4 md:grid-cols-2">
               {getBarsByCity(city).map((bar) => <BarCard key={bar.slug} bar={bar} />)}
@@ -116,13 +116,13 @@ export default function Naturvinsbarer() {
         </p>
       </div>
 
-      <div className="border-t border-[var(--rule)] py-16 px-6">
+      <div className="border-t-[3px] border-[var(--ink)] py-16 px-6">
         <div className="max-w-3xl mx-auto">
-          <h2 className="text-2xl font-bold mb-10">Vanliga frågor om naturvinsbarer</h2>
+          <h2 className="text-5xl mb-10">Vanliga frågor om naturvinsbarer</h2>
           <div className="space-y-8">
             {FAQ.map(({ q, a }) => (
               <div key={q}>
-                <h3 className="font-semibold mb-2">{q}</h3>
+                <h3 className="font-bold text-lg mb-2">{q}</h3>
                 <p className="text-sm text-[var(--muted)] leading-relaxed">{a}</p>
               </div>
             ))}

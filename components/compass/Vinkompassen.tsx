@@ -688,13 +688,13 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
   if (!started) {
     return (
       // Startläget fyller resten av första skärmen, så att videon täcker hela vyn innan man startar.
-      <div className="max-w-md md:mx-auto min-h-[calc(48svh-6rem)]">
+      <div className="max-w-md mx-auto min-h-[calc(48svh-6rem)]">
         <button type="button" onClick={() => start()}
-          className="w-full rounded-full bg-white text-[var(--hero-dark)] text-base md:text-lg font-semibold py-4 hover:opacity-90 transition-opacity focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
+          className="w-full rounded-full bg-[var(--accent)] text-[var(--fg)] border-[3px] border-[var(--paper)] text-lg md:text-xl font-bold py-4 hover:bg-[var(--paper)] transition-colors focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-white">
           Starta Vinkompassen
         </button>
         <button type="button" onClick={() => start(true)}
-          className="block mx-auto mt-4 text-sm text-white/75 underline underline-offset-4 hover:text-white">
+          className="block mx-auto mt-4 text-base text-white underline underline-offset-4 hover:text-[var(--accent)]">
           eller skriv vad du är sugen på
         </button>
       </div>

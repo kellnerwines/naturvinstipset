@@ -167,7 +167,7 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
         {/* Bilden på vintypens färgfält */}
         <div className="h-[380px] md:h-auto md:aspect-[3/4] overflow-hidden flex items-center justify-center border-[3px] border-[var(--ink)]" style={{ backgroundColor: typeField[wine.wineType] ?? "var(--surface)" }}>
           {wine.primaryImageUrl ? (
-            <Image src={wine.primaryImageUrl} alt={`${wine.name}${wine.year ? ` ${wine.year}` : ""}${wine.wineType ? ` ${wine.wineType.toLowerCase()} naturvin` : " naturvin"}${wine.country ? ` från ${wine.country}` : ""}`} width={400} height={530} className={wine.sourceImageUrl ? "object-contain w-full h-full p-8 mix-blend-multiply" : "object-cover w-full h-full"} unoptimized />
+            <Image src={wine.primaryImageUrl} alt={`${wine.name}${wine.year ? ` ${wine.year}` : ""}${wine.wineType ? ` ${wine.wineType.toLowerCase()} naturvin` : " naturvin"}${wine.country ? ` från ${wine.country}` : ""}`} width={400} height={530} className="object-contain w-full h-full p-6 md:p-10" unoptimized />
           ) : (
             <svg className="h-3/4 text-[var(--ink)]" viewBox="0 0 40 140" aria-hidden="true"><path d="M15 2h10v34c0 8 11 14 11 30v68a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V66c0-16 11-22 11-30z" fill="currentColor" opacity="0.3" /></svg>
           )}
