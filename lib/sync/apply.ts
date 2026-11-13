@@ -19,6 +19,8 @@ export type FeedItem = {
   importer?: string;
   /** Komplett vin att skapa om det inte redan finns. Saknas när sidan inte gick att läsa. */
   newWine?: Wine;
+  /** Butikens beskrivning visar att produkten inte är vin (cider, blanddryck …): skapas inte, döljs om den finns. */
+  notWine?: boolean;
 };
 
 export type ShopFeed = {
@@ -45,6 +47,7 @@ export type ShopReport = {
 
 export const TAX_HIDDEN = "Skattetexten saknas på butikens produktsida";
 export const STOCK_HIDDEN = "Slut i alla butiker";
+export const NOT_WINE_HIDDEN = "Inte vin enligt butikens beskrivning";
 
 const SB = "Systembolaget";
 /** Systembolaget-länk utan kontrollerat erbjudande: lagret är okänt, så vinet döljs inte. */
@@ -96,6 +99,7 @@ export function applySync(existing: Wine[], feeds: ShopFeed[], now: string): { w
 
       if (idx === -1) {
         if (!item.newWine) continue; // feeds.ts har redan loggat varför vinet inte kunde skapas
+        if (item.notWine) { alerts.push(`${feed.shop}: ${item.sourceId} är inte vin enligt beskrivningen, skapas inte`); continue; }
         if (item.taxIncluded === false) { alerts.push(`${feed.shop}: ${item.sourceId} saknar skattetext, skapas inte`); continue; }
         const twin = wines.findIndex((w) => matchKey(w) === matchKey(item.newWine!));
         if (twin > -1 && seen.has(twin)) continue; // samma vin har redan fått butikens erbjudande i den här körningen
@@ -127,7 +131,13 @@ export function applySync(existing: Wine[], feeds: ShopFeed[], now: string): { w
       if (was?.inStock && !item.inStock) r.outOfStock.push(w.slug);
       if (was && !was.inStock && item.inStock) r.backInStock.push(w.slug);
 
-      if (item.taxIncluded === false && w.published && !isLocked(w, "published")) {
+      if (item.notWine) {
+        if (w.published && !isLocked(w, "published")) {
+          w = { ...w, published: false, syncHidden: NOT_WINE_HIDDEN };
+          r.unpublished.push(w.slug);
+          alerts.push(`${feed.shop}: ${w.name} avpublicerades, beskrivningen visar att det inte är vin (${item.url})`);
+        }
+      } else if (item.taxIncluded === false && w.published && !isLocked(w, "published")) {
         w = { ...w, published: false, syncHidden: TAX_HIDDEN };
         r.unpublished.push(w.slug);
         alerts.push(`${feed.shop}: ${w.name} avpublicerades, "Moms och alkoholskatt inkluderad" saknas på ${item.url}`);
