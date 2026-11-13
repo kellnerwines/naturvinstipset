@@ -36,6 +36,11 @@ describe("Systembolagets produktsida", () => {
       .replace('"productNameThin": "Scheuermann"', '"productNameThin": "Chardonnay"')
       .replace('"producerName": "Scheuermann"', '"producerName": "Weingut Rückrich Gbr"');
     expect(parseSystembolagetPage(page)).toMatchObject({ name: "Chardonnay", producer: "Niklas Rückrich" });
+    const orbis = html
+      .replace('"productNameBold": "Friedelsheimer Rosengarten Chardonnay"', '"productNameBold": "Fidesser*Orbis"')
+      .replace('"productNameThin": "Scheuermann"', '"productNameThin": "White"')
+      .replace('"producerName": "Scheuermann"', '"producerName": "Weingut Fidesser"');
+    expect(parseSystembolagetPage(orbis)).toMatchObject({ name: "Orbis White", producer: "Fidesser" });
   });
   it("beställningsvaror går att köpa om leverantören har dem", () => {
     const order = (supplierOut: boolean) => html
