@@ -38,6 +38,18 @@ export const bars: Bar[] = [
     description: "Vinbar och restaurang vid Nytorget där naturvin från småskaliga producenter står i centrum. Ett avslappnat kvartersställe som passar lika bra för ett glas efter jobbet som för en hel middag.",
   },
   {
+    slug: "hosoi-stockholm", name: "Hosoi", city: "Stockholm", address: "Styckmästargatan 5", neighborhood: "Slakthusområdet",
+    lat: 59.29208, lng: 18.07862, website: "https://www.hosoistockholm.com", instagram: "hosoisthlm",
+    type: "Restaurang", wine_focus: "Naturvin", food: true,
+    description: "Restaurang och bar i Slakthusområdet där musiken står i centrum. Lokal och säsongsbetonad mat, naturvin i glaset och dj:s och dans framåt kvällen.",
+  },
+  {
+    slug: "matateljen-stockholm", name: "Matateljén", city: "Stockholm", address: "Hallvägen 9", neighborhood: "Slakthusområdet",
+    lat: 59.29291, lng: 18.07536, website: "https://matateljen.se", instagram: "matateljen",
+    type: "Restaurang", wine_focus: "Naturvin från Jura, Loire och Beaujolais bredvid klassisk Bourgogne", food: true,
+    description: "Restaurang i Kylhuset i Slakthusområdet med säsongsmenyer från ett öppet kök. Den långa vinlistan har gott om naturvin från bland andra Jura, Loire, Beaujolais och Auvergne, bredvid klassisk Bourgogne och Piemonte. Det finns också en deli.",
+  },
+  {
     slug: "cafe-nizza-stockholm", name: "Café Nizza", city: "Stockholm", address: "Åsögatan 171", neighborhood: "Södermalm",
     lat: 59.31417, lng: 18.08354, website: "https://cafenizza.se",
     type: "Restaurang", wine_focus: "Mest naturvin, några klassiker", food: true,
