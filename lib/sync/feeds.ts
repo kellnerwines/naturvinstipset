@@ -11,12 +11,14 @@ import {
   PHILIPSON_TAX_TEXT, isPhilipsonBottle, philipsonName, philipsonProducer, philipsonWineType,
   type PhilipsonProduct, type ShopifyProduct, type WooProduct,
   VIN_NATUR_TAX_TEXT, isWineTradeBottle, parseWineTradeProduct,
+  JUST_WINE_TAX_TEXT, isJustWineBottle, parseJustWineProduct,
 } from "./parse";
 
 export const VIN_NATUR = "Vin & Natur";
 export const FLASKVIS = "Flaskvis";
 export const PHILIPSON = "Philipson Wine";
 export const WINE_TRADE = "Wine Trade";
+export const JUST_WINE = "Just Wine";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -285,6 +287,62 @@ export async function wineTradeFeed(known: Set<string>, deadline: number, now: s
       description: describe(w.wineType, w.region ?? w.country, w.grapes),
       primaryImageUrl: p.images?.[0]?.src, importer: WINE_TRADE,
       source: `winetrade.se (synk ${now.slice(0, 10)})`, sourceId: p.handle, autoProfile: true,
+    };
+    return item;
+  });
+  return feed;
+}
+
+// ─── Just Wine ────────────────────────────────────────────────────────────────
+
+const JUST_WINE_COLLECTION = "https://justwine.se/collections/vara-naturviner";
+
+/**
+ * Samlingen Våra naturviner som Shopify-JSON. Skattetexten ("Inklusive moms och svensk
+ * alkoholskatt") kontrolleras på varje produktsida; nya viner skapas bara när den finns.
+ */
+export async function justWineFeed(known: Set<string>, deadline: number, now: string): Promise<ShopFeed> {
+  const feed: ShopFeed = { shop: JUST_WINE, source: "justwine.se", complete: false, items: [], errors: [] };
+  const products: ShopifyProduct[] = [];
+  try {
+    for (let page = 1; page <= 5; page++) {
+      const res = await politeFetch(`${JUST_WINE_COLLECTION}/products.json?limit=250&page=${page}`, deadline, "application/json");
+      const batch = ((await res.json()) as { products: ShopifyProduct[] }).products ?? [];
+      if (!batch.length) { feed.complete = true; break; }
+      products.push(...batch);
+    }
+  } catch (e) {
+    feed.errors.push(`Produktlistan: ${(e as Error).message}`);
+  }
+
+  const wines = products.filter((p) => isJustWineBottle(p) && (known.has(p.handle) || p.variants[0].available));
+  feed.items = await mapLimit(wines, 1, async (p): Promise<FeedItem> => {
+    const v = p.variants[0];
+    const url = `https://justwine.se/products/${p.handle}`;
+    const item: FeedItem = { sourceId: p.handle, url, price: Math.round(Number(v.price)), inStock: v.available };
+    try {
+      await sleep(400);
+      item.taxIncluded = JUST_WINE_TAX_TEXT.test(htmlText(await (await politeFetch(url, deadline)).text()));
+    } catch (e) {
+      feed.errors.push(`${p.handle}: produktsidan ${(e as Error).message}`);
+      if (!known.has(p.handle)) return item;
+    }
+    if (known.has(p.handle)) return item;
+
+    const w = parseJustWineProduct(p);
+    if (!w.producer || !w.wineType || !w.country) {
+      feed.errors.push(`${p.handle}: kunde inte avgöra ${[!w.producer && "producent", !w.wineType && "färg", !w.country && "land"].filter(Boolean).join(", ")}, skapas inte`);
+      return item;
+    }
+    const text = htmlText(p.body_html ?? "");
+    const id = `jw-${p.handle}`;
+    item.newWine = {
+      ...baseWine(now), ...heuristicProfile(text, w.wineType),
+      id, slug: id, name: w.name, year: w.year, producer: w.producer, region: w.region, country: w.country,
+      grape: w.grapes.join(", "), wineType: w.wineType, price: String(item.price), shop: JUST_WINE, shopUrl: url,
+      description: describe(w.wineType, w.region ?? w.country, w.grapes),
+      primaryImageUrl: p.images?.[0]?.src, importer: JUST_WINE,
+      source: `justwine.se (synk ${now.slice(0, 10)})`, sourceId: p.handle, autoProfile: true,
     };
     return item;
   });
