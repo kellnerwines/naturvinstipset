@@ -11,7 +11,7 @@ import {
   PHILIPSON_TAX_TEXT, isPhilipsonBottle, philipsonName, philipsonProducer, philipsonWineType,
   type PhilipsonProduct, type ShopifyProduct, type WooProduct,
   VIN_NATUR_TAX_TEXT, isWineTradeBottle, parseWineTradeProduct,
-  JUST_WINE_TAX_TEXT, isJustWineBottle, parseJustWineProduct,
+  JUST_WINE_TAX_TEXT, isJustWineBottle, parseJustWineProduct, isNotWine,
 } from "./parse";
 
 export const VIN_NATUR = "Vin & Natur";
@@ -86,7 +86,7 @@ export async function vinNaturFeed(known: Set<string>, deadline: number, now: st
   feed.items = await mapLimit(wines, 1, async (p): Promise<FeedItem> => {
     const v = vinNaturVariant(p)!;
     const url = `https://vinnatur.shop/products/${p.handle}`;
-    const item: FeedItem = { sourceId: p.handle, url, price: v.price, inStock: v.available };
+    const item: FeedItem = { sourceId: p.handle, url, price: v.price, inStock: v.available, notWine: isNotWine(`${p.title} ${htmlText(p.body_html ?? "")}`) };
     let page: ReturnType<typeof parseVinNaturPage>;
     try {
       await sleep(400);
@@ -152,7 +152,7 @@ export async function flaskvisFeed(known: Set<string>, deadline: number, now: st
     }
     // Alla naturviner från Flaskvis (beslut 2026-11-10), Kellner & Kellners viner även om de inte är märkta.
     if (!page.natural && !page.kellner) return null;
-    const item: FeedItem = { sourceId: p.slug, url: p.permalink, price: wooPrice(p), inStock: p.is_in_stock, importer: page.importer };
+    const item: FeedItem = { sourceId: p.slug, url: p.permalink, price: wooPrice(p), inStock: p.is_in_stock, importer: page.importer, notWine: isNotWine(`${p.name} ${page.description ?? ""}`) };
     if (known.has(p.slug)) return item;
 
     const text = page.description ?? "";
@@ -213,7 +213,7 @@ export async function philipsonFeed(known: Set<string>, deadline: number, now: s
     const url = p.schemaUrlFull ?? `https://philipsonwine.se${p.link}`;
     const inStock = p.availableForPurchase && !/slut|ej i lager|tillfälligt/i.test(p.stockText);
     if (!known.has(sourceId) && !inStock) continue;
-    const item: FeedItem = { sourceId, url, price: Math.round(p.priceDouble), inStock, taxIncluded };
+    const item: FeedItem = { sourceId, url, price: Math.round(p.priceDouble), inStock, taxIncluded, notWine: isNotWine(`${p.name} ${htmlText(p.productDescription ?? p.description ?? "")}`) };
     feed.items.push(item);
     if (known.has(sourceId)) continue;
 
@@ -263,7 +263,7 @@ export async function wineTradeFeed(known: Set<string>, deadline: number, now: s
   feed.items = await mapLimit(wines, 1, async (p): Promise<FeedItem> => {
     const v = p.variants[0];
     const url = `https://winetrade.se/products/${p.handle}`;
-    const item: FeedItem = { sourceId: p.handle, url, price: Math.round(Number(v.price)), inStock: v.available };
+    const item: FeedItem = { sourceId: p.handle, url, price: Math.round(Number(v.price)), inStock: v.available, notWine: isNotWine(`${p.title} ${htmlText(p.body_html ?? "")}`) };
     try {
       await sleep(400);
       item.taxIncluded = VIN_NATUR_TAX_TEXT.test(htmlText(await (await politeFetch(url, deadline)).text()));
@@ -319,7 +319,7 @@ export async function justWineFeed(known: Set<string>, deadline: number, now: st
   feed.items = await mapLimit(wines, 1, async (p): Promise<FeedItem> => {
     const v = p.variants[0];
     const url = `https://justwine.se/products/${p.handle}`;
-    const item: FeedItem = { sourceId: p.handle, url, price: Math.round(Number(v.price)), inStock: v.available };
+    const item: FeedItem = { sourceId: p.handle, url, price: Math.round(Number(v.price)), inStock: v.available, notWine: isNotWine(`${p.title} ${htmlText(p.body_html ?? "")}`) };
     try {
       await sleep(400);
       item.taxIncluded = JUST_WINE_TAX_TEXT.test(htmlText(await (await politeFetch(url, deadline)).text()));

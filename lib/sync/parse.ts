@@ -179,6 +179,14 @@ export function vinNaturVariant(p: ShopifyProduct): { price: number; available: 
   return { price: Math.round(price), available: v.available };
 }
 
+/**
+ * Produkter som butiken listar bland vinerna men som inte är vin: cider, blanddrycker,
+ * fruktvin, alkoholfritt med mera. Orden beskriver vad drycken ÄR, inte hur den smakar,
+ * så "gröna äpplen" i en smaknotering räknas inte.
+ */
+export const NOT_WINE = /\b(cider|cidre|sidra|perry|poiré|blanddryck|fruktvin|äppelvin|päronvin|bärvin|mjöd|kombucha|alkoholfri|alkoholfritt|avalkoholiserat?|sake|vermouth|vermut)\b|gjor[dt]a? på (ekologiska |svenska )?(äpplen|päron|bär|frukt)/i;
+export const isNotWine = (text: string) => NOT_WINE.test(text);
+
 export const VIN_NATUR_TAX_TEXT = /moms\s+och\s+alkoholskatt\s+inkluderad/i;
 
 /** Region och producent ur brödsmulorna: de två första länkarna före "›". */

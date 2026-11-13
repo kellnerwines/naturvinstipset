@@ -1,11 +1,11 @@
 import { describe, expect, it } from "vitest";
 import type { Wine } from "../blob";
-import { applySync, STOCK_HIDDEN, TAX_HIDDEN, type ShopFeed } from "./apply";
+import { applySync, NOT_WINE_HIDDEN, STOCK_HIDDEN, TAX_HIDDEN, type ShopFeed } from "./apply";
 import { deriveFoodCategories, fillFoodCategories } from "./food";
 import {
   deriveWineType, findGrapes, flaskvisScale, parseFlaskvisPage, parseVinNaturPage, splitOrigin, vinNaturVariant,
   isPhilipsonBottle, philipsonName, philipsonProducer, philipsonWineType, isWineTradeBottle, parseWineTradeProduct,
-  isJustWineBottle, parseJustWineProduct, JUST_WINE_TAX_TEXT,
+  isJustWineBottle, parseJustWineProduct, JUST_WINE_TAX_TEXT, isNotWine,
   type PhilipsonProduct, type ShopifyProduct,
 } from "./parse";
 
@@ -282,5 +282,22 @@ describe("matkategorier ur druva, färg och land", () => {
     expect(ws[0].foodCategories).toEqual(["kott", "flask"]);
     expect(ws[1].foodCategories).toEqual(["ost"]);
     expect(ws[2].foodCategories).toBeUndefined();
+  });
+});
+
+describe("Inte vin", () => {
+  it("känner igen cider och blanddrycker men inte frukt i smaknoteringar", () => {
+    expect(isNotWine("Häxjos är en kolsyrad blanddryck gjord på ekologiska äpplen och päron från Bjärehalvön.")).toBe(true);
+    expect(isNotWine("Torr cider från Normandie")).toBe(true);
+    expect(isNotWine("Gröna äpplen, citrus och salt mineral. Frisk och levande.")).toBe(false);
+    expect(isNotWine("Päron, honung och mineral i en pét-nat från Loire.")).toBe(false);
+  });
+  it("befintlig produkt döljs och publiceras inte igen av lagret", () => {
+    const NOW2 = "2026-12-01T02:00:00.000Z";
+    const w = { id: "vn-haxjos", slug: "vn-haxjos", name: "Häxjos", producer: "Josgrop", country: "Sverige", wineType: "Mousserande", description: "", adminRating: 0, createdAt: NOW2, published: true,
+      source: "vinnatur.shop", sourceId: "haxjos-2019", offers: [{ shop: "Vin & Natur", url: "https://vinnatur.shop/products/haxjos-2019", price: 199, inStock: true, lastSyncedAt: NOW2 }] };
+    const feed: ShopFeed = { shop: "Vin & Natur", source: "vinnatur.shop", complete: true, errors: [], items: [{ sourceId: "haxjos-2019", url: "https://vinnatur.shop/products/haxjos-2019", price: 199, inStock: true, notWine: true }] };
+    const { wines } = applySync([w as never], [feed], NOW2);
+    expect(wines[0]).toMatchObject({ published: false, syncHidden: NOT_WINE_HIDDEN });
   });
 });
