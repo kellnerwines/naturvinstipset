@@ -12,6 +12,7 @@ export const SHOPS: ShopInfo[] = [
   { name: "Philipson Wine", url: "https://philipsonwine.se", host: "philipsonwine.se", web: true },
   { name: "Flaskvis", url: "https://www.flaskvis.se", host: "flaskvis.se", web: true },
   { name: "Wine Trade", url: "https://winetrade.se", host: "winetrade.se", web: true },
+  { name: "Just Wine", url: "https://justwine.se", host: "justwine.se", web: true },
   { name: SB, url: "https://www.systembolaget.se", host: "systembolaget.se", web: false },
 ].map((s) => ({ ...s, slug: entitySlug(s.name) }));
 
