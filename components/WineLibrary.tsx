@@ -9,6 +9,10 @@ import { shopsOf, shopSlug } from "@/lib/shops";
 import OwnImportBadge from "@/components/OwnImportBadge";
 import LibraryFilter, { type LibraryOptions, type LibraryState } from "@/components/LibraryFilter";
 
+const TYPE_FIELD: Record<string, string> = {
+  Rött: "var(--wine-rott)", Vitt: "var(--wine-vitt)", Rosé: "var(--wine-rose)", Orange: "var(--wine-orange)",
+  Mousserande: "var(--wine-mousserande)", "Pét Nat": "var(--wine-petnat)",
+};
 const price = (w: Wine) => Number(String(w.price ?? "").replace(",", ".")) || 0;
 
 export default function WineLibrary({ wines, ratings, initial, lockShop }: {
@@ -43,17 +47,17 @@ export default function WineLibrary({ wines, ratings, initial, lockShop }: {
               data-price={price(w)}
               data-rating={rating.toFixed(2)}
               data-q={[w.name, w.producer, w.region, w.country, ...grapesOf(w)].join(" ").toLowerCase()}
-              className="border-b border-black/5"
+              className="border-b-2 border-[var(--rule)]"
             >
               <Link href={`/viner/${w.slug}`} className="flex items-center gap-4 py-3 group">
-                <span className="shrink-0 w-10 h-14 flex items-center justify-center bg-[var(--green-light)] rounded">
+                <span className="shrink-0 w-12 h-16 flex items-center justify-center border-2 border-[var(--ink)]" style={{ backgroundColor: TYPE_FIELD[w.wineType] ?? "var(--surface)" }}>
                   {w.primaryImageUrl ? (
                     // eslint-disable-next-line @next/next/no-img-element
-                    <img src={w.primaryImageUrl} alt="" loading="lazy" className="max-h-12 w-auto object-contain" />
+                    <img src={w.primaryImageUrl} alt="" loading="lazy" className="max-h-14 w-auto object-contain" />
                   ) : null}
                 </span>
                 <span className="flex-1 min-w-0">
-                  <span className="block font-semibold truncate group-hover:text-[var(--green)] transition-colors">
+                  <span className="block font-[family-name:var(--font-display)] font-black uppercase text-[22px] leading-none truncate text-[var(--ink)] group-hover:text-[var(--accent)] transition-colors">
                     {w.name}{w.year ? ` ${w.year}` : ""}
                   </span>
                   <span className="block text-sm text-[var(--muted)] truncate">

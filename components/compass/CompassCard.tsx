@@ -25,7 +25,7 @@ function Axis({ name, value, target }: { name: string; value: number; target?: n
       <span className="w-[62px] shrink-0">{name}</span>
       <div className="relative flex gap-[3px] flex-1 max-w-[110px]" aria-label={`${name} ${value} av 5`} role="img">
         {[1, 2, 3, 4, 5].map((i) => (
-          <i key={i} className={`h-[4px] flex-1 rounded-full ${i <= value ? "bg-[var(--fg)]" : "bg-[var(--rule)]"}`} />
+          <i key={i} className={`h-[8px] flex-1 border border-[var(--ink)] ${i <= value ? "bg-[var(--ink)]" : ""}`} />
         ))}
         {target ? (
           <span
@@ -59,9 +59,9 @@ export default function CompassCard({
 
   return (
     // På desktop ligger korten två och två med den stående flaskbilden överst.
-    <article className={`bg-[var(--card)] border ${first ? "border-[var(--fg)]" : "border-[var(--rule)]"} rounded-lg p-4`}>
+    <article className={`bg-[var(--card)] border-[3px] border-[var(--ink)] p-4 ${first ? "outline outline-[3px] outline-[var(--accent)] outline-offset-0" : ""}`}>
       <div className="grid grid-cols-[72px_1fr] sm:grid-cols-[88px_1fr] md:grid-cols-1 gap-x-4 md:gap-y-4">
-        <Link href={`/viner/${w.slug}`} className="flex items-center justify-center bg-[var(--surface)] rounded-md h-[132px] sm:h-[150px] md:h-[240px]" tabIndex={-1} aria-hidden="true">
+        <Link href={`/viner/${w.slug}`} className="flex items-center justify-center h-[132px] sm:h-[150px] md:h-[240px] border-2 border-[var(--ink)]" style={{ backgroundColor: `var(${COLOR_VAR[typeOf(w) as Color] ?? "--surface"})` }} tabIndex={-1} aria-hidden="true">
           {w.img && !imgFailed ? (
             // eslint-disable-next-line @next/next/no-img-element
             <img src={w.img} alt="" loading="lazy" className="h-[120px] w-[66px] sm:h-[136px] sm:w-[80px] md:h-[85%] md:w-auto object-contain" onError={() => setImgFailed(true)} />
@@ -71,8 +71,8 @@ export default function CompassCard({
         </Link>
 
         <div className="min-w-0 flex flex-col">
-          <h3 className="text-lg font-bold leading-tight tracking-tight">
-            <Link href={`/viner/${w.slug}`} className="hover:opacity-60 transition-opacity">{w.n}</Link>
+          <h3 className="font-[family-name:var(--font-display)] font-black uppercase text-[28px] leading-[0.95]">
+            <Link href={`/viner/${w.slug}`} className="hover:text-[var(--accent)] transition-colors">{w.n}</Link>
           </h3>
           <p className="text-sm text-[var(--muted)] mt-1">
             {w.p} · ca {w.pr} kr
@@ -85,7 +85,7 @@ export default function CompassCard({
               target="_blank"
               rel={buyRel(w.shop, compensation)}
               onClick={() => track({ type: "buy", wineId: w.id, shop: w.shop, price: w.pr })}
-              className="inline-flex items-center whitespace-nowrap rounded-full bg-[var(--fg)] text-[var(--bg)] text-[13px] sm:text-sm font-semibold px-3.5 sm:px-4 py-2 hover:opacity-80 transition-opacity"
+              className="inline-flex items-center whitespace-nowrap rounded-full bg-[var(--accent)] text-[var(--fg)] border-2 border-[var(--ink)] text-[13px] sm:text-sm font-bold px-3.5 sm:px-4 py-2 hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors"
             >
               {isSb ? "Se hos Systembolaget" : `Köp hos ${w.shop}`}
             </a>
@@ -104,8 +104,8 @@ export default function CompassCard({
       </div>
 
       {open ? (
-        <div id={detailsId} className="mt-4 pt-4 border-t border-[var(--rule)] space-y-3 text-sm">
-          <p className="text-[11px] tracking-[0.12em] uppercase text-[var(--muted)]">
+        <div id={detailsId} className="mt-4 pt-4 border-t-2 border-[var(--ink)] space-y-3 text-sm">
+          <p className="text-xs text-[var(--muted)]">
             {w.t} · {w.c}{w.y && w.y !== "NV" ? ` · ${w.y}` : ""}{w.g ? ` · ${w.g}` : ""} · {sc} % matchning
           </p>
           <div className="space-y-1.5">
@@ -117,13 +117,13 @@ export default function CompassCard({
           {w.foodText ? <p className="leading-relaxed"><span className="font-semibold">Passar till:</span> {w.foodText}</p> : null}
           <div className="flex flex-wrap gap-1.5">
             {[...hitSet].map((h) => (
-              <span key={`h-${h}`} className="text-[11px] px-2 py-0.5 rounded-full bg-[var(--fg)] text-[var(--bg)]">{h}</span>
+              <span key={`h-${h}`} className="text-xs font-bold px-2 py-0.5 rounded-full bg-[var(--ink)] text-[var(--paper)]">{h}</span>
             ))}
             {fh.map((f) => (
-              <span key={`f-${f}`} className="text-[11px] px-2 py-0.5 rounded-full bg-[var(--fg)] text-[var(--bg)]">{FOOD[f]}</span>
+              <span key={`f-${f}`} className="text-xs font-bold px-2 py-0.5 rounded-full bg-[var(--ink)] text-[var(--paper)]">{FOOD[f]}</span>
             ))}
             {w.tags.filter((t) => !hitSet.has(t)).map((t) => (
-              <span key={`t-${t}`} className="text-[11px] px-2 py-0.5 rounded-full bg-[var(--surface)] text-[var(--fg)]">{t}</span>
+              <span key={`t-${t}`} className="text-xs font-bold px-2 py-0.5 rounded-full border-2 border-[var(--ink)] text-[var(--ink)]">{t}</span>
             ))}
           </div>
           {!isSb ? <p className="text-xs text-[var(--muted)]">Webbutik med hemleverans, svensk alkoholskatt ingår i priset.</p> : null}

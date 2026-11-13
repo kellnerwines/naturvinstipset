@@ -110,12 +110,12 @@ export default async function SmakprofilPage({
       />
 
       {/* Hero */}
-      <div className="border-b border-[var(--rule)] pt-16 pb-14 px-6">
+      <div className="border-b-[3px] border-[var(--ink)] pt-16 pb-14 px-6">
         <div className="max-w-2xl mx-auto">
-          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--muted)] mb-4">
+          <p className="inline-block self-start bg-[var(--accent)] text-[var(--fg)] border-2 border-[var(--ink)] text-sm font-bold px-2 py-0.5 mb-4">
             Smakprofil
           </p>
-          <h1 className="text-3xl md:text-5xl font-extrabold text-[var(--fg)] mb-4 leading-tight tracking-tight">
+          <h1 className="text-5xl md:text-7xl mb-4">
             {data.label} naturvin på Systembolaget eller från webbutiker med hemleverans
           </h1>
           <p className="text-base text-[var(--muted)] leading-relaxed max-w-lg">
@@ -147,7 +147,7 @@ export default async function SmakprofilPage({
                   <Link
                     key={wine.id}
                     href={`/viner/${wine.slug}`}
-                    className="block bg-white border border-black/8 rounded-xl p-5 hover:border-[var(--green)] transition-colors"
+                    className="block bg-[var(--paper)] border-[3px] border-[var(--ink)] p-5 hover:border-[var(--accent)] transition-colors"
                   >
                     <div className="flex items-start justify-between gap-4">
                       <div className="min-w-0">
@@ -201,7 +201,7 @@ export default async function SmakprofilPage({
                 <Link
                   key={key}
                   href={`/smakprofil/${key}`}
-                  className="text-sm border border-black/10 px-4 py-2 rounded-full hover:border-[var(--green)] transition-colors"
+                  className="text-sm font-bold border-2 border-[var(--ink)] text-[var(--ink)] px-4 py-2 rounded-full hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors"
                 >
                   {val.label}
                 </Link>

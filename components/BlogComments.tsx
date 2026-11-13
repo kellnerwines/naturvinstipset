@@ -48,7 +48,7 @@ export default function BlogComments({ blogId, initial }: { blogId: string; init
 
   return (
     <div className="mt-10 pt-8 border-t border-[var(--rule)]">
-      <h2 className="text-sm font-bold tracking-[0.15em] uppercase text-[var(--fg)] mb-6">
+      <h2 className="text-sm font-bold text-[var(--fg)] mb-6">
         Kommentarer{comments.length > 0 ? ` (${comments.length})` : ""}
       </h2>
 

@@ -38,13 +38,10 @@ export default function HomeFaq() {
   };
 
   return (
-    <section className="border-t border-[var(--rule)] bg-white">
+    <section className="border-t-[3px] border-[var(--ink)]">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="max-w-3xl mx-auto px-6 py-20">
-        <h2
-          className="text-2xl md:text-3xl font-extrabold tracking-tight text-[var(--fg)] mb-10"
-          style={{ fontFamily: "Georgia, serif" }}
-        >
+        <h2 className="text-5xl md:text-6xl mb-10">
           Vanliga frågor om naturvin
         </h2>
         <div className="space-y-8">

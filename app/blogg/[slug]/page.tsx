@@ -123,7 +123,7 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
         <div className="absolute top-6 left-6">
           <Link
             href="/blogg"
-            className="text-white/70 hover:text-white text-xs font-semibold tracking-[0.18em] uppercase transition-colors"
+            className="text-white/70 hover:text-white text-xs font-semibold transition-colors"
           >
             ← Blogg
           </Link>
@@ -131,10 +131,10 @@ export default async function BlogPostPage({ params }: { params: Promise<{ slug:
 
         {/* Title block — bottom of hero */}
         <div className="absolute bottom-0 left-0 right-0 px-6 pb-10 max-w-3xl">
-          <p className="text-white/55 text-xs font-semibold tracking-[0.2em] uppercase mb-3">
+          <p className="text-white/55 text-xs font-semibold mb-3">
             {date}
           </p>
-          <h1 className="text-3xl md:text-5xl font-extrabold text-white leading-tight tracking-tight">
+          <h1 className="text-5xl md:text-7xl text-[var(--paper)]">
             {post.title}
           </h1>
         </div>

@@ -12,36 +12,28 @@ import OwnImportBadge from "./OwnImportBadge";
 
 type Props = { wine: Wine; rating: number; ratingCount: number; likeCount: number; rank?: number; wineOfMonth?: boolean };
 
+// Platta tryckfärger per vintyp (globals.css); texten på färgfältet är mörk eller ljus efter fältet.
 const typeColor: Record<string, string> = {
-  Vitt:        "#d4b896",
-  Rött:        "#8a4a4a",
-  Rosé:        "#d4879a",
-  Orange:      "#d4886a",
-  "Pét Nat":   "#8aaa7a",
-  Mousserande: "#7a9ab4",
+  Vitt:        "var(--wine-vitt)",
+  Rött:        "var(--wine-rott)",
+  Rosé:        "var(--wine-rose)",
+  Orange:      "var(--wine-orange)",
+  "Pét Nat":   "var(--wine-petnat)",
+  Mousserande: "var(--wine-mousserande)",
 };
-
-// Lighter tint for image container background
-const typeBg: Record<string, string> = {
-  Rött:        "#dccfcf",
-  Vitt:        "#dbd5bc",
-  Rosé:        "#dbc5d0",
-  Orange:      "#d8c9b0",
-  Mousserande: "#bfcdd8",
-  "Pét Nat":   "#cabfd8",
-};
+const lightText = new Set(["Rött"]);
 
 function Meter({ label, value, color }: { label: string; value: number; color?: string }) {
   const filled = Math.round(Math.max(0, Math.min(5, value)));
   return (
     <div className="flex items-center gap-2">
-      <span className="text-[10px] text-[var(--muted)] w-12 shrink-0">{label}</span>
+      <span className="text-xs text-[var(--muted)] w-16 shrink-0">{label}</span>
       <div className="flex gap-0.5 flex-1">
         {[1, 2, 3, 4, 5].map((n) => (
           <div
             key={n}
-            className="h-1 flex-1 rounded-full"
-            style={{ backgroundColor: n <= filled ? (color ?? "#0d0d0d") : "rgba(13,13,13,0.10)" }}
+            className="h-2 flex-1 border border-[var(--ink)]"
+            style={{ backgroundColor: n <= filled ? (color ?? "var(--ink)") : "transparent" }}
           />
         ))}
       </div>
@@ -52,8 +44,8 @@ function Meter({ label, value, color }: { label: string; value: number; color?: 
 export default function WineCard({ wine, rating, ratingCount, likeCount, rank, wineOfMonth }: Props) {
   const [open, setOpen] = useState(false);
 
-  const color = typeColor[wine.wineType] ?? "#0d0d0d";
-  const bg    = typeBg[wine.wineType] ?? "#d4d0c8";
+  const color = typeColor[wine.wineType] ?? "var(--surface)";
+  const onColor = lightText.has(wine.wineType) ? "text-[var(--paper)]" : "text-[var(--ink)]";
   const hasProfile = wine.syra != null || wine.fyllighet != null || wine.funk != null;
 
   const articleNumber = getArticleNumber(wine);
@@ -61,56 +53,44 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
   const jsonLd = buildWineProductJsonLd(wine, { combinedRating: rating, communityCount: ratingCount });
 
   return (
-    <div className={`flex flex-col bg-[var(--card)] border border-[var(--rule)]${wineOfMonth ? " motm-card" : ""}`}>
+    <div className={`flex flex-col bg-[var(--card)] border-[3px] border-[var(--ink)]${wineOfMonth ? " motm-card" : ""}`}>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      {/* ── Top bar: rank + type pill ───────────────────────────────────── */}
-      <div className="flex items-center justify-between px-3 pt-3 pb-2">
-        {rank ? (
-          <span className="text-[11px] font-bold text-[var(--muted)]">#{rank}</span>
-        ) : <span />}
-        <span
-          className="text-[9px] font-bold tracking-[0.15em] uppercase px-2 py-0.5 rounded-full text-white"
-          style={{ backgroundColor: color }}
-        >
-          {wine.wineType}
-        </span>
-      </div>
-
-      {/* ── Image block ────────────────────────────────────────────────── */}
-      <Link href={`/viner/${wine.slug}`} className="block relative group px-3">
-        {wineOfMonth && (
-          <span className="absolute -top-1 left-1/2 -translate-x-1/2 z-10 text-[9px] font-bold tracking-[0.2em] uppercase bg-amber-400 text-white px-3 py-0.5 whitespace-nowrap">
-            Veckans vin
-          </span>
-        )}
-        <div
-          className="w-full aspect-[3/4] overflow-hidden flex items-end justify-center rounded-md"
-          style={{ backgroundColor: bg }}
-        >
+      {/* ── Färgfält med flaskan, plats och vintyp ─────────────────────── */}
+      <Link href={`/viner/${wine.slug}`} className="block relative group border-b-[3px] border-[var(--ink)]" style={{ backgroundColor: color }}>
+        <div className="relative w-full aspect-[4/5] overflow-hidden">
           {wine.primaryImageUrl ? (
             <Image
               src={wine.primaryImageUrl}
               alt={`${wine.name}${wine.year ? ` ${wine.year}` : ""}${wine.wineType ? ` ${wine.wineType.toLowerCase()} naturvin` : " naturvin"}${wine.country ? ` från ${wine.country}` : ""}`}
               fill
-              className="object-contain object-top group-hover:scale-[1.03] transition-transform duration-500"
+              className="object-contain object-bottom p-4 pt-10 group-hover:scale-[1.03] transition-transform duration-500"
               unoptimized
             />
           ) : (
-            <span className="text-6xl mb-8 opacity-20 select-none">○</span>
+            <svg className={`absolute inset-x-0 bottom-4 mx-auto h-3/4 ${onColor}`} viewBox="0 0 40 140" aria-hidden="true"><path d="M15 2h10v34c0 8 11 14 11 30v68a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V66c0-16 11-22 11-30z" fill="currentColor" opacity="0.35" /></svg>
           )}
         </div>
+        <div className={`absolute top-0 inset-x-0 flex items-start justify-between p-3 ${onColor}`}>
+          {rank ? <span className="font-[family-name:var(--font-display)] font-black text-3xl leading-none">{rank}</span> : <span />}
+          <span className="font-[family-name:var(--font-display)] font-black uppercase text-lg leading-none">{wine.wineType}</span>
+        </div>
+        {wineOfMonth && (
+          <span className="absolute bottom-3 left-3 bg-[var(--accent)] text-[var(--fg)] border-2 border-[var(--ink)] text-xs font-bold px-2 py-1 rotate-[-3deg]">
+            Månadens vin
+          </span>
+        )}
       </Link>
 
       {/* ── Info block ─────────────────────────────────────────────────── */}
       <div className="px-3 pt-3 pb-3 flex-1 flex flex-col">
         {/* Producer */}
-        <p className="text-[10px] tracking-[0.15em] uppercase text-[var(--muted)] mb-0.5">{wine.producer}</p>
+        <p className="text-sm text-[var(--muted)] mb-0.5">{wine.producer}</p>
         {wine.ownImport ? <OwnImportBadge className="self-start mb-1.5" /> : null}
 
         {/* Name */}
         <Link href={`/viner/${wine.slug}`} className="group mb-2">
-          <h3 className="font-bold text-[var(--fg)] leading-tight text-sm tracking-tight group-hover:opacity-60 transition-opacity">
+          <h3 className="font-[family-name:var(--font-display)] font-black uppercase text-[26px] leading-[0.95] text-[var(--ink)] group-hover:text-[var(--accent)] transition-colors">
             {wine.name}
           </h3>
         </Link>
@@ -126,26 +106,25 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
 
         {/* Flavor notes — always visible */}
         {wine.flavorNotes && (
-          <p className="text-xs text-[var(--muted)] leading-relaxed italic mb-3">{wine.flavorNotes}</p>
+          <p className="text-sm text-[var(--muted)] leading-relaxed mb-3">{wine.flavorNotes}</p>
         )}
 
         {/* Rating + price row */}
-        <div className="flex items-baseline justify-between mt-auto mb-1">
+        <div className="flex items-baseline justify-between mt-auto mb-1 border-t-2 border-[var(--ink)] pt-2">
           <span
-            className="text-base font-bold text-[var(--fg)]"
-            style={{ fontFamily: "Georgia, serif" }}
+            className="text-base font-bold text-[var(--ink)]"
             role="img"
             aria-label={rating > 0 ? `Betyg: ${rating.toFixed(1)} av 5${ratingCount > 0 ? ` (${ratingCount} röster)` : ""}` : "Inget betyg än"}
           >
-            {rating > 0 ? <><span aria-hidden="true">★</span> {rating.toFixed(1)}</> : <span className="text-[11px] font-normal text-[var(--muted)]" style={{ fontFamily: "inherit" }}>Inget betyg än</span>}
+            {rating > 0 ? <><span aria-hidden="true">★</span> {rating.toFixed(1)}</> : <span className="text-xs font-normal text-[var(--muted)]">Inget betyg än</span>}
           </span>
           {wine.price && (
-            <span className="text-[11px] text-[var(--muted)]">{wine.price} kr</span>
+            <span className="font-bold text-[var(--ink)]">{wine.price} kr</span>
           )}
         </div>
 
         {/* Plain-text spec line — for AI/assistive parsing, not just icons */}
-        <p className="text-[10px] text-[var(--faint)] leading-snug mb-2">
+        <p className="text-xs text-[var(--muted)] leading-snug mb-2">
           {[
             wine.country && `Land: ${wine.country}`,
             wine.wineType && `Vintyp: ${wine.wineType}`,
@@ -157,7 +136,7 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
         </p>
 
         {/* Actions row */}
-        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-t border-[var(--rule-xs)] pt-2">
+        <div className="flex flex-wrap items-center gap-x-3 gap-y-2 border-t-2 border-[var(--ink)] pt-2">
           <LikeButton wineId={wine.id} likeCount={likeCount} small />
           {buy && (
             <a
@@ -165,14 +144,14 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
               target="_blank"
               rel={buy.rel}
               title={`${buy.label} – ${buy.how.toLowerCase()}`}
-              className="text-[10px] font-bold tracking-[0.2em] uppercase text-[var(--fg)] border-b border-[var(--fg)] hover:opacity-50 transition-opacity pb-px whitespace-nowrap"
+              className="text-sm font-bold text-[var(--ink)] border-b-2 border-[var(--ink)] hover:text-[var(--accent)] hover:border-[var(--accent)] transition-colors whitespace-nowrap"
             >
               {buy.isSb ? "Beställ" : "Hemleverans"}
             </a>
           )}
           <button
             onClick={() => setOpen(!open)}
-            className="text-[10px] tracking-[0.15em] uppercase text-[var(--muted)] hover:text-[var(--fg)] transition-colors flex items-center gap-1 whitespace-nowrap ml-auto"
+            className="text-sm text-[var(--muted)] hover:text-[var(--ink)] transition-colors flex items-center gap-1 whitespace-nowrap ml-auto"
           >
             Mer
             <svg className={`w-2.5 h-2.5 transition-transform duration-150 ${open ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
@@ -183,15 +162,15 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
 
         {/* ── Expandable: strävhet, flavor notes, druva, links ────────── */}
         {open && (
-          <div className="mt-3 pt-3 border-t border-[var(--rule-xs)] space-y-2">
+          <div className="mt-3 pt-3 border-t-2 border-[var(--ink)] space-y-2">
             {wine.stravhet != null && <Meter label="Strävhet" value={wine.stravhet} color={color} />}
             {wine.grape && (
-              <p className="text-[10px] text-[var(--faint)] tracking-wide">{wine.grape}</p>
+              <p className="text-sm text-[var(--muted)]">{wine.grape}</p>
             )}
             <div className="flex items-center gap-4 flex-wrap pt-1">
               <Link
                 href={`/viner/${wine.slug}`}
-                className="text-[10px] tracking-[0.15em] uppercase text-[var(--muted)] border-b border-[var(--rule)] hover:text-[var(--fg)] hover:border-[var(--fg)] transition-colors pb-px"
+                className="text-sm font-bold text-[var(--ink)] border-b-2 border-[var(--ink)] hover:text-[var(--accent)] transition-colors"
               >
                 Läs mer →
               </Link>
@@ -202,7 +181,7 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
                   : wine.wineType === "Mousserande" ? "/vad-ar-naturvin#pet-nat"
                   : "/vad-ar-naturvin"
                 }
-                className="text-[10px] tracking-[0.15em] uppercase text-[var(--faint)] hover:text-[var(--muted)] transition-colors pb-px"
+                className="text-sm text-[var(--muted)] hover:text-[var(--ink)] transition-colors"
               >
                 {wine.wineType === "Orange" ? "Vad är orange vin?"
                   : wine.wineType === "Pét Nat" ? "Vad är pét-nat?"

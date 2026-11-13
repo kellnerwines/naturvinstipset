@@ -300,10 +300,10 @@ export default function VadArNaturvinPage() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
       {/* Hero */}
-      <div className="border-b border-[var(--rule)] pt-16 pb-14 px-6">
+      <div className="border-b-[3px] border-[var(--ink)] pt-16 pb-14 px-6">
         <div className="max-w-2xl mx-auto">
-          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--muted)] mb-4">Guide</p>
-          <h1 className="text-3xl md:text-5xl font-extrabold text-[var(--fg)] mb-4 leading-tight tracking-tight">
+          <p className="inline-block self-start bg-[var(--accent)] text-[var(--fg)] border-2 border-[var(--ink)] text-sm font-bold px-2 py-0.5 mb-4">Guide</p>
+          <h1 className="text-5xl md:text-7xl mb-4">
             Vad är naturvin?
           </h1>
           <p className="text-base text-[var(--muted)] leading-relaxed max-w-lg">
@@ -313,7 +313,7 @@ export default function VadArNaturvinPage() {
       </div>
 
       {/* Jump links */}
-      <div className="border-b border-[var(--rule)] bg-[var(--bg)] sticky top-14 z-10">
+      <div className="border-b border-[var(--rule)] bg-[var(--bg)] sticky top-[67px] z-10">
         <div className="max-w-2xl mx-auto px-6 py-3 flex gap-5 overflow-x-auto text-xs text-[var(--muted)] whitespace-nowrap">
           {sections.map((s) => (
             <a key={s.id} href={`#${s.id}`} className="hover:text-[var(--fg)] transition-colors shrink-0">
@@ -340,7 +340,7 @@ export default function VadArNaturvinPage() {
               <div className="pl-10 mt-4">
                 <Link
                   href={s.cta.href}
-                  className="inline-flex items-center text-[11px] font-semibold tracking-[0.12em] uppercase text-[var(--fg)] border-b border-[var(--fg)] hover:opacity-60 transition-opacity pb-px"
+                  className="inline-flex items-center text-xs font-semibold text-[var(--fg)] border-b border-[var(--fg)] hover:opacity-60 transition-opacity pb-px"
                 >
                   {s.cta.text}
                 </Link>

@@ -16,8 +16,8 @@ export const metadata: Metadata = {
 export default function VinprovningPage() {
   return (
     <div className="max-w-2xl mx-auto px-5 py-16">
-      <p className="text-xs font-semibold tracking-widest text-[var(--green)] uppercase mb-3">Upplev</p>
-      <h1 className="text-4xl md:text-5xl font-bold text-[var(--green-dark)] mb-6 leading-tight">
+      <p className="inline-block bg-[var(--accent)] text-[var(--fg)] border-2 border-[var(--ink)] text-sm font-bold px-2 py-0.5 mb-4">Upplev</p>
+      <h1 className="text-5xl md:text-7xl mb-6">
         Naturvinsupplevelser för grupper
       </h1>
       <p className="text-lg text-black/70 leading-relaxed mb-4">
@@ -28,7 +28,7 @@ export default function VinprovningPage() {
       </p>
 
       <div className="mb-12">
-        <p className="text-sm font-semibold text-black/40 uppercase tracking-widest mb-4">Vi har gjort provningar för</p>
+        <p className="text-sm font-semibold text-black/40 mb-4">Vi har gjort provningar för</p>
         <div className="flex flex-wrap gap-3">
           {["After work", "Nybörjarkvällar", "Privata middagar"].map((item) => (
             <span key={item} className="border border-[var(--green)] text-[var(--green-dark)] text-sm font-medium px-4 py-2">

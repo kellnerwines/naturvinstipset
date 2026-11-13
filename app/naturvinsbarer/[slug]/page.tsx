@@ -38,21 +38,21 @@ export default async function BarPage({ params }: { params: Promise<{ slug: stri
     ...(bar.website ? { url: bar.website } : {}),
     ...(bar.instagram ? { sameAs: [instagramUrl(bar.instagram)] } : {}),
   };
-  const link = "inline-flex items-center text-sm font-semibold border border-[var(--fg)] rounded-full px-4 py-2 hover:bg-[var(--fg)] hover:text-[var(--bg)] transition-colors";
+  const link = "inline-flex items-center text-sm font-bold border-2 border-[var(--ink)] text-[var(--ink)] rounded-full px-4 py-2 hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors";
 
   return (
     <div className="max-w-2xl mx-auto px-5 py-12">
       <JsonLd data={[jsonLd, breadcrumbJsonLd([{ name: "Naturvinsbarer", path: "/naturvinsbarer" }, { name: bar.name, path: `/naturvinsbarer/${bar.slug}` }])]} />
 
-      <Link href={`/naturvinsbarer#${citySlug(bar.city)}`} className="text-sm text-[var(--muted)] hover:text-[var(--fg)] mb-8 inline-block">
+      <Link href={`/naturvinsbarer#${citySlug(bar.city)}`} className="font-bold text-[var(--ink)] border-b-2 border-[var(--ink)] hover:text-[var(--accent)] hover:border-[var(--accent)] mb-8 block w-fit">
         ← Naturvinsbarer i {bar.city}
       </Link>
 
-      <p className="text-[11px] font-semibold tracking-[0.15em] uppercase text-[var(--muted)] mb-3">
+      <p className="inline-block bg-[var(--accent)] text-[var(--fg)] border-2 border-[var(--ink)] text-sm font-bold px-2 py-0.5 mb-4">
         {bar.type} · {bar.neighborhood}, {bar.city}
       </p>
-      <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight leading-tight mb-5">{bar.name}</h1>
-      <p className="text-[var(--muted)] leading-relaxed mb-8 text-[16px]">{bar.description}</p>
+      <h1 className="text-6xl md:text-8xl mb-5">{bar.name}</h1>
+      <p className="leading-relaxed mb-8 text-lg">{bar.description}</p>
 
       <div className="flex flex-wrap gap-3 mb-10">
         {bar.website ? <a href={bar.website} target="_blank" rel="noopener" className={link}>Webbplats</a> : null}
@@ -60,8 +60,8 @@ export default async function BarPage({ params }: { params: Promise<{ slug: stri
         <a href={mapsUrl(bar)} target="_blank" rel="noopener" className={link}>Vägbeskrivning</a>
       </div>
 
-      <div className="border border-[var(--rule)] rounded-xl overflow-hidden mb-12">
-        <table className="w-full text-sm">
+      <div className="border-[3px] border-[var(--ink)] bg-[var(--paper)] mb-12">
+        <table className="w-full text-[15px]">
           <tbody>
             {[
               ["Adress", `${bar.address}, ${bar.city}`],
@@ -70,9 +70,9 @@ export default async function BarPage({ params }: { params: Promise<{ slug: stri
               ["Vinet", bar.wine_focus],
               ["Mat", bar.food ? "Ja" : "Snacks eller ingen mat"],
             ].map(([label, value]) => (
-              <tr key={label} className="border-b border-[var(--rule)] last:border-0">
-                <td className="px-4 py-2.5 text-[var(--muted)] whitespace-nowrap w-32">{label}</td>
-                <td className="px-4 py-2.5 font-medium">{value}</td>
+              <tr key={label} className="border-b-2 border-[var(--rule)] last:border-0">
+                <td className="px-4 py-2.5 font-bold whitespace-nowrap w-32">{label}</td>
+                <td className="px-4 py-2.5">{value}</td>
               </tr>
             ))}
           </tbody>
@@ -84,12 +84,12 @@ export default async function BarPage({ params }: { params: Promise<{ slug: stri
       </p>
 
       {nearby.length ? (
-        <div className="border-t border-[var(--rule)] pt-10">
-          <h2 className="text-lg font-bold mb-5">Fler naturvinsbarer i {bar.city}</h2>
+        <div className="border-t-[3px] border-[var(--ink)] pt-10">
+          <h2 className="text-4xl mb-5">Fler naturvinsbarer i {bar.city}</h2>
           <ul className="grid gap-x-6 gap-y-3 sm:grid-cols-2">
             {nearby.map((b) => (
               <li key={b.slug}>
-                <Link href={`/naturvinsbarer/${b.slug}`} className="font-semibold hover:opacity-60 transition-opacity">{b.name}</Link>
+                <Link href={`/naturvinsbarer/${b.slug}`} className="font-[family-name:var(--font-display)] font-black uppercase text-2xl text-[var(--ink)] hover:text-[var(--accent)]">{b.name}</Link>
                 <span className="text-sm text-[var(--muted)]"> · {b.neighborhood}</span>
               </li>
             ))}

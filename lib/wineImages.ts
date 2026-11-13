@@ -28,11 +28,13 @@ export function needsImageMigration(w: Wine): boolean {
 }
 
 /**
- * Beskär enfärgad kant (vit eller transparent, utgår från hörnpixeln), skalar
+ * Klipper bort enfärgad fotobakgrund, beskär kanten (utgår från hörnpixeln), skalar
  * till högst MAX_IMAGE_HEIGHT och kodar som WebP. Transparens behålls.
  */
 export async function processBottleImage(input: Buffer): Promise<{ data: Buffer; width: number; height: number }> {
-  let img = sharp(input, { failOn: "none" }).rotate();
+  // Enfärgad fotobakgrund klipps bort först, så att alla flaskor står fritt på sajtens färgfält.
+  const cut = await cutOutBackground(input).catch(() => null);
+  let img = sharp(cut ?? input, { failOn: "none" }).rotate();
   try {
     const trimmed = await img.clone().trim({ threshold: 12 }).toBuffer();
     img = sharp(trimmed);
@@ -44,6 +46,73 @@ export async function processBottleImage(input: Buffer): Promise<{ data: Buffer;
     .webp({ quality: 82, alphaQuality: 90, effort: 5 })
     .toBuffer({ resolveWithObject: true });
   return { data, width: info.width, height: info.height };
+}
+
+/**
+ * Tar bort en enfärgad fotobakgrund runt flaskan (t.ex. grå eller vit studiovägg).
+ * Fyller från bildens kanter in mot flaskan så länge färgen liknar bakgrunden, och gör
+ * de pixlarna genomskinliga med en mjuk övergång vid kanten. Bilder vars kant inte är
+ * enfärgad (miljöbilder, redan genomskinliga) lämnas orörda: då returneras null.
+ */
+export async function cutOutBackground(input: Buffer): Promise<Buffer | null> {
+  const { data, info } = await sharp(input, { failOn: "none" }).rotate().ensureAlpha().raw().toBuffer({ resolveWithObject: true });
+  const { width: w, height: h } = info;
+  const px = (i: number) => [data[i * 4], data[i * 4 + 1], data[i * 4 + 2], data[i * 4 + 3]];
+
+  // Kantpixlarna: redan genomskinlig kant betyder att bilden är klar.
+  const border: number[] = [];
+  for (let x = 0; x < w; x++) border.push(x, (h - 1) * w + x);
+  for (let y = 0; y < h; y++) border.push(y * w, y * w + w - 1);
+  const opaque = border.filter((i) => px(i)[3] > 200);
+  if (opaque.length < border.length * 0.5) return null;
+
+  // Bakgrundsfärgen är medianen av kanten; en spretig kant betyder att det inte är en studiovägg.
+  const med = [0, 1, 2].map((c) => opaque.map((i) => data[i * 4 + c]).sort((a, b) => a - b)[opaque.length >> 1]);
+  const dist = (i: number) => Math.hypot(data[i * 4] - med[0], data[i * 4 + 1] - med[1], data[i * 4 + 2] - med[2]);
+  const near = opaque.filter((i) => dist(i) < 40).length / opaque.length;
+  if (near < 0.85) return null;
+
+  // Fyll från kanten. Toleransen följer hur mycket bakgrunden varierar (skuggor, gradient).
+  const spread = opaque.map(dist).sort((a, b) => a - b)[Math.floor(opaque.length * 0.9)];
+  const tol = Math.min(40, Math.max(18, spread * 1.8));
+  const bg = new Uint8Array(w * h);
+  const stack: number[] = [];
+  for (const i of border) if (dist(i) < tol) { bg[i] = 1; stack.push(i); }
+  while (stack.length) {
+    const i = stack.pop()!;
+    const x = i % w, y = (i / w) | 0;
+    for (const j of [x > 0 ? i - 1 : -1, x < w - 1 ? i + 1 : -1, y > 0 ? i - w : -1, y < h - 1 ? i + w : -1]) {
+      if (j >= 0 && !bg[j] && dist(j) < tol) { bg[j] = 1; stack.push(j); }
+    }
+  }
+  // Skuggan på golvet: gråa (färglösa) pixlar som är mörkare än väggen men ljusare än flaskan,
+  // i nedre delen av bilden och sammanhängande med bakgrunden.
+  const lum = (i: number) => 0.299 * data[i * 4] + 0.587 * data[i * 4 + 1] + 0.114 * data[i * 4 + 2];
+  const bgLum = 0.299 * med[0] + 0.587 * med[1] + 0.114 * med[2];
+  const chroma = (i: number) => Math.max(data[i * 4], data[i * 4 + 1], data[i * 4 + 2]) - Math.min(data[i * 4], data[i * 4 + 1], data[i * 4 + 2]);
+  const bgChroma = Math.max(...med) - Math.min(...med);
+  const shadow = (i: number) => ((i / w) | 0) > h * 0.7 && lum(i) > bgLum * 0.45 && lum(i) < bgLum - 6 && Math.abs(chroma(i) - bgChroma) < 14;
+  for (let i = 0; i < w * h; i++) if (bg[i] && ((i / w) | 0) > h * 0.7) stack.push(i);
+  while (stack.length) {
+    const i = stack.pop()!;
+    const x = i % w, y = (i / w) | 0;
+    for (const j of [x > 0 ? i - 1 : -1, x < w - 1 ? i + 1 : -1, y > 0 ? i - w : -1, y < h - 1 ? i + w : -1]) {
+      if (j >= 0 && !bg[j] && shadow(j)) { bg[j] = 1; stack.push(j); }
+    }
+  }
+
+  const removed = bg.reduce((n, v) => n + v, 0) / (w * h);
+  // För lite borttaget: ingen bakgrund att tala om. För mycket: fyllningen har läckt in i flaskan.
+  if (removed < 0.15 || removed > 0.93) return null;
+
+  // Genomskinlig bakgrund, och en mjuk kant där flaskpixeln liknar bakgrunden.
+  for (let i = 0; i < w * h; i++) {
+    if (bg[i]) { data[i * 4 + 3] = 0; continue; }
+    const x = i % w, y = (i / w) | 0;
+    const edge = (x > 0 && bg[i - 1]) || (x < w - 1 && bg[i + 1]) || (y > 0 && bg[i - w]) || (y < h - 1 && bg[i + w]);
+    if (edge) data[i * 4 + 3] = Math.round(data[i * 4 + 3] * Math.min(1, Math.max(0.35, (dist(i) - tol) / tol + 0.5)));
+  }
+  return sharp(data, { raw: { width: w, height: h, channels: 4 } }).png().toBuffer();
 }
 
 /** Hämtar en bild med snäll user-agent och timeout. */

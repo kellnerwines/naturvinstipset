@@ -47,12 +47,12 @@ const PROFILE_LABELS: { key: keyof Filters["profile"]; label: string }[] = [
 
 /* ── Wine type colors ──────────────────────────────────────────────────────── */
 const TYPE_COLORS: Record<string, string> = {
-  Vitt:        "#d4b896",
-  Rött:        "#8a4a4a",
-  Rosé:        "#d4879a",
-  Orange:      "#d4886a",
-  "Pét Nat":   "#8aaa7a",
-  Mousserande: "#7a9ab4",
+  Vitt:        "var(--wine-vitt)",
+  Rött:        "var(--wine-rott)",
+  Rosé:        "var(--wine-rose)",
+  Orange:      "var(--wine-orange)",
+  "Pét Nat":   "var(--wine-petnat)",
+  Mousserande: "var(--wine-mousserande)",
 };
 
 /* ── Type filter pill (rounded, color-coded) ───────────────────────────────── */
@@ -76,7 +76,7 @@ function Pill({ active, onClick, children }: { active: boolean; onClick: () => v
   return (
     <button
       onClick={onClick}
-      className={`text-[9px] font-bold tracking-[0.18em] uppercase px-2.5 py-1 border transition-colors whitespace-nowrap
+      className={`text-[9px] font-bold px-2.5 py-1 border transition-colors whitespace-nowrap
         ${active
           ? "bg-[var(--fg)] text-[var(--bg)] border-[var(--fg)]"
           : "border-[var(--rule)] text-[var(--muted)] hover:border-[var(--fg)] hover:text-[var(--fg)]"
@@ -91,7 +91,7 @@ function Pill({ active, onClick, children }: { active: boolean; onClick: () => v
 function FilterSection({ label, children }: { label: string; children: React.ReactNode }) {
   return (
     <div className="flex flex-wrap items-center gap-1.5">
-      <span className="text-[9px] font-bold tracking-[0.2em] uppercase text-[var(--faint)] w-16 shrink-0">{label}</span>
+      <span className="text-xs font-bold text-[var(--faint)] w-16 shrink-0">{label}</span>
       {children}
     </div>
   );
@@ -226,7 +226,7 @@ export default function WineGrid({ entries }: { entries: WineEntry[] }) {
         <div className="flex items-center justify-between gap-4">
           <button
             onClick={() => setFiltersOpen(o => !o)}
-            className="flex items-center gap-2 text-[10px] font-bold tracking-[0.2em] uppercase text-[var(--muted)] hover:text-[var(--fg)] transition-colors shrink-0"
+            className="flex items-center gap-2 text-xs font-bold text-[var(--muted)] hover:text-[var(--fg)] transition-colors shrink-0"
           >
             <svg className={`w-3 h-3 transition-transform duration-200 ${filtersOpen ? "rotate-180" : ""}`} fill="none" stroke="currentColor" strokeWidth="2.5" viewBox="0 0 24 24">
               <path strokeLinecap="round" strokeLinejoin="round" d="M3 4h18M7 12h10M11 20h2" />
@@ -252,7 +252,7 @@ export default function WineGrid({ entries }: { entries: WineEntry[] }) {
         {hasFilters && (
           <button
             onClick={() => setFilters(empty)}
-            className="mt-2 text-[9px] tracking-[0.15em] uppercase text-[var(--faint)] hover:text-[var(--fg)] transition-colors border-b border-[var(--rule)] pb-px"
+            className="mt-2 text-xs text-[var(--faint)] hover:text-[var(--fg)] transition-colors border-b border-[var(--rule)] pb-px"
           >
             Rensa filter
           </button>
@@ -338,7 +338,7 @@ export default function WineGrid({ entries }: { entries: WineEntry[] }) {
             <div className="flex flex-wrap gap-3">
               {PROFILE_LABELS.map(({ key, label }) => (
                 <div key={key} className="flex items-center gap-2">
-                  <span className="text-[9px] tracking-[0.15em] uppercase text-[var(--muted)] w-14">{label}</span>
+                  <span className="text-xs text-[var(--muted)] w-14">{label}</span>
                   <div className="flex gap-1">
                     {[1, 2, 3, 4, 5].map(n => (
                       <button
@@ -367,7 +367,7 @@ export default function WineGrid({ entries }: { entries: WineEntry[] }) {
 
       {/* ── Result count ───────────────────────────────────────────────────── */}
       {hasFilters && (
-        <p className="text-[10px] tracking-[0.15em] uppercase text-[var(--muted)] mb-6">
+        <p className="text-xs text-[var(--muted)] mb-6">
           {ranked.length} {ranked.length === 1 ? "vin" : "viner"} matchar
         </p>
       )}

@@ -1,7 +1,7 @@
 import { describe, expect, it } from "vitest";
 import sharp from "sharp";
 import type { Wine } from "./blob";
-import { blobImageSrc, imageKey, mapLimit, needsImageMigration, processBottleImage } from "./wineImages";
+import { blobImageSrc, cutOutBackground, imageKey, mapLimit, needsImageMigration, processBottleImage } from "./wineImages";
 
 /** En "flaska" (rektangel) mitt på en bakgrund. */
 async function bottle(opts: { w: number; h: number; bw: number; bh: number; bg: { r: number; g: number; b: number; alpha: number } }) {
@@ -91,5 +91,22 @@ describe("hjälpfunktioner", () => {
     });
     expect(res).toEqual([2, 4, 6, 8, 10, 12, 14, 16]);
     expect(peak).toBeLessThanOrEqual(3);
+  });
+});
+
+describe("cutOutBackground", () => {
+  const photo = (bottle: boolean) => sharp({ create: { width: 120, height: 200, channels: 3, background: { r: 190, g: 196, b: 200 } } })
+    .composite(bottle ? [{ input: { create: { width: 30, height: 150, channels: 3, background: { r: 40, g: 30, b: 20 } } }, left: 45, top: 30 }] : [])
+    .jpeg().toBuffer();
+  it("gör den enfärgade bakgrunden genomskinlig men behåller flaskan", async () => {
+    const out = await cutOutBackground(await photo(true));
+    expect(out).not.toBeNull();
+    const { data, info } = await sharp(out!).raw().toBuffer({ resolveWithObject: true });
+    const alpha = (x: number, y: number) => data[(y * info.width + x) * 4 + 3];
+    expect(alpha(2, 2)).toBe(0);
+    expect(alpha(60, 100)).toBe(255);
+  });
+  it("lämnar bilder utan något motiv på bakgrunden orörda", async () => {
+    expect(await cutOutBackground(await photo(false))).toBeNull();
   });
 });

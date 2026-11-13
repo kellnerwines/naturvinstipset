@@ -44,12 +44,12 @@ export default async function BastaNaturvinNyborjarePage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }}
       />
 
-      <div className="border-b border-[var(--rule)] pt-16 pb-14 px-6">
+      <div className="border-b-[3px] border-[var(--ink)] pt-16 pb-14 px-6">
         <div className="max-w-2xl mx-auto">
-          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--muted)] mb-4">
+          <p className="inline-block self-start bg-[var(--accent)] text-[var(--fg)] border-2 border-[var(--ink)] text-sm font-bold px-2 py-0.5 mb-4">
             Guide
           </p>
-          <h1 className="text-3xl md:text-5xl font-extrabold text-[var(--fg)] mb-4 leading-tight tracking-tight">
+          <h1 className="text-5xl md:text-7xl mb-4">
             Bästa naturvinet för nybörjare
           </h1>
           <p className="text-base text-[var(--muted)] leading-relaxed max-w-lg">
@@ -94,12 +94,12 @@ export default async function BastaNaturvinNyborjarePage() {
             Fler guider
           </p>
           <div className="flex flex-wrap gap-2">
-            <Link href="/basta-naturvin-under-200-kr" className="text-sm border border-black/10 px-4 py-2 rounded-full hover:border-[var(--green)] transition-colors">Under 200 kr</Link>
-            <Link href="/rott" className="text-sm border border-black/10 px-4 py-2 rounded-full hover:border-[var(--green)] transition-colors">Bästa röda naturvinet</Link>
-            <Link href="/vitt" className="text-sm border border-black/10 px-4 py-2 rounded-full hover:border-[var(--green)] transition-colors">Bästa vita naturvinet</Link>
-            <Link href="/orange" className="text-sm border border-black/10 px-4 py-2 rounded-full hover:border-[var(--green)] transition-colors">Bästa orangevinet</Link>
-            <Link href="/pet-nat" className="text-sm border border-black/10 px-4 py-2 rounded-full hover:border-[var(--green)] transition-colors">Bästa pét nat</Link>
-            <Link href="/basta-naturvin-till-mat" className="text-sm border border-black/10 px-4 py-2 rounded-full hover:border-[var(--green)] transition-colors">Till mat</Link>
+            <Link href="/basta-naturvin-under-200-kr" className="text-sm font-bold border-2 border-[var(--ink)] text-[var(--ink)] px-4 py-2 rounded-full hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors">Under 200 kr</Link>
+            <Link href="/rott" className="text-sm font-bold border-2 border-[var(--ink)] text-[var(--ink)] px-4 py-2 rounded-full hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors">Bästa röda naturvinet</Link>
+            <Link href="/vitt" className="text-sm font-bold border-2 border-[var(--ink)] text-[var(--ink)] px-4 py-2 rounded-full hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors">Bästa vita naturvinet</Link>
+            <Link href="/orange" className="text-sm font-bold border-2 border-[var(--ink)] text-[var(--ink)] px-4 py-2 rounded-full hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors">Bästa orangevinet</Link>
+            <Link href="/pet-nat" className="text-sm font-bold border-2 border-[var(--ink)] text-[var(--ink)] px-4 py-2 rounded-full hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors">Bästa pét nat</Link>
+            <Link href="/basta-naturvin-till-mat" className="text-sm font-bold border-2 border-[var(--ink)] text-[var(--ink)] px-4 py-2 rounded-full hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors">Till mat</Link>
           </div>
         </div>
       </div>

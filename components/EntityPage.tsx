@@ -32,10 +32,10 @@ export default function EntityPage({ eyebrow, title, intro, note, facts, wines, 
         ...(schema ? [schema] : []),
       ]} />
 
-      <div className="border-b border-[var(--rule)] pt-16 pb-14 px-6">
+      <div className="border-b-[3px] border-[var(--ink)] pt-16 pb-14 px-6">
         <div className="max-w-2xl mx-auto">
-          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--muted)] mb-4">{eyebrow}</p>
-          <h1 className="text-3xl md:text-5xl font-extrabold text-[var(--fg)] mb-4 leading-tight tracking-tight">{title}</h1>
+          <p className="inline-block self-start bg-[var(--accent)] text-[var(--fg)] border-2 border-[var(--ink)] text-sm font-bold px-2 py-0.5 mb-4">{eyebrow}</p>
+          <h1 className="text-5xl md:text-7xl mb-4">{title}</h1>
           <p className="text-base text-[var(--muted)] leading-relaxed max-w-lg">{intro}</p>
           {note && <p className="text-base text-[var(--muted)] leading-relaxed max-w-lg mt-4">{note}</p>}
         </div>
@@ -49,7 +49,7 @@ export default function EntityPage({ eyebrow, title, intro, note, facts, wines, 
                 <dt className="text-[var(--muted)] w-24 shrink-0">{f.label}</dt>
                 <dd className="flex flex-wrap gap-x-3 gap-y-1">
                   {f.links.map((l) => (
-                    <Link key={l.href + l.label} href={l.href} className="font-medium underline underline-offset-2 decoration-black/20 hover:text-[var(--green)]">{l.label}</Link>
+                    <Link key={l.href + l.label} href={l.href} className="font-medium underline underline-offset-2 decoration-2 text-[var(--ink)] hover:text-[var(--accent)]">{l.label}</Link>
                   ))}
                 </dd>
               </div>
@@ -69,7 +69,7 @@ export default function EntityPage({ eyebrow, title, intro, note, facts, wines, 
             <p className="text-sm font-semibold text-[var(--muted)] mb-4 uppercase tracking-wider">{related.heading}</p>
             <div className="flex flex-wrap gap-2">
               {related.links.map((g) => (
-                <Link key={g.href} href={g.href} className="text-sm border border-black/10 px-4 py-2 rounded-full hover:border-[var(--green)] transition-colors">
+                <Link key={g.href} href={g.href} className="text-sm font-bold border-2 border-[var(--ink)] text-[var(--ink)] px-4 py-2 rounded-full hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors">
                   {g.label}
                 </Link>
               ))}
@@ -92,9 +92,9 @@ export function EntityIndex({ title, intro, items, crumb, path }: {
   return (
     <div>
       <JsonLd data={breadcrumbJsonLd([{ name: crumb, path }])} />
-      <div className="border-b border-[var(--rule)] pt-16 pb-14 px-6">
+      <div className="border-b-[3px] border-[var(--ink)] pt-16 pb-14 px-6">
         <div className="max-w-2xl mx-auto">
-          <h1 className="text-3xl md:text-5xl font-extrabold text-[var(--fg)] mb-4 leading-tight tracking-tight">{title}</h1>
+          <h1 className="text-5xl md:text-7xl mb-4">{title}</h1>
           <p className="text-base text-[var(--muted)] leading-relaxed max-w-lg">{intro}</p>
         </div>
       </div>
@@ -102,7 +102,7 @@ export function EntityIndex({ title, intro, items, crumb, path }: {
         {items.map((it) => (
           <li key={it.href}>
             <Link href={it.href} className="flex items-baseline justify-between gap-3 py-2 border-b border-black/5 group">
-              <span className="font-medium group-hover:text-[var(--green)] transition-colors">
+              <span className="font-medium group-hover:text-[var(--accent)] transition-colors">
                 {it.label}
                 {it.sub && <span className="block text-xs font-normal text-[var(--muted)]">{it.sub}</span>}
               </span>
