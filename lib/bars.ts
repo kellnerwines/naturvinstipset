@@ -249,7 +249,7 @@ export const bars: Bar[] = [
   },
   {
     slug: "lokal-uppsala", name: "Lokal", city: "Uppsala", address: "Geijersgatan 23A", neighborhood: "Luthagen",
-    lat: 59.86147, lng: 17.61776, website: "https://lokalluthagen.se",
+    lat: 59.86147, lng: 17.61776, website: "https://lokalluthagen.se", instagram: "lokalvinbar",
     type: "Vinbar", wine_focus: "Naturvin", food: true,
     description: "Vinbar i hörnet Geijersgatan–Kyrkogårdsgatan i Luthagen, en samlingspunkt för vinälskare i Uppsala. Här ordnas också vinprovningar, och bord går att boka.",
   },
