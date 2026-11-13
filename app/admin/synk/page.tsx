@@ -7,6 +7,7 @@ import { isAuthenticated } from "@/lib/auth";
 import { getSyncLog, getWines } from "@/lib/blob";
 import type { SyncLogEntry } from "@/lib/sync/run";
 import { TAX_HIDDEN } from "@/lib/sync/apply";
+import SyncNowButton from "@/components/admin/SyncNowButton";
 
 export const dynamic = "force-dynamic";
 export const metadata: Metadata = { title: "Synk av webbutiker", robots: { index: false, follow: false } };
@@ -17,6 +18,14 @@ export default async function SynkPage() {
   if (!(await isAuthenticated())) redirect("/admin");
   const [log, wines] = await Promise.all([getSyncLog<SyncLogEntry>(), getWines()]);
   const hidden = wines.filter((w) => w.syncHidden === TAX_HIDDEN);
+  // Uppskattad tid för "Synka nu": medianen av de senaste körningarna mot webbutikerna (inte nattens Systembolaget-kontroll).
+  const durations = log
+    .filter((e) => !e.dryRun && e.reports.some((r) => r.shop !== "Systembolaget"))
+    .slice(0, 5)
+    .map((e) => (Date.parse(e.finishedAt) - Date.parse(e.startedAt)) / 1000)
+    .filter((s) => s > 0)
+    .sort((a, b) => a - b);
+  const estimateSeconds = Math.round(durations.length ? durations[Math.floor(durations.length / 2)] : 180);
 
   const card = "border border-[var(--rule)] rounded-lg p-5";
   const th = "text-left text-[11px] font-semibold tracking-[0.12em] uppercase text-[var(--muted)] pb-2";
@@ -30,16 +39,17 @@ export default async function SynkPage() {
       </div>
 
       <div className="max-w-5xl mx-auto px-6 py-8 space-y-8">
-        <form action="/api/cron/sync" method="post" className={`${card} flex flex-wrap items-center justify-between gap-4`}>
+        <div className={`${card} flex flex-wrap items-start justify-between gap-4`}>
           <div className="max-w-xl">
             <h2 className="font-bold">Vin &amp; Natur, Flaskvis, Philipson Wine, Wine Trade och Just Wine</h2>
             <p className="text-sm text-[var(--muted)] mt-1">
               Synken körs automatiskt den 1:a varje månad. Den uppdaterar pris och lagerstatus, lägger till nya viner och markerar
-              slutsålda. Låsta fält skrivs aldrig över. Det tar några minuter.
+              slutsålda. Låsta fält skrivs aldrig över. Brukar ta {Math.max(1, Math.round(estimateSeconds / 60))} min.
+              Systembolaget kontrolleras varje natt och ingår inte här.
             </p>
           </div>
-          <button className="bg-[var(--fg)] text-white text-sm px-4 py-2 rounded">Synka nu</button>
-        </form>
+          <SyncNowButton estimateSeconds={estimateSeconds} />
+        </div>
 
         {hidden.length ? (
           <div className={`${card} bg-[var(--amber-light)]`}>
