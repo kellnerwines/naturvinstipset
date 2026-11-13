@@ -5,6 +5,7 @@ import { getWines } from "@/lib/blob";
 import { ANSWER_PAGES, SITE } from "@/lib/answers";
 import { toCompassWine, type CompassWine } from "@/lib/compass/engine";
 import { bars, CITIES } from "@/lib/bars";
+import { SHOPS } from "@/lib/shops";
 import { countriesOf, grapesIn, MIN_INDEXED, producersOf } from "@/lib/entities";
 
 export const dynamic = "force-dynamic";
@@ -53,6 +54,8 @@ Svaret innehåller namn, producent, land, druva, pris i SEK inklusive skatt, but
 ${ANSWER_PAGES.map((p) => `- [${p.question}](${SITE}/svar/${p.slug}): ${p.lead}`).join("\n")}
 
 ## Guider och listor
+- [Alla naturviner](${SITE}/viner): hela biblioteket, filtrerbart med t.ex. ?butik=wine-trade&farg=rott&land=frankrike&pris=300
+- Per butik: ${SHOPS.map((s) => `[${s.name}](${SITE}/butiker/${s.slug})`).join(", ")}
 - [Topp 100](${SITE}/topp-100): de bäst betygsatta naturvinerna på Systembolaget, kompletterade med naturviner med hemleverans
 - [Rött naturvin](${SITE}/rott), [vitt naturvin](${SITE}/vitt), [orangevin](${SITE}/orange), [pét-nat](${SITE}/pet-nat)
 - [Naturvin under 200 kr](${SITE}/basta-naturvin-under-200-kr), [för nybörjare](${SITE}/basta-naturvin-for-nyborjare), [till mat](${SITE}/basta-naturvin-till-mat)

@@ -5,6 +5,7 @@ import { deriveFoodCategories, fillFoodCategories } from "./food";
 import {
   deriveWineType, findGrapes, flaskvisScale, parseFlaskvisPage, parseVinNaturPage, splitOrigin, vinNaturVariant,
   isPhilipsonBottle, philipsonName, philipsonProducer, philipsonWineType, isWineTradeBottle, parseWineTradeProduct,
+  isJustWineBottle, parseJustWineProduct, JUST_WINE_TAX_TEXT,
   type PhilipsonProduct, type ShopifyProduct,
 } from "./parse";
 
@@ -97,6 +98,27 @@ describe("Philipson Wine", () => {
   it("bara 75 cl", () => {
     expect(isPhilipsonBottle(p({}))).toBe(true);
     expect(isPhilipsonBottle(p({ bottleSizeCl: "150" }))).toBe(false);
+  });
+});
+
+describe("Just Wine", () => {
+  const p = (o: Partial<ShopifyProduct>): ShopifyProduct => ({
+    handle: "x", title: "2023 Saint Jean du Barroux La Pierre Noire", product_type: "", tags: ["Frankrike", "vinflaska"], vendor: "Saint Jean du Barroux",
+    body_html: "<p>Mörkt och kryddigt.</p><p>Producent: Saint Jean du Barroux</p><p>Druva: Grenache och syrah</p><p>Region: Ventoux, Södra Rhone-dalen</p><p>Odling: Ekologisk</p>",
+    variants: [{ title: "Default Title", price: "389.00", available: true }], ...o,
+  });
+  it("producent ur butikens fält, druvor och region ur faktadelen, land ur taggarna", () => {
+    expect(parseJustWineProduct(p({}))).toMatchObject({ producer: "Saint Jean du Barroux", name: "La Pierre Noire", year: "2023", region: "Södra Rhone-dalen", country: "Frankrike", wineType: "Rött", grapes: ["Grenache", "Syrah"] });
+  });
+  it("bubbel och felstavad producent", () => {
+    const x = parseJustWineProduct(p({ title: "2024 Il Farneto Frisant Rosso", vendor: "Il Farneto", tags: ["Italien", "vinflaska"], body_html: "<p>Rött och bubblande.</p><p>Druva: Olika lambruscodruvor</p>" }));
+    expect(x).toMatchObject({ producer: "Il Farneto", name: "Frisant Rosso", wineType: "Mousserande", country: "Italien" });
+    expect(parseJustWineProduct(p({ title: "Ciallarosso 2021", vendor: "Rochi di Cialla", tags: ["Italien", "vinflaska"] })).producer).toBe("Ronchi di Cialla");
+  });
+  it("bara flaskor, och skattetexten känns igen", () => {
+    expect(isJustWineBottle(p({}))).toBe(true);
+    expect(isJustWineBottle(p({ title: "Vinterlådan 2026", tags: ["vinlåda"] }))).toBe(false);
+    expect(JUST_WINE_TAX_TEXT.test("Ordinarie pris 242 SEK Inklusive moms och svensk alkoholskatt.")).toBe(true);
   });
 });
 

@@ -2,6 +2,7 @@ import type { MetadataRoute } from "next";
 import { getWines, getBlogs, isPostLive } from "@/lib/blob";
 import { bars } from "@/lib/bars";
 import { ANSWER_PAGES } from "@/lib/answers";
+import { SHOPS } from "@/lib/shops";
 import { countriesOf, grapesIn, MIN_INDEXED, producersOf } from "@/lib/entities";
 
 const BASE = "https://www.naturvinstipset.se";
@@ -56,6 +57,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
   // Producenter, druvor och länder med tillräckligt många viner; övriga har noindex och utelämnas.
   const live = wines.filter((w) => w.published);
   const entityRoutes: MetadataRoute.Sitemap = [
+    ...["viner", "butiker", ...SHOPS.map((s) => `butiker/${s.slug}`)].map((p) => ({ url: `${BASE}/${p}`, lastModified: new Date(), changeFrequency: "daily" as const, priority: 0.8 })),
     ...["producenter", "druvor", "land"].map((p) => ({ url: `${BASE}/${p}`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.7 })),
     ...[...countriesOf(live).values()].filter((e) => e.wines.length >= MIN_INDEXED.country)
       .map((e) => ({ url: `${BASE}/land/${e.slug}`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 })),

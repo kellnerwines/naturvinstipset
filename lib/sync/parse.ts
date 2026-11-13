@@ -31,7 +31,7 @@ const wordRe = (w: string) => new RegExp(`(^|[^\\p{L}])${w.replace(/[.*+?^${}()|
 export const BLUE_GRAPES = [
   "Pinot Noir", "Gamay", "Syrah", "Grenache", "Garnacha", "Mourvèdre", "Carignan", "Cinsault", "Merlot",
   "Cabernet Sauvignon", "Cabernet Franc", "Malbec", "Côt", "Tempranillo", "Sangiovese", "Nebbiolo", "Barbera",
-  "Dolcetto", "Montepulciano", "Nero d'Avola", "Frappato", "Nerello Mascalese", "Aglianico", "Lambrusco",
+  "Dolcetto", "Montepulciano", "Nero d'Avola", "Frappato", "Nerello Mascalese", "Aglianico", "Lambrusco", "Schioppettino",
   "Zweigelt", "Blaufränkisch", "St. Laurent", "Poulsard", "Trousseau", "Pinot Meunier", "Mondeuse",
   "Grolleau", "Pineau d'Aunis", "Touriga Nacional", "Baga", "Castelão", "Ramisco", "Jaen", "Alfrocheiro",
   "Tinta Roriz", "Rufete", "Tinto Cão", "Vranac", "Teroldego", "Lagrein", "Schiava", "Corvina", "Refosco",
@@ -43,7 +43,7 @@ export const BLUE_GRAPES = [
 
 /** Gröna druvor. */
 export const GREEN_GRAPES = [
-  "Chardonnay", "Sauvignon Blanc", "Chenin Blanc", "Riesling", "Grüner Veltliner", "Gewürztraminer", "Muscat",
+  "Chardonnay", "Sauvignon Blanc", "Spergola", "Chenin Blanc", "Riesling", "Grüner Veltliner", "Gewürztraminer", "Muscat",
   "Muskateller", "Pinot Gris", "Pinot Grigio", "Pinot Blanc", "Weissburgunder", "Auxerrois", "Sylvaner",
   "Silvaner", "Savagnin", "Melon de Bourgogne", "Aligoté", "Viognier", "Marsanne", "Roussanne", "Grenache Blanc",
   "Macabeu", "Macabeo", "Xarel·lo", "Xarello", "Parellada", "Albariño", "Godello", "Verdejo", "Arinto",
@@ -157,7 +157,7 @@ export function heuristicProfile(text: string, wineType: string): Pick<Wine, "sy
 
 export type ShopifyVariant = { title: string; price: string; available: boolean };
 export type ShopifyProduct = {
-  handle: string; title: string; product_type: string; tags: string[] | string; body_html: string;
+  handle: string; title: string; product_type: string; tags: string[] | string; body_html: string; vendor?: string;
   variants: ShopifyVariant[]; images?: { src: string }[];
 };
 
@@ -387,4 +387,53 @@ export function parseWineTradeProduct(p: ShopifyProduct): { producer?: string; n
     ?? COLOUR_WORDS.find(([re]) => re.test(p.title))?.[1]
     ?? WT_TYPES[lower(p.product_type)];
   return { producer, name: name || p.title, year, region, country, wineType: colour, grapes };
+}
+
+// ─── Just Wine (Shopify, samlingen Våra naturviner) ──────────────────────────
+
+export const JUST_WINE_TAX_TEXT = /inklusive\s+moms\s+och\s+svensk\s+alkoholskatt/i;
+
+/** Stavfel i butikens producentfält. */
+const JW_PRODUCERS: Record<string, string> = { "Rochi di Cialla": "Ronchi di Cialla" };
+
+/** Bara enskilda flaskor (taggen "vinflaska"), inte lådor. */
+export const isJustWineBottle = (p: ShopifyProduct) =>
+  tagList(p.tags).some((t) => t.toLowerCase() === "vinflaska") && !/låda|lådan|box|kartong/i.test(p.title) && Number(p.variants[0]?.price) > 0;
+
+/** Ett fält ur beskrivningens faktadel, t.ex. "Druva:" eller "Region:". */
+const jwField = (text: string, label: string) =>
+  text.match(new RegExp(`${label}:\\s*(.*?)(?=\\s+(?:Producent|Druva|Region|Odling|Vinifiering|Alkohol|Lagring|Jäsning)\\s*:|$)`, "i"))?.[1]?.trim();
+
+/**
+ * Producent ur butikens producentfält, namn och år ur titeln, druvor och region ur
+ * beskrivningens faktadel ("Druva: …", "Region: …") och land ur taggarna.
+ */
+export function parseJustWineProduct(p: ShopifyProduct): { producer?: string; name: string; year: string; region?: string; country: string; wineType?: string; grapes: string[] } {
+  const vendor = p.vendor?.trim();
+  const producer = vendor ? JW_PRODUCERS[vendor] ?? vendor : undefined;
+  const text = htmlText(p.body_html ?? "");
+  const year = p.title.match(/(?:19|20)\d{2}/)?.[0] ?? "NV";
+  const esc = (x: string) => x.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
+  let name = p.title.replace(/(?:19|20)\d{2}/, "");
+  for (const n of [producer, vendor].filter((x): x is string => !!x)) name = name.replace(new RegExp(esc(n), "i"), "");
+  name = name.replace(/\s{2,}/g, " ").trim();
+
+  const country = COUNTRIES.find((c) => tagList(p.tags).includes(c)) ?? "";
+  // Regionen är sista delen som inte är ett land; ibland står en beskrivning i fältet, och då hoppas den över.
+  const regionParts = (jwField(text, "Region") ?? "").split(",").map((x) => x.trim())
+    .filter((x) => x && !COUNTRIES.includes(x) && /^[A-ZÀ-Ý]/.test(x) && !/\s(och|på|med)\s/.test(x));
+  const region = regionParts[regionParts.length - 1] || undefined;
+  const grapeText = jwField(text, "Druva") ?? "";
+  const grapes = findGrapes(grapeText).length ? findGrapes(grapeText) : findGrapes(p.title);
+
+  // Färgen: bubbel först, sedan druvorna, färgord i titeln och sist beskrivningens "rött"/"vitt".
+  const head = `${p.title} ${text.slice(0, 300)}`;
+  const lower = head.toLowerCase();
+  const wineType = /pet[ -]?nat|ancestral/.test(lower) ? "Pét Nat"
+    : /frisant|frizzante|prosecco|col fondo|mousserande|bubbel|brut nature|spumante/.test(lower) ? "Mousserande"
+    : deriveWineType(p.title, tagList(p.tags), grapes)
+      ?? (/rosato|rosé/i.test(p.title) ? "Rosé" : undefined)
+      ?? COLOUR_WORDS.find(([re]) => re.test(p.title))?.[1]
+      ?? (/(^|[^\p{L}])rött($|[^\p{L}])/u.test(lower) ? "Rött" : /(^|[^\p{L}])vitt($|[^\p{L}])/u.test(lower) ? "Vitt" : undefined);
+  return { producer, name: name || p.title, year, region, country, wineType, grapes };
 }

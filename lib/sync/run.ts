@@ -4,7 +4,7 @@
 import { backupWines, getSyncLog, getWines, putWineImage, saveSyncLog, saveWines, type Wine } from "../blob";
 import { downloadImage, imageKey, mapLimit, needsImageMigration, processBottleImage } from "../wineImages";
 import { applySync, type ShopReport } from "./apply";
-import { flaskvisFeed, philipsonFeed, vinNaturFeed, wineTradeFeed } from "./feeds";
+import { flaskvisFeed, justWineFeed, philipsonFeed, vinNaturFeed, wineTradeFeed } from "./feeds";
 import { fillFoodCategories } from "./food";
 import { systembolagetFeed } from "./systembolaget";
 
@@ -22,7 +22,7 @@ export type SyncLogEntry = {
 const LOG_KEEP = 24;
 
 // "systembolaget" körs bara när den anges, av en egen daglig cron (se systembolaget.ts).
-export const SYNC_SHOPS = ["vinnatur", "flaskvis", "philipson", "winetrade", "systembolaget"] as const;
+export const SYNC_SHOPS = ["vinnatur", "flaskvis", "philipson", "winetrade", "justwine", "systembolaget"] as const;
 export type SyncShop = (typeof SYNC_SHOPS)[number];
 
 const knownIds = (wines: Wine[], source: string) =>
@@ -41,6 +41,7 @@ export async function runSync(opts: { trigger: "cron" | "admin"; dryRun?: boolea
     !opts.only || opts.only === "flaskvis" ? flaskvisFeed(knownIds(existing, "flaskvis.se"), deadline, now) : null,
     !opts.only || opts.only === "philipson" ? philipsonFeed(knownIds(existing, "philipsonwine.se"), deadline, now) : null,
     !opts.only || opts.only === "winetrade" ? wineTradeFeed(knownIds(existing, "winetrade.se"), deadline, now) : null,
+    !opts.only || opts.only === "justwine" ? justWineFeed(knownIds(existing, "justwine.se"), deadline, now) : null,
     opts.only === "systembolaget" ? systembolagetFeed(existing, deadline, now) : null,
   ]);
   const { wines, reports, alerts } = applySync(existing, feeds.filter((f) => f !== null), now);

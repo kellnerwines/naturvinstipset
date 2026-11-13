@@ -30,6 +30,25 @@ describe("Systembolagets produktsida", () => {
     expect(parseSystembolagetPage(page("Heinrich", "Leithaberg Blaufränkisch", "Weingut Heinrich"))).toMatchObject({ name: "Leithaberg Blaufränkisch", producer: "Heinrich" });
     expect(parseSystembolagetPage(page("Orange", "Arndorfer", "Weingut Arndorfer"))).toMatchObject({ name: "Orange", producer: "Arndorfer", wineType: "Orange" });
   });
+  it("producenten i fetstil när producentnamnet är längre, t.ex. Weingut Rückrich Gbr", () => {
+    const page = html
+      .replace('"productNameBold": "Friedelsheimer Rosengarten Chardonnay"', '"productNameBold": "Niklas Rückrich"')
+      .replace('"productNameThin": "Scheuermann"', '"productNameThin": "Chardonnay"')
+      .replace('"producerName": "Scheuermann"', '"producerName": "Weingut Rückrich Gbr"');
+    expect(parseSystembolagetPage(page)).toMatchObject({ name: "Chardonnay", producer: "Niklas Rückrich" });
+  });
+  it("beställningsvaror går att köpa om leverantören har dem", () => {
+    const order = (supplierOut: boolean) => html
+      .replace('"state": "Available"', '"state": "SupplierProduct"')
+      .replace('"availableNumberOfStores": 5', '"availableNumberOfStores": 0')
+      .replace('"isSupplierNotAvailable": true', `"isSupplierNotAvailable": ${supplierOut}`);
+    expect(parseSystembolagetPage(order(false))?.inStock).toBe(true);
+    expect(parseSystembolagetPage(order(true))?.inStock).toBe(false);
+  });
+  it("druvor och förpackning", () => {
+    const page = html.replace('"packagingLevel1": "Flaska"', '"packagingLevel1": "Multipack", "grapes": "Pinot noir;Neuburger"');
+    expect(parseSystembolagetPage(page)).toMatchObject({ packaging: "Multipack", grapes: ["Pinot Noir", "Neuburger"] });
+  });
   it("utan produktdata blir det inget", () => {
     expect(parseSystembolagetPage("<html></html>")).toBeUndefined();
   });
