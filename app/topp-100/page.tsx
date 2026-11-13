@@ -45,7 +45,7 @@ export default async function Topp100Page() {
 
       {/* ── Hero: fotot som bakgrund under blått bläck. Lågt nog att listan syns direkt under. ── */}
       <section
-        className="relative border-b-[3px] border-[var(--ink)] bg-[var(--ink)] bg-cover bg-center"
+        className="relative border-b-[3px] border-[var(--ink)] bg-[var(--ink)] bg-cover bg-[center_65%]"
         style={{ backgroundImage: "url(/topp-100-hero.jpg)" }}
       >
         <div className="absolute inset-0 bg-[var(--ink)] opacity-60" aria-hidden="true" />
