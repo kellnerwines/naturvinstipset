@@ -57,6 +57,10 @@ export const SB_IMPORT: { nr: string; producer: string; importer: string }[] = [
     .map(([nr, producer]) => ({ nr, producer, importer: "Vin Vivant" })),
   ...([["3319701", "friberg"]] as const)
     .map(([nr, producer]) => ({ nr, producer, importer: "J. Friberg" })),
+  ...([["7452401", "fidesser"], ["7701301", "fidesser"], ["7701401", "fidesser"], ["7398001", "fidesser"], ["7134001", "fidesser"],
+    ["7764401", "fidesser"], ["7077401", "fidesser"], ["7308801", "cruchon"], ["7431001", "cruchon"], ["7603001", "cruchon"],
+    ["7650801", "colombe"], ["7364601", "colombe"]] as const)
+    .map(([nr, producer]) => ({ nr, producer, importer: "Vinum Alpes" })),
 ];
 
 /** Artikelnumret i en Systembolaget-länk, t.ex. "9323901" ur …/fred-9323901/. */
@@ -106,10 +110,14 @@ export function parseSystembolagetPage(html: string): SbProduct | undefined {
   const full = str("producerName") || thin;
   const has = (x: string) => !!x && full.toLowerCase().includes(x.toLowerCase());
   // Delar ett ord på minst fyra bokstäver med producentnamnet, t.ex. "Niklas Rückrich" och "Weingut Rückrich Gbr".
-  const shares = (x: string) => x.toLowerCase().split(/[\s-]+/).some((w) => w.length >= 4 && full.toLowerCase().split(/[\s-]+/).includes(w));
+  const words = (x: string) => x.toLowerCase().split(/[^\p{L}]+/u);
+  const shares = (x: string) => words(x).some((w) => w.length >= 4 && words(full).includes(w));
   // Systembolaget skriver antingen producenten i fetstil och vinet under ("Scheuermann" /
   // "Vin de Weiß") eller tvärtom ("Orange" / "Arndorfer"). Det kortare producentnamnet används.
-  const [name, producer] = has(bold) && thin ? [thin, bold] : has(thin) ? [bold, thin] : shares(bold) && thin ? [thin, bold] : [bold, full];
+  // "Fidesser*Orbis" / "White": producenten före stjärnan, serien och vinet efter.
+  const star = bold.match(/^([^*]+)\*(.+)$/);
+  const [name, producer] = star ? [`${star[2].trim()} ${thin}`.trim(), star[1].trim()]
+    : has(bold) && thin ? [thin, bold] : has(thin) ? [bold, thin] : shares(bold) && thin ? [thin, bold] : [bold, full];
   const text = `${str("productNameBold")} ${thin}`;
   // Orange och pét-nat har ingen egen kategori hos Systembolaget; de syns i namnet.
   const wineType = /pet[ -]?nat|pétillant/i.test(text) ? "Pét Nat"

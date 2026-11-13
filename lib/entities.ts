@@ -17,6 +17,7 @@ export function entitySlug(s: string): string {
 /** Samma producent under olika namn. Nyckel: slug av namnet i datan, värde: namnet som visas. */
 const PRODUCER_ALIASES: Record<string, string> = {
   "julien-meyer": "Domaine Julien Meyer",
+  "weingut-fidesser": "Fidesser",
 };
 
 /** Samma druva under olika namn eller stavningar. Nyckel: slug, värde: namnet som visas. */
