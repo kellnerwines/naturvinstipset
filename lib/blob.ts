@@ -1,5 +1,6 @@
 import path from "path";
 import { readFile, writeFile, mkdir } from "fs/promises";
+import { withCutoutImage } from "./imageOverrides";
 
 // ─── Types ────────────────────────────────────────────────────────────────────
 
@@ -161,7 +162,7 @@ const RATINGS_KEY           = "naturvin/ratings.json";
 const BLOGS_KEY             = "naturvin/blogs.json";
 const BLOG_INTERACTIONS_KEY = "naturvin/blog-interactions.json";
 
-export const getWines   = () => readJson<Wine>(WINES_KEY);
+export const getWines   = async () => (await readJson<Wine>(WINES_KEY)).map(withCutoutImage);
 export const saveWines  = (d: Wine[]) => writeJson(WINES_KEY, d);
 
 export const getRatings  = () => readJson<Rating>(RATINGS_KEY);
