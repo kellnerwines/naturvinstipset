@@ -80,24 +80,21 @@ function ProfileMeter({ label, value }: { label: string; value: number }) {
   const filled = Math.round(Math.max(0, Math.min(5, value)));
   return (
     <div className="flex items-center gap-4">
-      <span className="text-xs text-[var(--muted)] w-20 shrink-0">{label}</span>
+      <span className="text-sm font-bold w-20 shrink-0">{label}</span>
       <div className="flex gap-1.5">
         {[1, 2, 3, 4, 5].map((n) => (
-          <div key={n} className={`h-1.5 w-8 rounded-full ${n <= filled ? "bg-[var(--fg)]" : "bg-[var(--fg)] opacity-10"}`} />
+          <div key={n} className={`h-3 w-9 border-2 border-[var(--ink)] ${n <= filled ? "bg-[var(--ink)]" : ""}`} />
         ))}
       </div>
-      <span className="text-xs text-[var(--faint)]">{value}/5</span>
+      <span className="text-sm text-[var(--muted)]">{value}/5</span>
     </div>
   );
 }
 
-const typeColor: Record<string, string> = {
-  Rött:        "bg-red-100 text-red-700",
-  Vitt:        "bg-yellow-100 text-yellow-700",
-  Rosé:        "bg-pink-100 text-pink-700",
-  Orange:      "bg-orange-100 text-orange-700",
-  Mousserande: "bg-blue-100 text-blue-700",
-  "Pét Nat":   "bg-purple-100 text-purple-700",
+// Platta tryckfärger per vintyp (globals.css), samma som på vinkorten.
+const typeField: Record<string, string> = {
+  Rött: "var(--wine-rott)", Vitt: "var(--wine-vitt)", Rosé: "var(--wine-rose)", Orange: "var(--wine-orange)",
+  Mousserande: "var(--wine-mousserande)", "Pét Nat": "var(--wine-petnat)",
 };
 
 export default async function WinePage({ params }: { params: Promise<{ slug: string }> }) {
@@ -155,67 +152,69 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
   });
 
   return (
-    <div className="max-w-3xl mx-auto px-5 py-12">
+    <div className="max-w-5xl mx-auto px-5 md:px-8 py-10">
       <JsonLd data={[jsonLd, breadcrumbJsonLd([
         inTopList ? { name: "Topp 100", path: "/topp-100" } : { name: "Alla viner", path: "/viner" },
         { name: `${wine.name}${wine.year && wine.year !== "NV" ? ` ${wine.year}` : ""}`, path: `/viner/${wine.slug}` },
       ])]} />
 
-      <Link href={inTopList ? "/topp-100" : "/viner"} className="text-sm text-black/40 hover:text-[var(--green)] mb-8 inline-block">
+      <Link href={inTopList ? "/topp-100" : "/viner"} className="font-bold text-[var(--ink)] border-b-2 border-[var(--ink)] hover:text-[var(--accent)] hover:border-[var(--accent)] mb-8 inline-block">
         {inTopList ? "← Tillbaka till listan" : "← Alla viner"}
       </Link>
 
       {/* Top section */}
       <div className="grid md:grid-cols-2 gap-10 mb-14 items-start">
-        {/* Image */}
-        <div className="bg-[var(--green-light)] aspect-[3/4] rounded-xl overflow-hidden flex items-center justify-center">
+        {/* Bilden på vintypens färgfält */}
+        <div className="h-[380px] md:h-auto md:aspect-[3/4] overflow-hidden flex items-center justify-center border-[3px] border-[var(--ink)]" style={{ backgroundColor: typeField[wine.wineType] ?? "var(--surface)" }}>
           {wine.primaryImageUrl ? (
-            <Image src={wine.primaryImageUrl} alt={`${wine.name}${wine.year ? ` ${wine.year}` : ""}${wine.wineType ? ` ${wine.wineType.toLowerCase()} naturvin` : " naturvin"}${wine.country ? ` från ${wine.country}` : ""}`} width={400} height={530} className={wine.sourceImageUrl ? "object-contain w-full h-full p-8" : "object-cover w-full h-full"} unoptimized />
+            <Image src={wine.primaryImageUrl} alt={`${wine.name}${wine.year ? ` ${wine.year}` : ""}${wine.wineType ? ` ${wine.wineType.toLowerCase()} naturvin` : " naturvin"}${wine.country ? ` från ${wine.country}` : ""}`} width={400} height={530} className={wine.sourceImageUrl ? "object-contain w-full h-full p-8 mix-blend-multiply" : "object-cover w-full h-full"} unoptimized />
           ) : (
-            <span className="text-6xl">🍷</span>
+            <svg className="h-3/4 text-[var(--ink)]" viewBox="0 0 40 140" aria-hidden="true"><path d="M15 2h10v34c0 8 11 14 11 30v68a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4V66c0-16 11-22 11-30z" fill="currentColor" opacity="0.3" /></svg>
           )}
         </div>
 
         {/* Info */}
         <div>
           <div className="flex items-center gap-2 mb-3">
-            <span className={`text-xs font-medium px-2.5 py-1 rounded-full ${typeColor[wine.wineType] ?? "bg-gray-100 text-gray-600"}`}>
+            <span className="bg-[var(--accent)] text-[var(--fg)] border-2 border-[var(--ink)] text-sm font-bold px-2 py-0.5">
               {wine.wineType}
             </span>
             {wine.ownImport ? <OwnImportBadge /> : null}
           </div>
 
-          <h1 className="text-3xl md:text-4xl font-bold text-[var(--green-dark)] leading-tight mb-1">
+          <h1 className="text-6xl md:text-8xl mb-2">
             {wine.name}
           </h1>
-          {wine.year && <p className="text-lg text-black/40 mb-4">{wine.year}</p>}
+          <p className="text-xl font-bold mb-4">{wine.producer}{wine.year ? ` · ${wine.year}` : ""}</p>
 
-          <div className="mb-6">
-            <StarDisplay rating={score} count={wineRatings.length} />
-          </div>
+          {score > 0 ? (
+            <div className="mb-6">
+              <StarDisplay rating={score} count={wineRatings.length} />
+            </div>
+          ) : null}
 
-          <p className="text-black/70 leading-relaxed mb-6">{wine.description}</p>
+          <p className="text-lg leading-relaxed mb-6">{wine.description}</p>
 
           {/* Flavor tags */}
           {wine.flavorTags && wine.flavorTags.length > 0 && (
             <div className="flex flex-wrap gap-2 mb-6">
               {wine.flavorTags.map((t) => (
-                <span key={t} className="text-sm bg-[var(--green-light)] text-[var(--green-dark)] px-3 py-1 rounded-full">{t}</span>
+                <span key={t} className="text-sm font-bold border-2 border-[var(--ink)] text-[var(--ink)] px-3 py-1 rounded-full">{t}</span>
               ))}
             </div>
           )}
 
           {/* Faktaruta som definitionslista, så att varje uppgift har en tydlig etikett */}
-          <dl className="border-t border-black/8 pt-4 space-y-2 mb-6">
+          <dl className="border-t-[3px] border-[var(--ink)] mb-6">
             {specs.map((s) => (
-              <div key={s.label} className="flex justify-between text-sm gap-4">
-                <dt className="text-black/40 shrink-0">{s.label}</dt>
+              <div key={s.label} className="flex justify-between gap-4 py-2 border-b-2 border-[var(--rule)]">
+                <dt className="font-bold shrink-0">{s.label}</dt>
                 <dd className="font-medium text-right">
                   {s.links
                     ? s.links.map((l, i) => (
                         <span key={l.href}>
                           {i > 0 && ", "}
-                          <Link href={l.href} className="underline underline-offset-2 decoration-black/20 hover:text-[var(--green)]">{l.label}</Link>
+                          <Link href={l.href} className="text-[var(--ink)] underline underline-offset-2 decoration-2 hover:text-[var(--accent)]">{l.label}</Link>
                         </span>
                       ))
                     : s.value}
@@ -232,16 +231,16 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
                 target="_blank"
                 rel={l.rel}
                 className={i === 0
-                  ? "block text-center bg-[var(--green)] text-white font-semibold px-6 py-3 rounded-lg hover:bg-[var(--green-dark)] transition-colors"
-                  : "block text-center border border-[var(--green)] text-[var(--green-dark)] font-semibold px-6 py-3 rounded-lg hover:bg-[var(--green-light)] transition-colors"}
+                  ? "block text-center bg-[var(--accent)] text-[var(--fg)] border-[3px] border-[var(--ink)] font-bold text-lg px-6 py-4 rounded-full hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors"
+                  : "block text-center border-[3px] border-[var(--ink)] text-[var(--ink)] font-bold px-6 py-3 rounded-full hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors"}
               >
-                {l.label}{l.price ? `, ${l.price} kr` : ""} →
+                {l.label}{l.price ? `, ${l.price} kr` : ""}
               </a>
               <p className="text-center text-xs text-[var(--muted)] mt-1.5">{l.how}</p>
             </div>
           ))}
           {!links.length && hasAnyOffer(wine) ? (
-            <p className="text-center text-sm font-semibold border border-[var(--rule)] rounded-lg px-6 py-3">Tillfälligt slut</p>
+            <p className="text-center font-bold border-[3px] border-[var(--ink)] rounded-full px-6 py-3">Tillfälligt slut</p>
           ) : null}
           {links.length ? (
             <p className="text-[11px] text-[var(--muted)] leading-snug mt-4">{retailerNote(links)}</p>
@@ -253,7 +252,7 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
               href={importerUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="block text-center text-sm text-black/40 hover:text-[var(--green)] mt-3 underline underline-offset-2"
+              className="block text-center text-sm text-[var(--muted)] hover:text-[var(--ink)] mt-3 underline underline-offset-2"
             >
               Producenten hos Kellner & Kellner (kellnerwines.se) →
             </a>
@@ -268,7 +267,7 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
       {/* Smakprofil */}
       {(wine.syra != null || wine.fyllighet != null || wine.funk != null || wine.stravhet != null || wine.flavorNotes) && (
         <div className="mb-14 max-w-2xl">
-          <h2 className="text-sm font-semibold tracking-[0.15em] uppercase text-[var(--muted)] mb-5">Smakprofil</h2>
+          <h2 className="text-4xl mb-5">Smakprofil</h2>
           <div className="space-y-3 mb-4">
             {wine.syra      != null && <ProfileMeter label="Syra"      value={wine.syra} />}
             {wine.fyllighet != null && <ProfileMeter label="Fyllighet" value={wine.fyllighet} />}
@@ -276,18 +275,18 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
             {wine.stravhet  != null && <ProfileMeter label="Strävhet"  value={wine.stravhet} />}
           </div>
           {wine.flavorNotes && (
-            <p className="text-sm text-[var(--muted)] leading-relaxed italic mt-4">{wine.flavorNotes}</p>
+            <p className="text-[17px] leading-relaxed mt-4">{wine.flavorNotes}</p>
           )}
         </div>
       )}
 
       {/* AEO intro + long description */}
       <div className="mb-14 max-w-2xl">
-        <h2 className="text-lg font-bold text-[var(--green-dark)] mb-4">Om vinet</h2>
-        <p className="text-black/70 leading-relaxed mb-4">
+        <h2 className="text-4xl mb-4">Om vinet</h2>
+        <p className="text-[17px] leading-relaxed mb-4">
           {wine.year ? `${wine.name} ${wine.year}` : wine.name} är ett{" "}
           {wine.wineType.toLowerCase()}{" "}
-          <Link href="/vad-ar-naturvin" className="underline underline-offset-2 hover:text-[var(--green)]">naturvin</Link>
+          <Link href="/vad-ar-naturvin" className="underline underline-offset-2 hover:text-[var(--accent)]">naturvin</Link>
           {wine.country ? ` från ${wine.country}` : ""}
           {wine.region ? ` (${wine.region})` : ""}
           {wine.producer ? `, producerat av ${wine.producer}` : ""}.
@@ -298,21 +297,21 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
           {whereSentence(wine) ? ` ${whereSentence(wine)}` : ""}
         </p>
         {wine.longDescription && (
-          <p className="text-black/70 leading-relaxed whitespace-pre-line">{wine.longDescription}</p>
+          <p className="text-[17px] leading-relaxed whitespace-pre-line">{wine.longDescription}</p>
         )}
       </div>
 
       {/* Rating section */}
-      <div className="border-t border-black/8 pt-12">
-        <h2 className="text-lg font-bold text-[var(--green-dark)] mb-2">
+      <div className="border-t-[3px] border-[var(--ink)] pt-12">
+        <h2 className="text-4xl mb-2">
           Vad tycker du?
         </h2>
-        <p className="text-sm text-black/50 mb-6">
+        <p className="text-sm text-[var(--muted)] mb-6">
           Inget konto behövs. En röst per person och vin.
         </p>
         <div className="flex items-center gap-3 mb-8">
           <LikeButton wineId={wine.id} likeCount={likeCount} />
-          <span className="text-sm text-black/30">eller ge ett detaljerat betyg nedan</span>
+          <span className="text-sm text-[var(--muted)]">eller ge ett detaljerat betyg nedan</span>
         </div>
         <RatingForm wineId={wine.id} />
       </div>
@@ -320,20 +319,20 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
       {/* User reviews */}
       {wineRatings.filter((r) => r.comment).length > 0 && (
         <div className="mt-10">
-          <h3 className="text-sm font-semibold text-black/50 uppercase tracking-widest mb-4">Kommentarer</h3>
+          <h3 className="text-lg font-bold mb-4">Kommentarer</h3>
           <div className="space-y-4">
             {wineRatings
               .filter((r) => r.comment)
               .sort((a, b) => new Date(b.createdAt).getTime() - new Date(a.createdAt).getTime())
               .map((r) => (
-                <div key={r.id} className="bg-white rounded-xl p-4 border border-black/8">
+                <div key={r.id} className="bg-[var(--paper)] p-4 border-2 border-[var(--ink)]">
                   <div className="flex items-center gap-2 mb-2">
                     <StarDisplay rating={r.stars} />
-                    <span className="text-xs text-black/30">
+                    <span className="text-xs text-[var(--muted)]">
                       {new Date(r.createdAt).toLocaleDateString("sv-SE")}
                     </span>
                   </div>
-                  <p className="text-sm text-black/70">{r.comment}</p>
+                  <p className="text-[15px]">{r.comment}</p>
                 </div>
               ))}
           </div>
@@ -378,12 +377,12 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
           }),
         }}
       />
-      <div className="mt-14 max-w-2xl border-t border-black/8 pt-12">
-        <h2 className="text-lg font-bold text-[var(--green-dark)] mb-8">Vanliga frågor</h2>
+      <div className="mt-14 max-w-2xl border-t-[3px] border-[var(--ink)] pt-12">
+        <h2 className="text-4xl mb-8">Vanliga frågor</h2>
         <div className="space-y-8">
           <div>
-            <h3 className="font-semibold text-[var(--green-dark)] mb-2">Vad smakar {wine.name}?</h3>
-            <p className="text-sm text-black/70 leading-relaxed">
+            <h3 className="font-bold text-lg mb-2">Vad smakar {wine.name}?</h3>
+            <p className="text-sm text-[17px] leading-relaxed">
               {wine.flavorNotes
                 ? wine.flavorNotes
                 : `${wine.name} är ett ${wine.wineType.toLowerCase()} naturvin${wine.flavorTags?.length ? ` med smakprofil: ${wine.flavorTags.join(", ").toLowerCase()}` : ""}.${wine.syra != null ? ` Syra: ${wine.syra}/5.` : ""}${wine.fyllighet != null ? ` Fyllighet: ${wine.fyllighet}/5.` : ""}${wine.funk != null ? ` Funk: ${wine.funk}/5.` : ""}`}
@@ -391,15 +390,15 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
           </div>
           {wine.grape && (
             <div>
-              <h3 className="font-semibold text-[var(--green-dark)] mb-2">Vilka druvor ingår i {wine.name}?</h3>
-              <p className="text-sm text-black/70 leading-relaxed">
+              <h3 className="font-bold text-lg mb-2">Vilka druvor ingår i {wine.name}?</h3>
+              <p className="text-sm text-[17px] leading-relaxed">
                 {wine.name} görs på {wine.grape}{wine.country ? ` från ${wine.country}` : ""}.
               </p>
             </div>
           )}
           <div>
-            <h3 className="font-semibold text-[var(--green-dark)] mb-2">Vad passar {wine.name} till?</h3>
-            <p className="text-sm text-black/70 leading-relaxed">
+            <h3 className="font-bold text-lg mb-2">Vad passar {wine.name} till?</h3>
+            <p className="text-sm text-[17px] leading-relaxed">
               {foodAnswer}
             </p>
           </div>
@@ -408,24 +407,24 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
 
       {/* Related: same producer */}
       {producerWines.length > 0 && (
-        <div className="mt-14 max-w-2xl border-t border-black/8 pt-12">
-          <h2 className="text-lg font-bold text-[var(--green-dark)] mb-6">Fler viner från {producerName(wine.producer)}</h2>
+        <div className="mt-14 max-w-2xl border-t-[3px] border-[var(--ink)] pt-12">
+          <h2 className="text-4xl mb-6">Fler viner från {producerName(wine.producer)}</h2>
           <ul className="space-y-3">
             {producerWines.map((w) => (
               <li key={w.id}>
                 <Link
                   href={`/viner/${w.slug}`}
-                  className="flex items-center justify-between group py-2 border-b border-black/5 last:border-0"
+                  className="flex items-center justify-between group py-2 border-b-2 border-[var(--rule)] last:border-0"
                 >
-                  <span className="font-medium group-hover:text-[var(--green)] transition-colors">
+                  <span className="font-medium group-hover:text-[var(--accent)] transition-colors">
                     {w.name}{w.year ? ` ${w.year}` : ""}
                   </span>
-                  <span className="text-xs text-black/40">{w.wineType}</span>
+                  <span className="text-xs text-[var(--muted)]">{w.wineType}</span>
                 </Link>
               </li>
             ))}
           </ul>
-          <Link href={`/producenter/${producerSlug(wine.producer)}`} className="inline-block mt-6 text-sm underline underline-offset-2 hover:text-[var(--green)]">
+          <Link href={`/producenter/${producerSlug(wine.producer)}`} className="inline-block mt-6 text-sm underline underline-offset-2 hover:text-[var(--accent)]">
             Alla viner från {producerName(wine.producer)}
           </Link>
         </div>
@@ -433,8 +432,8 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
 
       {/* Related: same region/country */}
       {regionalWines.length > 0 && (
-        <div className="mt-14 max-w-2xl border-t border-black/8 pt-12">
-          <h2 className="text-lg font-bold text-[var(--green-dark)] mb-6">
+        <div className="mt-14 max-w-2xl border-t-[3px] border-[var(--ink)] pt-12">
+          <h2 className="text-4xl mb-6">
             Andra naturviner från {wine.region ?? wine.country}
           </h2>
           <ul className="space-y-3">
@@ -442,18 +441,18 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
               <li key={w.id}>
                 <Link
                   href={`/viner/${w.slug}`}
-                  className="flex items-center justify-between group py-2 border-b border-black/5 last:border-0"
+                  className="flex items-center justify-between group py-2 border-b-2 border-[var(--rule)] last:border-0"
                 >
-                  <span className="font-medium group-hover:text-[var(--green)] transition-colors">
+                  <span className="font-medium group-hover:text-[var(--accent)] transition-colors">
                     {w.name}{w.year ? ` ${w.year}` : ""}
                   </span>
-                  <span className="text-xs text-black/40">{w.producer}</span>
+                  <span className="text-xs text-[var(--muted)]">{w.producer}</span>
                 </Link>
               </li>
             ))}
           </ul>
           {wine.country && (
-            <Link href={`/land/${countrySlug(wine.country)}`} className="inline-block mt-6 text-sm underline underline-offset-2 hover:text-[var(--green)]">
+            <Link href={`/land/${countrySlug(wine.country)}`} className="inline-block mt-6 text-sm underline underline-offset-2 hover:text-[var(--accent)]">
               Alla naturviner från {wine.country}
             </Link>
           )}

@@ -25,8 +25,8 @@ export default async function OmOssPage() {
       {/* Hero */}
       <section className="border-b border-[var(--rule)] pt-20 pb-16 px-6">
         <div className="max-w-2xl mx-auto">
-          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--muted)] mb-4">Om oss</p>
-          <h1 className="text-4xl md:text-5xl font-extrabold text-[var(--fg)] leading-tight tracking-tight mb-6">
+          <p className="inline-block self-start bg-[var(--accent)] text-[var(--fg)] border-2 border-[var(--ink)] text-sm font-bold px-2 py-0.5 mb-4">Om oss</p>
+          <h1 className="text-5xl md:text-7xl mb-6">
             Vi gör det enklare att hitta naturvin du faktiskt gillar.
           </h1>
         </div>
@@ -75,7 +75,7 @@ export default async function OmOssPage() {
       {/* Så rankar vi (BRIEF-KOMPASSEN.md, avsnitt 8) */}
       <section className="border-t border-[var(--rule)] py-16 px-6 scroll-mt-20" id="sa-rankar-vi">
         <div className="max-w-2xl mx-auto">
-          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--muted)] mb-4">Oberoende</p>
+          <p className="inline-block self-start bg-[var(--accent)] text-[var(--fg)] border-2 border-[var(--ink)] text-sm font-bold px-2 py-0.5 mb-4">Oberoende</p>
           <h2 className="text-2xl md:text-3xl font-bold text-[var(--fg)] mb-8 leading-tight">
             Så rankar vi och så tjänar vi pengar
           </h2>
@@ -120,7 +120,7 @@ export default async function OmOssPage() {
       {/* Contact */}
       <section className="border-t border-[var(--rule)] py-16 px-6" id="kontakt">
         <div className="max-w-2xl mx-auto">
-          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--muted)] mb-4">Kom i kontakt</p>
+          <p className="inline-block self-start bg-[var(--accent)] text-[var(--fg)] border-2 border-[var(--ink)] text-sm font-bold px-2 py-0.5 mb-4">Kom i kontakt</p>
           <h2 className="text-2xl md:text-3xl font-bold text-[var(--fg)] mb-6 leading-tight">
             Frågor, tips eller samarbeten?
           </h2>

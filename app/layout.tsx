@@ -1,5 +1,5 @@
 import type { Metadata } from "next";
-import { Outfit } from "next/font/google";
+import { Big_Shoulders_Display, Karla } from "next/font/google";
 import "./globals.css";
 import SiteShell from "@/components/SiteShell";
 import { getSettings } from "@/lib/blob";
@@ -8,14 +8,19 @@ import JsonLd from "@/components/JsonLd";
 import { siteJsonLd } from "@/lib/seo";
 
 /*
-  Outfit — clean geometric sans, upright proportions (not wide like Syne).
-  Similar rounded terminals to Kynema. To swap in Kynema later: self-host
-  the .woff2 files with @font-face and update --font-display in globals.css.
+  Stilriktningen "Etiketten" (2026-11-13): smal, tung rubrikstil som på naturvinsetiketter
+  och affischer, och Karla för brödtext. Färgerna är två tryckfärger, se globals.css.
 */
-const outfit = Outfit({
+const display = Big_Shoulders_Display({
   subsets: ["latin"],
-  variable: "--font-syne",   // reuse same CSS var so nothing else needs changing
-  weight: ["400", "500", "600", "700", "800"],
+  variable: "--font-display-face",
+  weight: ["700", "900"],
+  display: "swap",
+});
+const body = Karla({
+  subsets: ["latin"],
+  variable: "--font-body-face",
+  weight: ["400", "500", "700"],
   display: "swap",
 });
 
@@ -53,7 +58,7 @@ export const metadata: Metadata = {
 export default async function RootLayout({ children }: { children: React.ReactNode }) {
   const settings = await getSettings().catch(() => ({ retailerCompensation: false }));
   return (
-    <html lang="sv" className={`${outfit.variable} h-full`}>
+    <html lang="sv" className={`${display.variable} ${body.variable} h-full`}>
       <body className="min-h-full flex flex-col antialiased">
         <JsonLd data={siteJsonLd} />
         <SiteShell retailerCompensation={settings.retailerCompensation}>{children}</SiteShell>

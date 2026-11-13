@@ -20,8 +20,8 @@ export default async function BloggPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-5 py-16">
-      <p className="text-xs font-semibold tracking-widest text-[var(--green)] uppercase mb-3">Blogg</p>
-      <h1 className="text-4xl font-bold text-[var(--green-dark)] mb-12 leading-tight">Naturvinsbloggen</h1>
+      <p className="inline-block bg-[var(--accent)] text-[var(--fg)] border-2 border-[var(--ink)] text-sm font-bold px-2 py-0.5 mb-4">Blogg</p>
+      <h1 className="text-5xl md:text-6xl mb-12">Naturvinsbloggen</h1>
 
       {published.length === 0 ? (
         <div className="text-center py-20 text-black/40">
@@ -34,7 +34,7 @@ export default async function BloggPage() {
             <Link
               key={post.id}
               href={`/blogg/${post.slug}`}
-              className="group flex gap-5 p-5 bg-white rounded-xl border border-black/8 hover:border-[var(--green)] hover:shadow-sm transition-all"
+              className="group flex gap-5 p-5 bg-[var(--paper)] border-[3px] border-[var(--ink)] hover:border-[var(--accent)] transition-colors"
             >
               {post.imageUrl && (
                 <div className="shrink-0 w-24 h-24 rounded-lg overflow-hidden">

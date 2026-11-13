@@ -43,7 +43,7 @@ export default function AgeGate() {
           </>
         ) : (
           <>
-            <p className="text-[9px] font-bold tracking-[0.25em] uppercase text-[var(--muted)] mb-4">
+            <p className="text-xs font-bold text-[var(--muted)] mb-4">
               Välkommen
             </p>
 
@@ -58,13 +58,13 @@ export default function AgeGate() {
             <div className="flex gap-3 w-full">
               <button
                 onClick={confirm}
-                className="flex-1 bg-[var(--fg)] text-[var(--bg)] text-[11px] font-bold tracking-[0.2em] uppercase py-3 hover:opacity-80 transition-opacity"
+                className="flex-1 bg-[var(--fg)] text-[var(--bg)] text-xs font-bold py-3 hover:opacity-80 transition-opacity"
               >
                 Ja
               </button>
               <button
                 onClick={() => setDenied(true)}
-                className="flex-1 border border-[var(--rule)] text-[var(--muted)] text-[11px] font-bold tracking-[0.2em] uppercase py-3 hover:border-[var(--fg)] hover:text-[var(--fg)] transition-colors"
+                className="flex-1 border border-[var(--rule)] text-[var(--muted)] text-xs font-bold py-3 hover:border-[var(--fg)] hover:text-[var(--fg)] transition-colors"
               >
                 Nej
               </button>

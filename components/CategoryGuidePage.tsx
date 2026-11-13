@@ -52,12 +52,12 @@ export default async function CategoryGuidePage({
     <div>
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
 
-      <div className="border-b border-[var(--rule)] pt-16 pb-14 px-6">
+      <div className="border-b-[3px] border-[var(--ink)] pt-16 pb-14 px-6">
         <div className="max-w-2xl mx-auto">
-          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--muted)] mb-4">
+          <p className="inline-block self-start bg-[var(--accent)] text-[var(--fg)] border-2 border-[var(--ink)] text-sm font-bold px-2 py-0.5 mb-4">
             {eyebrow}
           </p>
-          <h1 className="text-3xl md:text-5xl font-extrabold text-[var(--fg)] mb-4 leading-tight tracking-tight">
+          <h1 className="text-5xl md:text-7xl mb-4">
             {title}
           </h1>
           <p className="text-base text-[var(--muted)] leading-relaxed max-w-lg">
@@ -99,7 +99,7 @@ export default async function CategoryGuidePage({
                 <Link
                   key={g.href}
                   href={g.href}
-                  className="text-sm border border-black/10 px-4 py-2 rounded-full hover:border-[var(--green)] transition-colors"
+                  className="text-sm font-bold border-2 border-[var(--ink)] text-[var(--ink)] px-4 py-2 rounded-full hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors"
                 >
                   {g.label}
                 </Link>

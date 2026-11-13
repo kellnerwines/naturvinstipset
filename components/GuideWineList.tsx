@@ -48,14 +48,14 @@ export default function GuideWineList({ wines, ratings }: Props) {
             key={wine.id}
             data-where={wheres[i]}
             href={`/viner/${wine.slug}`}
-            className="block bg-white border border-black/8 rounded-xl p-5 hover:border-[var(--green)] transition-colors"
+            className="block bg-[var(--paper)] border-[3px] border-[var(--ink)] p-5 hover:border-[var(--accent)] transition-colors"
           >
             <div className="flex items-start gap-4">
-              <span className="guide-rank shrink-0 w-6 text-sm text-[var(--muted)] tabular-nums pt-0.5" aria-hidden="true" />
+              <span className="guide-rank shrink-0 w-8 font-[family-name:var(--font-display)] font-black text-3xl leading-none text-[var(--accent)]" aria-hidden="true" />
               <div className="flex-1 min-w-0">
                 <div className="flex items-start justify-between gap-4">
                   <div className="min-w-0">
-                    <p className="font-semibold text-[var(--fg)] truncate">
+                    <p className="font-[family-name:var(--font-display)] font-black uppercase text-2xl leading-none text-[var(--ink)] truncate">
                       {wine.name}
                       {wine.year ? ` ${wine.year}` : ""}
                     </p>
@@ -81,7 +81,7 @@ export default function GuideWineList({ wines, ratings }: Props) {
                   </div>
                 </div>
                 {buyLinks(wine)[0] && (
-                  <span className="inline-block mt-3 text-xs text-[var(--green)] font-medium">
+                  <span className="inline-block mt-3 text-xs text-[var(--ink)] font-bold">
                     {buyLinks(wine)[0].isSb ? "Köp på Systembolaget" : `Hemleverans från webbutiken ${buyLinks(wine)[0].shop}`} →
                   </span>
                 )}

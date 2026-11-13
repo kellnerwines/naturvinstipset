@@ -1,52 +1,64 @@
 @import "tailwindcss";
 
 /*
-  Design system — Naturvinstipset
-  Palette: warm cream + near-black, editorial minimal
-  Font: Outfit (geometric sans, upright proportions) — swap in Kynema later via --font-display
+  Designsystem – Naturvinstipset, riktningen "Etiketten" (2026-11-13)
+  Tidningspapper och två tryckfärger som på en risograftryckt etikett: blått bläck och rödorange.
+  Rubriker: Big Shoulders Display (smal, tung, versaler). Brödtext: Karla.
+  Kort och ytor har raka hörn och kraftiga blå kanter; knappar är runda "pillor".
 */
 
 :root {
-  --bg:      #ffffff;
-  --fg:      #0d0d0d;
-  /* Kontrast mot vitt: --muted ≈ 5,6:1 (WCAG AA för brödtext), --faint ≈ 2,6:1
-     (bara för dekor och sekundära etiketter, aldrig för text man måste läsa). */
-  --muted:   rgba(13, 13, 13, 0.62);
-  --faint:   rgba(13, 13, 13, 0.40);
-  --rule:    rgba(13, 13, 13, 0.12);
-  --rule-xs: rgba(13, 13, 13, 0.06);
-  --card:    #ffffff;   /* kort: vita med tunn kant i --rule, ingen skugga */
-  --surface: #f0ebe2;   /* krämvitt, sparsamt för små ytor som taggar */
-  --hero-dark: #2a2420;
+  --bg:      #F0EBE1;   /* tidningspapper */
+  --paper:   #F7F3EC;   /* ljusare papper för kort */
+  --ink:     #23409A;   /* blått bläck: rubriker, kanter, länkar */
+  --fg:      #1D2B57;   /* mörkblå brödtext */
+  --accent:  #E9573F;   /* rödorange tryckfärg */
+  /* Kontrast mot --bg: --fg ≈ 11:1, --ink ≈ 7:1, --muted ≈ 6:1 (AA för brödtext).
+     --faint bara för dekor och sekundära etiketter. */
+  --muted:   rgba(29, 43, 87, 0.78);
+  --faint:   rgba(29, 43, 87, 0.50);
+  --rule:    rgba(35, 64, 154, 0.35);
+  --rule-xs: rgba(35, 64, 154, 0.15);
+  --card:    var(--paper);
+  --surface: #E6DFD2;
+  --hero-dark: #23409A;
 
-  /* Wine type colors */
-  --wine-vitt:        #d4b896;
-  --wine-rott:        #8a4a4a;
-  --wine-rose:        #d4879a;
-  --wine-orange:      #d4886a;
-  --wine-petnat:      #8aaa7a;
-  --wine-mousserande: #7a9ab4;
+  /* Färgfält per vintyp, platta tryckfärger */
+  --wine-vitt:        #E8C76A;
+  --wine-rott:        #8E2F2A;
+  --wine-rose:        #E89AA6;
+  --wine-orange:      #E9573F;
+  --wine-petnat:      #9DB57A;
+  --wine-mousserande: #8FB1D9;
 
-  /* Admin panel colors — not used on public pages */
-  --green:       #3d7a52;
-  --green-light: #eaf4ee;
-  --green-dark:  #2a5438;
-  --amber:       #b8722a;
-  --amber-light: #fdf3e7;
+  /* Äldre namn som komponenterna använder: knappar och länkar följer nu tryckfärgerna */
+  --green:       #23409A;
+  --green-light: #E6DFD2;
+  --green-dark:  #23409A;
+  --amber:       #B8722A;
+  --amber-light: #F5E3C8;
 }
 
 @theme inline {
   --color-background: var(--bg);
   --color-foreground: var(--fg);
-  --font-display: var(--font-syne);
-  --font-sans:    var(--font-syne);
+  --font-display: var(--font-display-face), "Arial Narrow", sans-serif;
+  --font-sans:    var(--font-body-face), "Helvetica Neue", Arial, sans-serif;
+  /* Svart och vitt i Tailwind-klasserna blir bläck och papper */
+  --color-black: #1D2B57;
+  --color-white: #F7F3EC;
+  /* Raka hörn på kort och rutor; rounded-full (knappar) är kvar */
+  --radius-sm: 0px;
+  --radius-md: 0px;
+  --radius-lg: 0px;
+  --radius-xl: 0px;
+  --radius-2xl: 0px;
 }
 
 html {
   background: var(--bg);
   color: var(--fg);
-  /* Explicit font-family ensures Outfit applies on every route, not just root */
-  font-family: var(--font-syne), "Outfit", "Helvetica Neue", Arial, sans-serif;
+  font-family: var(--font-body-face), "Helvetica Neue", Arial, sans-serif;
 }
 
 body {
@@ -57,39 +69,32 @@ body {
   -moz-osx-font-smoothing: grayscale;
 }
 
+/* Rubriker som på en etikett: smal, tung och i versaler. I base-lagret så att Tailwind-klasser går före. */
+@layer base {
+  h1, h2 {
+    font-family: var(--font-display-face), "Arial Narrow", sans-serif;
+    font-weight: 900;
+    text-transform: uppercase;
+    letter-spacing: 0;
+    line-height: 0.95;
+    color: var(--ink);
+  }
+  h3 { color: var(--ink); }
+}
+
 /* Selection */
 ::selection {
   background: var(--fg);
   color: var(--bg);
 }
 
-/* Wine of the month — soft pulsing glow around the whole card */
+/* Månadens vin: en tjock rödorange ram, som en dekal på flaskan */
 .motm-card {
-  border-radius: 4px;
   padding: 10px;
   margin: -10px;
-  background: radial-gradient(ellipse at 50% 30%, rgba(210, 160, 40, 0.08) 0%, transparent 70%);
-  outline: 1px solid rgba(210, 160, 40, 0.30);
-  outline-offset: 4px;
-  box-shadow:
-    0 0 20px 4px rgba(210, 160, 40, 0.18),
-    0 0 60px 16px rgba(210, 160, 40, 0.09);
-  animation: motm-breathe 4s ease-in-out infinite;
-}
-
-@keyframes motm-breathe {
-  0%, 100% {
-    box-shadow:
-      0 0 20px 4px rgba(210, 160, 40, 0.18),
-      0 0 60px 16px rgba(210, 160, 40, 0.09);
-    outline-color: rgba(210, 160, 40, 0.30);
-  }
-  50% {
-    box-shadow:
-      0 0 32px 8px rgba(210, 160, 40, 0.28),
-      0 0 80px 24px rgba(210, 160, 40, 0.13);
-    outline-color: rgba(210, 160, 40, 0.50);
-  }
+  outline: 3px solid var(--accent);
+  outline-offset: 0;
+  background: var(--paper);
 }
 
 /* "Var köper du?" (components/WhereFilter.tsx): döljer viner som inte säljs där, numrerar om med CSS-räknare */

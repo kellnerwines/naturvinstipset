@@ -13,7 +13,7 @@ const EMPTY: LibraryState = { butik: "", farg: "", land: "", pris: "", q: "", so
 const PRICES: [string, string][] = [["", "Alla priser"], ["150", "Under 150 kr"], ["200", "Under 200 kr"], ["300", "Under 300 kr"], ["400", "Under 400 kr"]];
 const SORTS: [string, string][] = [["betyg", "Högst betyg"], ["pris", "Lägst pris"], ["pris-hog", "Högst pris"]];
 
-const select = "text-sm border border-[var(--rule)] rounded-full px-3 py-1.5 bg-[var(--bg)] text-[var(--fg)] hover:border-[var(--fg)] max-w-full";
+const select = "text-sm font-bold border-2 border-[var(--ink)] rounded-full px-3 py-1.5 bg-[var(--paper)] text-[var(--ink)] hover:bg-[var(--surface)] max-w-full";
 
 export default function LibraryFilter({ options, initial, total, lockShop, children }: {
   options: LibraryOptions;
@@ -70,7 +70,7 @@ export default function LibraryFilter({ options, initial, total, lockShop, child
           onChange={(e) => set("q")(e.target.value)}
           placeholder="Sök vin, producent eller druva"
           aria-label="Sök"
-          className="w-full text-sm border border-[var(--rule)] rounded-full px-4 py-2 bg-[var(--bg)] mb-1"
+          className="w-full text-base border-[3px] border-[var(--ink)] rounded-full px-5 py-2.5 bg-[var(--paper)] mb-1 placeholder:text-[var(--muted)]"
         />
         {!lockShop && (
           <select aria-label="Butik" value={s.butik} onChange={(e) => set("butik")(e.target.value)} className={select}>

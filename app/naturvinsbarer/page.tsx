@@ -37,7 +37,7 @@ function BarCard({ bar }: { bar: Bar }) {
   const link = "text-sm font-semibold text-[var(--fg)] underline underline-offset-4 decoration-[var(--rule)] hover:decoration-[var(--fg)]";
   return (
     <article className="border border-[var(--rule)] rounded-xl p-5 bg-[var(--card)]">
-      <p className="text-[11px] font-semibold tracking-[0.12em] uppercase text-[var(--muted)] mb-1.5">
+      <p className="text-xs font-semibold text-[var(--muted)] mb-1.5">
         {bar.type} · {bar.neighborhood}
       </p>
       <h3 className="text-xl font-bold leading-tight tracking-tight mb-2">
@@ -85,10 +85,10 @@ export default function Naturvinsbarer() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(faqJsonLd) }} />
 
-      <div className="border-b border-[var(--rule)] pt-16 pb-12 px-6">
+      <div className="border-b-[3px] border-[var(--ink)] pt-16 pb-12 px-6">
         <div className="max-w-3xl mx-auto">
-          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--muted)] mb-4">Guide · Hela Sverige</p>
-          <h1 className="text-3xl md:text-5xl font-extrabold leading-tight tracking-tight mb-4">Naturvinsbarer i Sverige</h1>
+          <p className="inline-block self-start bg-[var(--accent)] text-[var(--fg)] border-2 border-[var(--ink)] text-sm font-bold px-2 py-0.5 mb-4">Guide · Hela Sverige</p>
+          <h1 className="text-5xl md:text-7xl mb-4">Naturvinsbarer i Sverige</h1>
           <p className="text-base text-[var(--muted)] leading-relaxed max-w-xl">
             {bars.length} ställen i {cities.length} städer där naturvinet står i centrum. Vinbarer, bistroer och ett par pizzerior,
             alla med länk till webbplats och Instagram så att du ser vad som är på gång just nu.

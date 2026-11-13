@@ -45,84 +45,43 @@ export default async function Topp100Page() {
     <div>
       <JsonLd data={[jsonLd, wineItemListJsonLd("Topp 100 naturviner", "/topp-100", entries.map((e) => e.wine)), breadcrumbJsonLd([{ name: "Topp 100", path: "/topp-100" }])]} />
 
-      {/* ── Hero ──────────────────────────────────────────────────────────── */}
-      {/* Videon ligger bara på startsidan; här räcker den mörka bakgrunden. */}
-      <section className="relative overflow-hidden bg-[var(--hero-dark)]">
-
-        <div className="relative flex flex-col md:flex-row min-h-[520px]">
-          {/* Left: beige overlay + headline */}
-          <div className="flex-1 flex flex-col justify-center px-8 md:px-16 py-20" style={{ background: "rgba(42,36,32,0.50)" }}>
-            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-white/40 mb-5">
-              De bästa naturvinerna på Systembolaget
+      {/* ── Hero: bilden i ram, rubriken som en etikett och veckans vin som en dekal ── */}
+      <section className="border-b-[3px] border-[var(--ink)]">
+        <div className="max-w-6xl mx-auto px-5 md:px-8 py-10 md:py-14 grid md:grid-cols-12 gap-8 md:gap-10 items-end">
+          <div className="md:col-span-5 flex flex-col gap-6">
+            <h1 className="text-[88px] md:text-[132px]">Topp 100</h1>
+            <p className="text-lg leading-relaxed max-w-md">
+              De bäst betygsatta naturvinerna på Systembolaget, kompletterade med naturviner som skickas hem från webbutiker.
             </p>
-            <h1 className="text-4xl md:text-5xl font-extrabold leading-[1.1] tracking-tight text-white mb-6">
-              Hitta vinet<br />
-              du faktiskt{" "}
-              <em style={{ fontFamily: "Georgia, serif", fontWeight: 700 }}>gillar</em>
-            </h1>
-            <p className="text-base text-white/55 max-w-sm leading-relaxed mb-8">
-              Ärliga betyg och direktlänk till Systembolaget — utan krångel.
-            </p>
-            <a
-              href="#listan"
-              className="inline-flex items-center gap-2 text-sm font-semibold bg-white text-[var(--hero-dark)] px-5 py-3 hover:opacity-80 transition-opacity w-fit"
-            >
-              Se listan →
+            <a href="#listan" className="self-start rounded-full bg-[var(--ink)] text-[var(--paper)] font-bold px-7 py-4 hover:bg-[var(--accent)] hover:text-[var(--fg)] transition-colors">
+              Till listan
             </a>
           </div>
-
-          {/* Right: featured wine panel */}
-          {featured && (
-            <div className="w-full md:w-72 flex-shrink-0 flex flex-col" style={{ background: "#a8b3b6" }}>
-              {featured.wine.primaryImageUrl && (
-                <Image
-                  src={featured.wine.primaryImageUrl}
-                  alt={`${featured.wine.name}${featured.wine.year ? ` ${featured.wine.year}` : ""}${featured.wine.wineType ? ` ${featured.wine.wineType.toLowerCase()} naturvin` : " naturvin"}${featured.wine.country ? ` från ${featured.wine.country}` : ""}`}
-                  width={288}
-                  height={380}
-                  className="w-full object-cover object-center"
-                  unoptimized
-                />
-              )}
-              <div className="px-6 py-6 flex flex-col justify-end flex-1">
-                <p className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/60 mb-2">Veckans vin</p>
-                <p className="text-[10px] tracking-[0.15em] uppercase text-white/60 mb-1">{featured.wine.producer}</p>
-                <p className="text-sm font-bold text-white mb-2 leading-snug">{featured.wine.name}</p>
-                <div className="flex items-baseline gap-3 mb-4">
-                  <span className="text-2xl font-bold text-white" style={{ fontFamily: "Georgia, serif" }}>
-                    {featured.rating.toFixed(1)}
-                  </span>
-                  {featured.wine.price && (
-                    <span className="text-sm text-white/60">{featured.wine.price} kr</span>
-                  )}
-                </div>
-                <Link
-                  href={`/viner/${featured.wine.slug}`}
-                  className="text-[10px] font-bold tracking-[0.2em] uppercase text-white/70 border-b border-white/30 pb-px hover:text-white transition-colors w-fit"
-                >
-                  Läs mer →
-                </Link>
-              </div>
+          <div className="md:col-span-7 relative">
+            <div className="border-[3px] border-[var(--ink)] bg-[var(--surface)] aspect-[3/2] overflow-hidden">
+              <Image src="/topp-100-hero.jpg" alt="Vänner skålar med naturvin i en vinbar" width={1200} height={800} priority className="w-full h-full object-cover" unoptimized />
             </div>
-          )}
-        </div>
-
-        {/* Wavy bottom */}
-        <div className="absolute bottom-0 left-0 right-0 leading-[0]">
-          <svg viewBox="0 0 1440 60" xmlns="http://www.w3.org/2000/svg" preserveAspectRatio="none" className="w-full block" style={{ height: "60px" }}>
-            <path d="M0,60 L0,35 C60,25 130,15 240,22 C340,28 390,42 490,36 C590,30 640,18 760,23 C870,28 920,38 1020,34 C1110,30 1170,20 1280,26 C1360,30 1410,38 1440,34 L1440,60 Z" fill="#ffffff" />
-          </svg>
+            {featured && (
+              <Link
+                href={`/viner/${featured.wine.slug}`}
+                className="absolute -bottom-6 -left-4 md:-left-10 w-56 bg-[var(--accent)] text-[var(--fg)] border-[3px] border-[var(--ink)] p-4 rotate-[-3deg] hover:rotate-0 transition-transform"
+              >
+                <span className="block text-sm font-bold">{featured.wine.wineOfMonth ? "Månadens vin" : "Etta på listan"}</span>
+                <span className="block font-[family-name:var(--font-display)] font-black uppercase text-3xl leading-none mt-1">{featured.wine.name}</span>
+                <span className="block text-sm mt-1">{featured.wine.producer}</span>
+                <span className="block text-sm font-bold mt-2">{featured.rating > 0 ? `${featured.rating.toFixed(1)} av 5` : ""}{featured.rating > 0 && featured.wine.price ? " · " : ""}{featured.wine.price ? `${featured.wine.price} kr` : ""}</span>
+              </Link>
+            )}
+          </div>
         </div>
       </section>
 
       {/* ── Wine grid ───────────────────────────────────────────────────────── */}
-      <section id="listan" className="bg-white">
-        <div className="max-w-6xl mx-auto px-6 py-16">
-          <div className="flex items-baseline justify-between mb-8">
-            <h2 className="text-2xl md:text-3xl font-extrabold tracking-tight text-[var(--fg)]" style={{ fontFamily: "Georgia, serif" }}>
-              Topp 100
-            </h2>
-            <p className="text-xs text-[var(--faint)] tracking-widest uppercase">{entries.length} viner</p>
+      <section id="listan" className="scroll-mt-20">
+        <div className="max-w-6xl mx-auto px-5 md:px-8 py-16">
+          <div className="flex items-baseline justify-between mb-8 border-b-[3px] border-[var(--ink)] pb-3">
+            <h2 className="text-5xl md:text-6xl">Listan</h2>
+            <p className="font-bold">{entries.length} viner</p>
           </div>
           <WineGrid entries={entries} />
           <p className="text-[11px] text-[var(--muted)] leading-snug mt-10 max-w-2xl">
@@ -135,20 +94,12 @@ export default async function Topp100Page() {
       </section>
 
       {/* ── CTA strip ──────────────────────────────────────────────────────── */}
-      <section className="border-t border-[var(--rule)] py-20 px-6">
-        <div className="max-w-3xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-6">
-          <div>
-            <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--muted)] mb-2">Ny på naturvin?</p>
-            <h2 className="text-2xl md:text-3xl font-bold text-[var(--fg)] leading-tight">
-              Vi förklarar allt du behöver veta.
-            </h2>
-          </div>
-          <a
-            href="/vad-ar-naturvin"
-            className="shrink-0 inline-flex items-center gap-2 text-sm font-semibold text-[var(--fg)] border border-[var(--fg)] px-5 py-3 hover:bg-[var(--fg)] hover:text-[var(--bg)] transition-colors"
-          >
-            Läs vår guide →
-          </a>
+      <section className="border-t-[3px] border-[var(--ink)] py-16 px-5">
+        <div className="max-w-6xl mx-auto md:px-3 flex flex-col md:flex-row md:items-end md:justify-between gap-6">
+          <h2 className="text-5xl md:text-6xl max-w-xl">Ny på naturvin?</h2>
+          <Link href="/vad-ar-naturvin" className="shrink-0 rounded-full border-[3px] border-[var(--ink)] text-[var(--ink)] font-bold px-7 py-4 hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors">
+            Så funkar naturvin
+          </Link>
         </div>
       </section>
 

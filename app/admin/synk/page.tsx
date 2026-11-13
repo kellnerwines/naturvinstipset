@@ -51,6 +51,18 @@ export default async function SynkPage() {
           <SyncNowButton estimateSeconds={estimateSeconds} />
         </div>
 
+        <div className={`${card} flex flex-wrap items-start justify-between gap-4`}>
+          <div className="max-w-xl">
+            <h2 className="font-bold">Klipp ut flaskbilder</h2>
+            <p className="text-sm text-[var(--muted)] mt-1">
+              Tar bort enfärgad fotobakgrund (grå eller vit vägg och skugga) runt flaskan, så att alla flaskor står fritt på
+              sajtens färgfält. Varje bild kontrolleras en gång, och bilder utan sådan bakgrund lämnas orörda. Nya bilder från
+              synken klipps automatiskt. {wines.filter((w) => w.primaryImageUrl && !w.imageCheckedAt).length} bilder är inte kontrollerade än.
+            </p>
+          </div>
+          <SyncNowButton estimateSeconds={180} endpoint="/api/admin/klipp-bilder" label="Klipp ut bilder" />
+        </div>
+
         {hidden.length ? (
           <div className={`${card} bg-[var(--amber-light)]`}>
             <h2 className="font-bold mb-2">Avpublicerade av synken</h2>

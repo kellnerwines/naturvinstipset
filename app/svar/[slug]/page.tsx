@@ -48,8 +48,8 @@ export default async function SvarPage({ params }: { params: Promise<{ slug: str
   return (
     <div className="max-w-2xl mx-auto px-5 py-14">
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
-      <p className="text-[11px] font-semibold tracking-[0.2em] uppercase text-[var(--muted)] mb-3">Vinkompassen svarar</p>
-      <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight leading-tight mb-4">{page.question}</h1>
+      <p className="text-xs font-semibold text-[var(--muted)] mb-3">Vinkompassen svarar</p>
+      <h1 className="text-5xl md:text-6xl mb-4">{page.question}</h1>
       <p className="text-base leading-relaxed mb-2">{page.lead} {summary}</p>
       <p className="text-xs text-[var(--muted)] mb-8">
         Uppdaterat {today()} · {a.count} naturviner passar · priser inklusive svensk alkoholskatt

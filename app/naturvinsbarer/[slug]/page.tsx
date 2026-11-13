@@ -48,10 +48,10 @@ export default async function BarPage({ params }: { params: Promise<{ slug: stri
         ← Naturvinsbarer i {bar.city}
       </Link>
 
-      <p className="text-[11px] font-semibold tracking-[0.15em] uppercase text-[var(--muted)] mb-3">
+      <p className="text-xs font-semibold text-[var(--muted)] mb-3">
         {bar.type} · {bar.neighborhood}, {bar.city}
       </p>
-      <h1 className="text-3xl md:text-4xl font-extrabold tracking-tight leading-tight mb-5">{bar.name}</h1>
+      <h1 className="text-5xl md:text-6xl mb-5">{bar.name}</h1>
       <p className="text-[var(--muted)] leading-relaxed mb-8 text-[16px]">{bar.description}</p>
 
       <div className="flex flex-wrap gap-3 mb-10">

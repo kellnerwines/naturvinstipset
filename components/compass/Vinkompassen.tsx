@@ -146,7 +146,7 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
     if (!el) return;
     const r = el.getBoundingClientRect();
     // "start": under menyn och progressbaren; "end": ovanför det fasta skrivfältet längst ner.
-    const top = 56 + (progressRef.current?.offsetHeight ?? 0) + 24;
+    const top = 67 + (progressRef.current?.offsetHeight ?? 0) + 24;
     const target = align === "start" ? window.scrollY + r.top - top : window.scrollY + r.bottom - window.innerHeight + 150;
     const to = Math.max(0, Math.min(document.documentElement.scrollHeight - window.innerHeight, target));
     const from = window.scrollY;
@@ -530,7 +530,7 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
 
   const renderPanel = (k: PanelKey) => {
     const box = "mt-3 border border-[var(--rule)] rounded-md p-4 bg-[var(--card)]";
-    const h = (t: string) => <h4 className="text-xs font-semibold tracking-[0.12em] uppercase text-[var(--muted)] mb-3">{t}</h4>;
+    const h = (t: string) => <h4 className="text-xs font-semibold text-[var(--muted)] mb-3">{t}</h4>;
     switch (k) {
       case "shop":
         return (
@@ -656,7 +656,7 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
           </p>
           {item.picked?.length ? (
             <div className="flex flex-wrap items-center gap-1.5 mt-3">
-              <span className="text-[11px] tracking-[0.12em] uppercase text-[var(--muted)] mr-1">Jag plockade upp</span>
+              <span className="text-xs text-[var(--muted)] mr-1">Jag plockade upp</span>
               {item.picked.map((p) => <span key={p} className="text-[11px] px-2 py-0.5 rounded-full bg-[var(--fg)] text-[var(--bg)]">{p}</span>)}
             </div>
           ) : null}
@@ -708,7 +708,7 @@ export default function Vinkompassen({ wines, compensation = false }: { wines: C
       style={{ "--muted": "rgba(13, 13, 13, 0.8)", "--faint": "rgba(13, 13, 13, 0.6)" } as React.CSSProperties}
     >
       {!done ? (
-        <div ref={progressRef} className="sticky top-14 z-20 -mx-4 -mt-6 md:-mt-8 mb-6 px-4 py-3 bg-white/70 backdrop-blur-sm rounded-t-xl border-b border-[var(--rule)]"
+        <div ref={progressRef} className="sticky top-[67px] z-20 -mx-4 -mt-6 md:-mt-8 mb-6 px-4 py-3 bg-white/70 backdrop-blur-sm rounded-t-xl border-b border-[var(--rule)]"
           role="progressbar" aria-label="Vinkompassen" aria-valuemin={0} aria-valuemax={QUESTIONS.length} aria-valuenow={qDone}>
           <div className="flex items-center gap-3">
             <div className="flex gap-1.5 flex-1">

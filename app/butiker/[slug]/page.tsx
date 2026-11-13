@@ -68,10 +68,10 @@ export default async function ShopPage({ params, searchParams }: {
         { "@context": "https://schema.org", "@type": "CollectionPage", name: `Naturvin från ${shop.name}`, url: `${SITE}${path}`, publisher: publisherRef,
           about: { "@type": "Store", name: shop.name, url: shop.url } },
       ]} />
-      <div className="border-b border-[var(--rule)] pt-16 pb-14 px-6">
+      <div className="border-b-[3px] border-[var(--ink)] pt-16 pb-14 px-6">
         <div className="max-w-2xl mx-auto">
-          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--muted)] mb-4">{shop.web ? "Webbutik" : "Butik"}</p>
-          <h1 className="text-3xl md:text-5xl font-extrabold text-[var(--fg)] mb-4 leading-tight tracking-tight">Naturvin från {shop.name}</h1>
+          <p className="inline-block self-start bg-[var(--accent)] text-[var(--fg)] border-2 border-[var(--ink)] text-sm font-bold px-2 py-0.5 mb-4">{shop.web ? "Webbutik" : "Butik"}</p>
+          <h1 className="text-5xl md:text-7xl mb-4">Naturvin från {shop.name}</h1>
           <p className="text-base text-[var(--muted)] leading-relaxed max-w-lg">{intro(shop.name, shop.web, wines)}</p>
           <a href={shop.url} target="_blank" rel="noopener" className="inline-block mt-6 text-sm font-semibold border border-[var(--fg)] px-4 py-2 hover:bg-[var(--fg)] hover:text-[var(--bg)] transition-colors">
             Till {shop.host} →
@@ -101,8 +101,8 @@ export default async function ShopPage({ params, searchParams }: {
           nouns={{ best: `naturvinet från ${shop.name}`, one: `naturvin från ${shop.name}`, many: `naturviner från ${shop.name}` }}
         />
         <div className="mt-16 pt-12 border-t border-[var(--rule)] flex flex-wrap gap-2">
-          <Link href="/viner" className="text-sm border border-black/10 px-4 py-2 rounded-full hover:border-[var(--green)] transition-colors">Alla naturviner</Link>
-          <Link href="/butiker" className="text-sm border border-black/10 px-4 py-2 rounded-full hover:border-[var(--green)] transition-colors">Alla butiker</Link>
+          <Link href="/viner" className="text-sm font-bold border-2 border-[var(--ink)] text-[var(--ink)] px-4 py-2 rounded-full hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors">Alla naturviner</Link>
+          <Link href="/butiker" className="text-sm font-bold border-2 border-[var(--ink)] text-[var(--ink)] px-4 py-2 rounded-full hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors">Alla butiker</Link>
         </div>
       </div>
     </div>

@@ -23,31 +23,25 @@ export default function Nav() {
   if (pathname.startsWith("/admin")) return null;
 
   return (
-    <header className="sticky top-0 z-50 bg-[var(--bg)] border-b border-[var(--rule)]">
-      <div className="max-w-5xl mx-auto px-6 h-14 flex items-center justify-between">
+    <header className="sticky top-0 z-50 bg-[var(--bg)] border-b-[3px] border-[var(--ink)]">
+      <div className="max-w-6xl mx-auto px-5 md:px-8 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link href="/" className="flex items-center gap-2.5 hover:opacity-75 transition-opacity">
-          <Image
-            src="/logo.png"
-            alt="Naturvinstipset"
-            width={22}
-            height={33}
-            className="shrink-0"
-            unoptimized
-          />
-          <span className="text-sm font-bold tracking-tight text-[var(--fg)]">Naturvinstipset</span>
+        <Link href="/" className="flex items-center gap-2.5 text-[var(--ink)] hover:text-[var(--accent)] transition-colors">
+          <Image src="/logo.png" alt="" width={22} height={33} className="shrink-0" unoptimized />
+          <span className="font-[family-name:var(--font-display)] font-black uppercase text-[26px] leading-none">Naturvinstipset</span>
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden md:flex gap-5 lg:gap-8 text-sm">
+        <nav className="hidden lg:flex gap-6 text-[15px] font-bold">
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
-              className={`transition-opacity ${
+              aria-current={pathname === l.href ? "page" : undefined}
+              className={`py-1 border-b-[3px] transition-colors ${
                 pathname === l.href
-                  ? "text-[var(--fg)] font-medium opacity-100"
-                  : "text-[var(--fg)] opacity-40 hover:opacity-80"
+                  ? "text-[var(--ink)] border-[var(--accent)]"
+                  : "text-[var(--ink)] border-transparent hover:border-[var(--ink)]"
               }`}
             >
               {l.label}
@@ -57,26 +51,27 @@ export default function Nav() {
 
         {/* Mobile burger */}
         <button
-          className="md:hidden flex flex-col gap-[5px] p-1"
+          className="lg:hidden flex flex-col gap-[5px] p-2 -mr-2"
           onClick={() => setOpen(!open)}
           aria-label="Meny"
+          aria-expanded={open}
         >
-          <span className={`block h-px w-6 bg-[var(--fg)] transition-all origin-center ${open ? "rotate-45 translate-y-[7px]" : ""}`} />
-          <span className={`block h-px w-6 bg-[var(--fg)] transition-all ${open ? "opacity-0" : ""}`} />
-          <span className={`block h-px w-6 bg-[var(--fg)] transition-all origin-center ${open ? "-rotate-45 -translate-y-[7px]" : ""}`} />
+          <span className={`block h-[3px] w-7 bg-[var(--ink)] transition-all origin-center ${open ? "rotate-45 translate-y-[8px]" : ""}`} />
+          <span className={`block h-[3px] w-7 bg-[var(--ink)] transition-all ${open ? "opacity-0" : ""}`} />
+          <span className={`block h-[3px] w-7 bg-[var(--ink)] transition-all origin-center ${open ? "-rotate-45 -translate-y-[8px]" : ""}`} />
         </button>
       </div>
 
       {/* Mobile menu */}
       {open && (
-        <div className="md:hidden border-t border-[var(--rule)] bg-[var(--bg)]">
+        <div className="lg:hidden border-t-[3px] border-[var(--ink)] bg-[var(--bg)]">
           {links.map((l) => (
             <Link
               key={l.href}
               href={l.href}
               onClick={() => setOpen(false)}
-              className={`block px-6 py-4 text-sm border-b border-[var(--rule-xs)] ${
-                pathname === l.href ? "font-medium" : "opacity-50"
+              className={`block px-5 py-4 font-[family-name:var(--font-display)] font-black uppercase text-2xl border-b-2 border-[var(--rule)] ${
+                pathname === l.href ? "text-[var(--accent)]" : "text-[var(--ink)]"
               }`}
             >
               {l.label}

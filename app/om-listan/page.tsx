@@ -60,12 +60,12 @@ export default function OmListanPage() {
       />
 
       {/* Hero */}
-      <div className="border-b border-[var(--rule)] pt-16 pb-14 px-6">
+      <div className="border-b-[3px] border-[var(--ink)] pt-16 pb-14 px-6">
         <div className="max-w-2xl mx-auto">
-          <p className="text-xs font-semibold tracking-[0.2em] uppercase text-[var(--muted)] mb-4">
+          <p className="inline-block self-start bg-[var(--accent)] text-[var(--fg)] border-2 border-[var(--ink)] text-sm font-bold px-2 py-0.5 mb-4">
             Om listan
           </p>
-          <h1 className="text-3xl md:text-5xl font-extrabold text-[var(--fg)] mb-4 leading-tight tracking-tight">
+          <h1 className="text-5xl md:text-7xl mb-4">
             Hur vi betygsätter
           </h1>
           <p className="text-base text-[var(--muted)] leading-relaxed max-w-lg">
