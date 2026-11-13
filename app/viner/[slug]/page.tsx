@@ -157,12 +157,12 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
   return (
     <div className="max-w-3xl mx-auto px-5 py-12">
       <JsonLd data={[jsonLd, breadcrumbJsonLd([
-        ...(inTopList ? [{ name: "Topp 100", path: "/topp-100" }] : []),
+        inTopList ? { name: "Topp 100", path: "/topp-100" } : { name: "Alla viner", path: "/viner" },
         { name: `${wine.name}${wine.year && wine.year !== "NV" ? ` ${wine.year}` : ""}`, path: `/viner/${wine.slug}` },
       ])]} />
 
-      <Link href={inTopList ? "/topp-100" : "/"} className="text-sm text-black/40 hover:text-[var(--green)] mb-8 inline-block">
-        {inTopList ? "← Tillbaka till listan" : "← Till Vinkompassen"}
+      <Link href={inTopList ? "/topp-100" : "/viner"} className="text-sm text-black/40 hover:text-[var(--green)] mb-8 inline-block">
+        {inTopList ? "← Tillbaka till listan" : "← Alla viner"}
       </Link>
 
       {/* Top section */}
