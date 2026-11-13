@@ -248,6 +248,12 @@ export const bars: Bar[] = [
     description: "Vinbar bakom sushirestaurangen Hachi med fokus på naturvin och sake av hög kvalitet.",
   },
   {
+    slug: "lokal-uppsala", name: "Lokal", city: "Uppsala", address: "Geijersgatan 23A", neighborhood: "Luthagen",
+    lat: 59.86147, lng: 17.61776, website: "https://lokalluthagen.se", instagram: "lokalvinbar",
+    type: "Vinbar", wine_focus: "Naturvin", food: true,
+    description: "Vinbar i hörnet Geijersgatan–Kyrkogårdsgatan i Luthagen, en samlingspunkt för vinälskare i Uppsala. Här ordnas också vinprovningar, och bord går att boka.",
+  },
+  {
     slug: "la-ruelle-uppsala", name: "La Ruelle", city: "Uppsala", address: "Bredgränd 4", neighborhood: "Centrum",
     lat: 59.85733, lng: 17.64035, website: "https://www.laruelle.se",
     type: "Restaurang", wine_focus: "Naturvin och bra råvaror", food: true,
