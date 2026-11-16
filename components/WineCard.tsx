@@ -49,7 +49,7 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
   const hasProfile = wine.syra != null || wine.fyllighet != null || wine.funk != null;
 
   const articleNumber = getArticleNumber(wine);
-  const buy = buyLinks(wine, { source: "topplistan", path: "/topp-100" })[0];
+  const buy = buyLinks(wine, { source: "topplistan", path: "/topplista" })[0];
   const jsonLd = buildWineProductJsonLd(wine, { combinedRating: rating, communityCount: ratingCount });
 
   return (

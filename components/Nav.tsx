@@ -7,7 +7,7 @@ import { useState } from "react";
 
 const links = [
   { href: "/", label: "Vinkompassen" },
-  { href: "/topp-100", label: "Topp 100" },
+  { href: "/topplista", label: "Topplistan" },
   { href: "/viner", label: "Alla viner" },
   { href: "/vad-ar-naturvin", label: "Vad är naturvin?" },
   { href: "/naturvinsbarer", label: "Naturvinsbarer" },

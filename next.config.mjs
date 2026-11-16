@@ -8,6 +8,8 @@ const nextConfig = {
   },
   async redirects() {
     return [
+      // Topp 100 blev Veckans topplista 2026-11-16.
+      { source: "/topp-100", destination: "/topplista", permanent: true },
       { source: "/basta-orangevin-systembolaget", destination: "/orange", permanent: true },
       { source: "/basta-pet-nat-systembolaget", destination: "/pet-nat", permanent: true },
       // Barguiden gäller hela Sverige sedan 2026-11-11.

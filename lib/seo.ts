@@ -15,7 +15,7 @@ export const siteJsonLd = [
     url: SITE,
     logo: `${SITE}/logo.png`,
     email: "hej@naturvinstipset.se",
-    description: "Svensk guide till naturvin på Systembolaget och från webbutiker med hemleverans, med Vinkompassen, Topp 100 och naturvinsbarer i hela Sverige.",
+    description: "Svensk guide till naturvin på Systembolaget och från webbutiker med hemleverans, med Vinkompassen, veckans topplista och naturvinsbarer i hela Sverige.",
   },
   {
     "@context": "https://schema.org",

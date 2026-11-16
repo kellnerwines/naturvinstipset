@@ -24,7 +24,7 @@ export default function Footer({ retailerCompensation = false }: { retailerCompe
               <p className="font-bold text-[var(--ink)] mb-3">Utforska</p>
               <nav className="flex flex-col gap-2">
                 <Link href="/" className="hover:text-[var(--accent)] transition-colors">Vinkompassen</Link>
-                <Link href="/topp-100" className="hover:text-[var(--accent)] transition-colors">Topp 100</Link>
+                <Link href="/topplista" className="hover:text-[var(--accent)] transition-colors">Veckans topplista</Link>
                 <Link href="/viner" className="hover:text-[var(--accent)] transition-colors">Alla viner</Link>
                 <Link href="/butiker" className="hover:text-[var(--accent)] transition-colors">Butiker</Link>
                 <Link href="/producenter" className="hover:text-[var(--accent)] transition-colors">Producenter</Link>

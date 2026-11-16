@@ -1,7 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import HeroVideo from "@/components/HeroVideo";
-import { getWines, getRatings, combinedRating, getSettings, type Wine } from "@/lib/blob";
+import { getWines, getRatings, getSettings } from "@/lib/blob";
+import { topList, weekOf } from "@/lib/topList";
+import { bars, CITIES, citySlug, getBarsByCity } from "@/lib/bars";
+import TopThree from "@/components/TopThree";
 import { toCompassWine, type CompassWine } from "@/lib/compass/engine";
 import Vinkompassen from "@/components/compass/Vinkompassen";
 import HomeFaq from "@/components/HomeFaq";
@@ -24,8 +27,8 @@ export const metadata: Metadata = {
   },
 };
 
-const atSystembolaget = (w: Wine) =>
-  !!w.systembolagetUrl || (w.offers ?? []).some((o) => o.shop === "Systembolaget");
+/** Så många barer per stad visas på startsidan; resten finns på barsidan. */
+const BARS_PER_CITY = 6;
 
 export default async function HomePage() {
   const [wines, ratings, settings] = await Promise.all([getWines(), getRatings(), getSettings()]);
@@ -33,11 +36,9 @@ export default async function HomePage() {
   const shops = new Set(compassWines.map((w) => w.shop));
   const count = compassWines.length;
 
-  const top3 = wines
-    .filter((w) => w.published && atSystembolaget(w))
-    .map((w) => ({ w, r: combinedRating(w, ratings) }))
-    .sort((a, b) => b.r - a.r)
-    .slice(0, 3);
+  const top3 = topList(wines, ratings).slice(0, 3);
+  const { week } = weekOf();
+  const barCities = CITIES.filter((c) => getBarsByCity(c).length);
 
   return (
     <div>
@@ -68,6 +69,57 @@ export default async function HomePage() {
         </div>
       </section>
 
+      {/* ── Veckans topp 3 ────────────────────────────────────────────────── */}
+      {top3.length ? (
+        <section className="max-w-6xl mx-auto px-5 md:px-8 pt-16 md:pt-20">
+          <div className="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2 mb-6 border-b-[3px] border-[var(--ink)] pb-3">
+            <h2 className="text-5xl md:text-6xl">Veckans topp 3</h2>
+            <Link href="/topplista" className="font-bold whitespace-nowrap text-[var(--ink)] border-b-2 border-[var(--ink)] hover:text-[var(--accent)] hover:border-[var(--accent)]">Hela topplistan, vecka {week}</Link>
+          </div>
+          <TopThree entries={top3} source="topplistan" path="/" />
+        </section>
+      ) : null}
+
+      {/* ── Naturvinsbarer ───────────────────────────────────────────────── */}
+      <section className="max-w-6xl mx-auto px-5 md:px-8 pt-16 md:pt-20">
+        <div className="bg-[var(--ink)] text-[var(--paper)] border-[3px] border-[var(--ink)] p-5 md:p-10">
+          <div className="flex flex-col md:flex-row md:items-end md:justify-between gap-4 mb-8">
+            <div>
+              <h2 className="text-[42px] sm:text-5xl md:text-7xl text-[var(--paper)]">Naturvinsbarer</h2>
+              <p className="text-lg mt-2 max-w-xl">{bars.length} ställen i {barCities.length} städer där naturvinet står i centrum.</p>
+            </div>
+            <Link href="/naturvinsbarer" className="self-start md:self-auto shrink-0 rounded-full bg-[var(--accent)] text-[var(--fg)] border-2 border-[var(--paper)] font-bold px-6 py-3 hover:bg-[var(--paper)] hover:text-[var(--ink)] transition-colors">
+              Karta och alla barer
+            </Link>
+          </div>
+          <div className="grid grid-cols-2 gap-x-6 gap-y-8 lg:grid-cols-5">
+            {barCities.map((city) => {
+              const list = getBarsByCity(city);
+              return (
+                <div key={city}>
+                  <h3 className="font-[family-name:var(--font-display)] font-black uppercase text-3xl leading-none text-[var(--paper)] border-b-2 border-[var(--paper)] pb-2 mb-3">
+                    <Link href={`/naturvinsbarer#${citySlug(city)}`} className="hover:text-[var(--accent)] transition-colors">{city}</Link>
+                  </h3>
+                  <ul className="space-y-1.5">
+                    {list.slice(0, BARS_PER_CITY).map((b) => (
+                      <li key={b.slug}>
+                        <Link href={`/naturvinsbarer/${b.slug}`} className="font-bold hover:text-[var(--accent)] transition-colors">{b.name}</Link>
+                        <span className="block text-sm opacity-75">{b.neighborhood}</span>
+                      </li>
+                    ))}
+                    {list.length > BARS_PER_CITY ? (
+                      <li>
+                        <Link href={`/naturvinsbarer#${citySlug(city)}`} className="text-sm underline underline-offset-4 hover:text-[var(--accent)]">och {list.length - BARS_PER_CITY} till</Link>
+                      </li>
+                    ) : null}
+                  </ul>
+                </div>
+              );
+            })}
+          </div>
+        </div>
+      </section>
+
       {/* ── SEO-text ─────────────────────────────────────────────────────── */}
       <section className="max-w-2xl mx-auto px-4 pt-20 pb-6">
         <h2 className="text-4xl md:text-5xl mb-5">Naturvin på Systembolaget eller med hemleverans</h2>
@@ -91,32 +143,6 @@ export default async function HomePage() {
           </p>
         </div>
       </section>
-
-      {/* ── Topp 100-teaser ──────────────────────────────────────────────── */}
-      {top3.length ? (
-        <section className="max-w-2xl mx-auto px-4 py-12">
-          <div className="border-t-[3px] border-[var(--ink)] pt-8">
-            <div className="flex items-baseline justify-between gap-4 mb-6">
-              <h2 className="text-5xl">Topp 100</h2>
-              <Link href="/topp-100" className="font-bold whitespace-nowrap text-[var(--ink)] border-b-2 border-[var(--ink)] hover:text-[var(--accent)] hover:border-[var(--accent)]">Hela listan</Link>
-            </div>
-            <ol className="divide-y-2 divide-[var(--ink)] border-y-[3px] border-[var(--ink)]">
-              {top3.map(({ w, r }, i) => (
-                <li key={w.id}>
-                  <Link href={`/viner/${w.slug}`} className="flex items-baseline gap-4 py-4 group">
-                    <span className="font-[family-name:var(--font-display)] font-black text-4xl leading-none text-[var(--accent)] w-8">{i + 1}</span>
-                    <span className="flex-1 min-w-0">
-                      <span className="block font-[family-name:var(--font-display)] font-black uppercase text-2xl leading-none truncate text-[var(--ink)] group-hover:text-[var(--accent)]">{w.name}{w.year && w.year !== "NV" ? ` ${w.year}` : ""}</span>
-                      <span className="block text-sm text-[var(--muted)] mt-1">{w.producer} · {w.wineType} · {w.country}</span>
-                    </span>
-                    <span className="text-sm font-bold">{r.toFixed(1)}</span>
-                  </Link>
-                </li>
-              ))}
-            </ol>
-          </div>
-        </section>
-      ) : null}
 
       <HomeFaq />
     </div>

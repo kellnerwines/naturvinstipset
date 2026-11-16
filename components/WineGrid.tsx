@@ -107,7 +107,8 @@ const SORT_OPTS: { key: SortKey; label: string }[] = [
 ];
 
 /* ── Main component ────────────────────────────────────────────────────────── */
-export default function WineGrid({ entries }: { entries: WineEntry[] }) {
+/** rankOffset: platserna före listan som visas separat (topp 3). */
+export default function WineGrid({ entries, rankOffset = 0 }: { entries: WineEntry[]; rankOffset?: number }) {
   const [filters, setFilters] = useState<Filters>(empty);
   const [filtersOpen, setFiltersOpen] = useState(false);
   const [sort, setSort] = useState<SortKey>("rating-desc");
@@ -163,8 +164,8 @@ export default function WineGrid({ entries }: { entries: WineEntry[] }) {
   const sorted = useMemo(() => {
     return [...filtered].sort((a, b) => {
       switch (sort) {
-        // Listans ordning: Systembolaget-vinerna efter betyg, sedan utfyllnaden i importörsordning.
-        case "rating-desc": return Number(!!a.filler) - Number(!!b.filler) || (a.filler ? 0 : b.rating - a.rating);
+        // Listans egen ordning (lib/topList.ts) behålls.
+        case "rating-desc": return 0;
         case "rating-asc":  return a.rating - b.rating;
         case "price-desc":  return Number(b.wine.price ?? 0) - Number(a.wine.price ?? 0);
         case "price-asc":   return Number(a.wine.price ?? 0) - Number(b.wine.price ?? 0);
@@ -172,14 +173,8 @@ export default function WineGrid({ entries }: { entries: WineEntry[] }) {
     });
   }, [filtered, sort]);
 
-  /* Pin motm to #1 */
-  const ranked = useMemo(() => {
-    const motmIdx = sorted.findIndex(e => e.wine.wineOfMonth);
-    if (motmIdx > 0) {
-      return [sorted[motmIdx], ...sorted.slice(0, motmIdx), ...sorted.slice(motmIdx + 1)];
-    }
-    return sorted;
-  }, [sorted]);
+  // Månadens vin står redan först i listan (lib/topList.ts).
+  const ranked = sorted;
 
   /* Toggle helpers */
   function toggleArr<T>(arr: T[], val: T): T[] {
@@ -381,7 +376,7 @@ export default function WineGrid({ entries }: { entries: WineEntry[] }) {
       ) : (
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-x-6 gap-y-12">
           {ranked.map(({ wine, rating, count, likeCount }, i) => (
-            <WineCard key={wine.id} wine={wine} rating={rating} ratingCount={count} likeCount={likeCount} rank={i + 1} wineOfMonth={wine.wineOfMonth} />
+            <WineCard key={wine.id} wine={wine} rating={rating} ratingCount={count} likeCount={likeCount} rank={rankOffset + i + 1} wineOfMonth={wine.wineOfMonth} />
           ))}
         </div>
       )}

@@ -22,7 +22,7 @@ const FAQS = [
   {
     question: "Hur hittar man naturvin på Systembolaget?",
     answer:
-      "De flesta naturviner säljs via Systembolagets tillfälliga sortiment och beställningssortiment snarare än i den fasta hyllan, så de kan vara svåra att hitta på egen hand. Enklast är att söka på producent eller artikelnummer direkt på systembolaget.se — eller använda vår Topp 100-lista här på Naturvinstipset med direktlänkar till varje vin.",
+      "De flesta naturviner säljs via Systembolagets tillfälliga sortiment och beställningssortiment snarare än i den fasta hyllan, så de kan vara svåra att hitta på egen hand. Enklast är att söka på producent eller artikelnummer direkt på systembolaget.se — eller använda veckans topplista här på Naturvinstipset med direktlänkar till varje vin.",
   },
 ];
 

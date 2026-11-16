@@ -87,15 +87,15 @@ export default async function OmOssPage() {
               </p>
             </div>
             <div>
-              <h3 className="font-semibold text-[var(--fg)] mb-2">Topp 100</h3>
+              <h3 className="font-semibold text-[var(--fg)] mb-2">Veckans topplista</h3>
               <p>
-                Topplistan börjar med naturvinerna på Systembolaget, ordnade efter ett snitt av vårt betyg och besökarnas betyg, där vårt betyg väger lika mycket som en röst. Räcker de inte till 100 fylls resten av platserna med naturviner med hemleverans från Flaskvis, i importörsordningen Kellner &amp; Kellner, Backyard Wines, Wine Rebels och Nordic 4 Wines.
+                Topplistan börjar med naturvinerna på Systembolaget, ordnade efter ett snitt av vårt betyg och besökarnas betyg, där vårt betyg väger lika mycket som en röst. Räcker de inte till 100 fylls resten av platserna med naturviner med hemleverans från Flaskvis, i importörsordningen Kellner &amp; Kellner, Backyard Wines, Wine Rebels och Nordic 4 Wines. Bara viner med flaskbild är med. Betygen räknas fram till måndag, så listan står still hela veckan och byts varje måndag.
               </p>
             </div>
             <div>
               <h3 className="font-semibold text-[var(--fg)] mb-2">Egen import</h3>
               <p>
-                Naturvinstipset drivs av grundaren av vinimportören Kellner &amp; Kellner. Därför märks viner som Kellner &amp; Kellner importerar med &quot;Egen import&quot; överallt där de visas. I Vinkompassen ger egen import ingen extra poäng, och det kontrolleras av ett automatiskt test i koden. I Topp 100 kommer Kellner &amp; Kellners viner först bland webbutiksvinerna som fyller ut listan efter Systembolaget-vinerna.
+                Naturvinstipset drivs av grundaren av vinimportören Kellner &amp; Kellner. Därför märks viner som Kellner &amp; Kellner importerar med &quot;Egen import&quot; överallt där de visas. I Vinkompassen ger egen import ingen extra poäng, och det kontrolleras av ett automatiskt test i koden. I topplistan kommer Kellner &amp; Kellners viner först bland webbutiksvinerna som fyller ut listan efter Systembolaget-vinerna.
               </p>
             </div>
             <div>
@@ -142,10 +142,10 @@ export default async function OmOssPage() {
         <div className="max-w-2xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <h2 className="text-xl font-bold text-[var(--fg)]">Redo att hitta ditt nästa naturvin?</h2>
           <Link
-            href="/topp-100"
+            href="/topplista"
             className="shrink-0 inline-flex items-center gap-2 text-sm font-semibold text-[var(--fg)] border border-[var(--fg)] px-5 py-3 hover:bg-[var(--fg)] hover:text-[var(--bg)] transition-colors"
           >
-            Se Topp 100 →
+            Se veckans topplista →
           </Link>
         </div>
       </section>

@@ -82,7 +82,7 @@ export default async function BastaNaturvinNyborjarePage() {
           <p className="text-[var(--muted)] text-sm leading-relaxed">
             Gillar du vad du hittar här? Nästa steg är att utforska viner med
             lite högre funk och djupare karaktär. Vår{" "}
-            <Link href="/topp-100" className="underline">
+            <Link href="/topplista" className="underline">
               fullständiga lista
             </Link>{" "}
             har smakparametrar som hjälper dig steg för steg.

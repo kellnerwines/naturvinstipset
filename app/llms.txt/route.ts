@@ -56,7 +56,7 @@ ${ANSWER_PAGES.map((p) => `- [${p.question}](${SITE}/svar/${p.slug}): ${p.lead}`
 ## Guider och listor
 - [Alla naturviner](${SITE}/viner): hela biblioteket, filtrerbart med t.ex. ?butik=wine-trade&farg=rott&land=frankrike&pris=300
 - Per butik: ${SHOPS.map((s) => `[${s.name}](${SITE}/butiker/${s.slug})`).join(", ")}
-- [Topp 100](${SITE}/topp-100): de bäst betygsatta naturvinerna på Systembolaget, kompletterade med naturviner med hemleverans
+- [Veckans topplista](${SITE}/topplista): de bäst betygsatta naturvinerna på Systembolaget, kompletterade med naturviner med hemleverans, uppdateras varje måndag
 - [Rött naturvin](${SITE}/rott), [vitt naturvin](${SITE}/vitt), [orangevin](${SITE}/orange), [pét-nat](${SITE}/pet-nat)
 - [Naturvin under 200 kr](${SITE}/basta-naturvin-under-200-kr), [för nybörjare](${SITE}/basta-naturvin-for-nyborjare), [till mat](${SITE}/basta-naturvin-till-mat)
 - Smakprofiler: [mineralisk](${SITE}/smakprofil/mineralisk), [fruktig](${SITE}/smakprofil/fruktig), [jordig](${SITE}/smakprofil/jordig), [lätt](${SITE}/smakprofil/latt), [funk](${SITE}/smakprofil/funk)

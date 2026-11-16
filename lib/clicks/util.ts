@@ -5,7 +5,7 @@ export type SourcePage = "kompassen" | "vinsida" | "topplistan" | "kategori" | "
 export const SOURCE_PAGES: SourcePage[] = ["kompassen", "vinsida", "topplistan", "kategori", "guide", "okand"];
 
 export const SOURCE_LABEL: Record<SourcePage, string> = {
-  kompassen: "Vinkompassen", vinsida: "Vinsida", topplistan: "Topp 100",
+  kompassen: "Vinkompassen", vinsida: "Vinsida", topplistan: "Topplistan",
   kategori: "Kategorisida", guide: "Guide", okand: "Okänd",
 };
 
