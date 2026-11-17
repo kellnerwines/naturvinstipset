@@ -39,6 +39,7 @@ function BarCard({ bar }: { bar: Bar }) {
     <article className="border-[3px] border-[var(--ink)] p-5 bg-[var(--paper)]">
       <p className="text-sm font-bold text-[var(--accent)] mb-1.5">
         {bar.type} · {bar.neighborhood}
+        {bar.opening ? <span className="inline-block bg-[var(--accent)] text-[var(--fg)] border-2 border-[var(--ink)] text-xs font-bold px-1.5 py-0.5 ml-2 align-middle">{bar.opening}</span> : null}
       </p>
       <h3 className="font-[family-name:var(--font-display)] font-black uppercase text-[34px] leading-[0.95] mb-2">
         <Link href={`/naturvinsbarer/${bar.slug}`} className="hover:text-[var(--accent)] transition-colors">{bar.name}</Link>

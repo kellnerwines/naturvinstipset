@@ -9,7 +9,7 @@ import type { Map as LeafletMap } from "leaflet";
 import "leaflet/dist/leaflet.css";
 import type { Bar } from "@/lib/bars";
 
-type MapBar = Pick<Bar, "slug" | "name" | "city" | "address" | "neighborhood" | "lat" | "lng" | "type">;
+type MapBar = Pick<Bar, "slug" | "name" | "city" | "address" | "neighborhood" | "lat" | "lng" | "type" | "opening">;
 
 const esc = (s: string) => s.replace(/[&<>"']/g, (c) => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#39;" })[c]!);
 
@@ -32,7 +32,7 @@ export default function BarMap({ bars, cities }: { bars: MapBar[]; cities: strin
         L.marker([b.lat, b.lng], { icon, title: b.name, alt: b.name })
           .addTo(m)
           .bindPopup(
-            `<a href="/naturvinsbarer/${esc(b.slug)}" class="bar-popup"><strong>${esc(b.name)}</strong><span>${esc(b.type)} · ${esc(b.neighborhood)}, ${esc(b.city)}</span><span>${esc(b.address)}</span></a>`,
+            `<a href="/naturvinsbarer/${esc(b.slug)}" class="bar-popup"><strong>${esc(b.name)}</strong><span>${esc(b.type)} · ${esc(b.neighborhood)}, ${esc(b.city)}</span><span>${esc(b.address)}</span>${b.opening ? `<span><b>${esc(b.opening)}</b></span>` : ""}</a>`,
           );
       }
       // Hjulet zoomar först när man har klickat i kartan, så att sidan går att scrolla förbi den.

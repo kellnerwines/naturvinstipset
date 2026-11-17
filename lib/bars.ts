@@ -19,6 +19,8 @@ export type Bar = {
   wine_focus: string;
   food: boolean;
   description: string;
+  /** Ställen som inte har öppnat än, t.ex. "Öppnar snart" eller "Öppnar i december". Tas bort när de öppnat. */
+  opening?: string;
 };
 
 /** Städer i den ordning de visas. */
