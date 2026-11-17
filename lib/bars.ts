@@ -202,6 +202,12 @@ export const bars: Bar[] = [
     description: "Kvartersbar i Aspudden sedan 2018 med naturvin, drinkar och smårätter. Ett mysigt häng för par och kompisar söder om Liljeholmen.",
   },
   {
+    slug: "kakes-kompis-stockholm", name: "Kåkes Kompis", city: "Stockholm", address: "Sjöbjörnsvägen 36", neighborhood: "Gröndal",
+    lat: 59.31631, lng: 18.00974, website: "https://www.kakeskompis.se", instagram: "kakeskompis",
+    type: "Restaurang", wine_focus: "Naturvin", food: true, opening: "Öppnar snart",
+    description: "Ny bistro och café i Gröndal som vill bli ett stammisställe söder om söder, både för en vanlig fredag och för att fira något större. Mat, kaffe och naturvin.",
+  },
+  {
     slug: "bar-la-lune-goteborg", name: "Bar La Lune", city: "Göteborg", address: "Vasa Kyrkogata 1", neighborhood: "Vasastaden",
     lat: 57.69651, lng: 11.97168, website: "https://barlalune.se", instagram: "barlalune",
     type: "Vinbar", wine_focus: "Handplockat naturvin", food: true,
