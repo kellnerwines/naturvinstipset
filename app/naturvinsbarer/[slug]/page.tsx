@@ -51,6 +51,7 @@ export default async function BarPage({ params }: { params: Promise<{ slug: stri
       <p className="inline-block bg-[var(--accent)] text-[var(--fg)] border-2 border-[var(--ink)] text-sm font-bold px-2 py-0.5 mb-4">
         {bar.type} · {bar.neighborhood}, {bar.city}
       </p>
+      {bar.opening ? <p className="inline-block ml-2 bg-[var(--paper)] text-[var(--fg)] border-2 border-[var(--ink)] text-sm font-bold px-2 py-0.5 mb-4">{bar.opening}</p> : null}
       <h1 className="text-6xl md:text-8xl mb-5">{bar.name}</h1>
       <p className="leading-relaxed mb-8 text-lg">{bar.description}</p>
 
@@ -69,6 +70,7 @@ export default async function BarPage({ params }: { params: Promise<{ slug: stri
               ["Typ", bar.type],
               ["Vinet", bar.wine_focus],
               ["Mat", bar.food ? "Ja" : "Snacks eller ingen mat"],
+              ...(bar.opening ? [["Status", bar.opening]] : []),
             ].map(([label, value]) => (
               <tr key={label} className="border-b-2 border-[var(--rule)] last:border-0">
                 <td className="px-4 py-2.5 font-bold whitespace-nowrap w-32">{label}</td>

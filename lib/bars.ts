@@ -19,6 +19,8 @@ export type Bar = {
   wine_focus: string;
   food: boolean;
   description: string;
+  /** Ställen som inte har öppnat än, t.ex. "Öppnar snart" eller "Öppnar i december". Tas bort när de öppnat. */
+  opening?: string;
 };
 
 /** Städer i den ordning de visas. */
@@ -198,6 +200,18 @@ export const bars: Bar[] = [
     lat: 59.30567, lng: 18.00058, website: "https://fabelbar.se", instagram: "_fabelbar_",
     type: "Bar", wine_focus: "Naturvin och smårätter", food: true,
     description: "Kvartersbar i Aspudden sedan 2018 med naturvin, drinkar och smårätter. Ett mysigt häng för par och kompisar söder om Liljeholmen.",
+  },
+  {
+    slug: "kakes-kompis-stockholm", name: "Kåkes Kompis", city: "Stockholm", address: "Sjöbjörnsvägen 36", neighborhood: "Gröndal",
+    lat: 59.31631, lng: 18.00974, website: "https://www.kakeskompis.se", instagram: "kakeskompis",
+    type: "Restaurang", wine_focus: "Naturvin", food: true, opening: "Öppnar snart",
+    description: "Ny bistro och café i Gröndal som vill bli ett stammisställe söder om söder, både för en vanlig fredag och för att fira något större. Mat, kaffe och naturvin.",
+  },
+  {
+    slug: "klover-stockholm", name: "Klöver", city: "Stockholm", address: "Rålambsvägen 54", neighborhood: "Fredhäll",
+    lat: 59.3303, lng: 18.00316,
+    type: "Vinbar", wine_focus: "Naturvin från mindre franska producenter", food: true,
+    description: "Vinbar i hörnet mot Frödingsvägen i Fredhäll, öppnad i slutet av 2025 av paret Suzanna El Khoury och Måns Magnusson. Naturvinerna kommer mest från mindre franska producenter och lutar åt det eleganta snarare än det funkiga. Till det medelhavsinspirerade smårätter.",
   },
   {
     slug: "bar-la-lune-goteborg", name: "Bar La Lune", city: "Göteborg", address: "Vasa Kyrkogata 1", neighborhood: "Vasastaden",
