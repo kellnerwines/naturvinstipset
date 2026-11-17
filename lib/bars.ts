@@ -208,6 +208,12 @@ export const bars: Bar[] = [
     description: "Ny bistro och café i Gröndal som vill bli ett stammisställe söder om söder, både för en vanlig fredag och för att fira något större. Mat, kaffe och naturvin.",
   },
   {
+    slug: "klover-stockholm", name: "Klöver", city: "Stockholm", address: "Rålambsvägen 54", neighborhood: "Fredhäll",
+    lat: 59.3303, lng: 18.00316,
+    type: "Vinbar", wine_focus: "Naturvin från mindre franska producenter", food: true,
+    description: "Vinbar i hörnet mot Frödingsvägen i Fredhäll, öppnad i slutet av 2025 av paret Suzanna El Khoury och Måns Magnusson. Naturvinerna kommer mest från mindre franska producenter och lutar åt det eleganta snarare än det funkiga. Till det medelhavsinspirerade smårätter.",
+  },
+  {
     slug: "bar-la-lune-goteborg", name: "Bar La Lune", city: "Göteborg", address: "Vasa Kyrkogata 1", neighborhood: "Vasastaden",
     lat: 57.69651, lng: 11.97168, website: "https://barlalune.se", instagram: "barlalune",
     type: "Vinbar", wine_focus: "Handplockat naturvin", food: true,
