@@ -209,9 +209,9 @@ export const bars: Bar[] = [
   },
   {
     slug: "klover-stockholm", name: "Klöver", city: "Stockholm", address: "Rålambsvägen 54", neighborhood: "Fredhäll",
-    lat: 59.3303, lng: 18.00316,
+    lat: 59.3303, lng: 18.00316, website: "https://www.klovervinbar.se", instagram: "klovervinbar",
     type: "Vinbar", wine_focus: "Naturvin från mindre franska producenter", food: true,
-    description: "Vinbar i hörnet mot Frödingsvägen i Fredhäll, öppnad i slutet av 2025 av paret Suzanna El Khoury och Måns Magnusson. Naturvinerna kommer mest från mindre franska producenter och lutar åt det eleganta snarare än det funkiga. Till det medelhavsinspirerade smårätter.",
+    description: "Vinbar i hörnet mot Frödingsvägen i Fredhäll, öppnad i slutet av 2025 av paret Suzanna El Khoury och Måns Magnusson. Naturvinerna kommer mest från mindre franska producenter och lutar åt det eleganta snarare än det funkiga. Till det medelhavsinspirerade smårätter. Det går inte att boka bord.",
   },
   {
     slug: "bar-la-lune-goteborg", name: "Bar La Lune", city: "Göteborg", address: "Vasa Kyrkogata 1", neighborhood: "Vasastaden",
