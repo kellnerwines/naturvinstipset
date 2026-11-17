@@ -163,8 +163,8 @@ export default function WineGrid({ entries }: { entries: WineEntry[] }) {
   const sorted = useMemo(() => {
     return [...filtered].sort((a, b) => {
       switch (sort) {
-        // Listans ordning: Systembolaget-vinerna efter betyg, sedan utfyllnaden i importörsordning.
-        case "rating-desc": return Number(!!a.filler) - Number(!!b.filler) || (a.filler ? 0 : b.rating - a.rating);
+        // Listans ordning: Systembolaget-vinerna efter betyg, sedan utfyllnaden, också efter betyg.
+        case "rating-desc": return Number(!!a.filler) - Number(!!b.filler) || b.rating - a.rating;
         case "rating-asc":  return a.rating - b.rating;
         case "price-desc":  return Number(b.wine.price ?? 0) - Number(a.wine.price ?? 0);
         case "price-asc":   return Number(a.wine.price ?? 0) - Number(b.wine.price ?? 0);

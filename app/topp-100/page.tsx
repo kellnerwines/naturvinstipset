@@ -67,7 +67,7 @@ export default async function Topp100Page() {
           <WineGrid entries={entries} />
           <p className="text-[11px] text-[var(--muted)] leading-snug mt-10 max-w-2xl">
             Listan börjar med de {sbCount} bäst betygsatta naturvinerna på Systembolaget.
-            {entries.length > sbCount ? ` Resten av platserna fylls med naturviner med hemleverans från ${FILL_SHOP}, i importörsordningen ${FILL_IMPORTERS.join(", ").replace(/, ([^,]*)$/, " och $1")}. Kellner & Kellner drivs av sajtens grundare, och deras viner är märkta "Egen import".` : ""}{" "}
+            {entries.length > sbCount ? ` Resten av platserna fylls med naturviner med hemleverans från ${FILL_SHOP}, från ${FILL_IMPORTERS.join(", ").replace(/, ([^,]*)$/, " och $1")}, också efter betyg. Kellner & Kellner drivs av Simon och Stefan som står bakom sajten. Deras viner är märkta "Egen import" och får ingen förtur.` : ""}{" "}
             {retailerNote([{ isSb: true }, ...(entries.length > sbCount ? [{ isSb: false }] : [])])}{" "}
             <Link href={OWN_IMPORT_HREF} className="underline underline-offset-2">Så rankar vi</Link>.
           </p>

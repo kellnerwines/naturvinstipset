@@ -278,7 +278,7 @@ export default async function OmOssPage() {
               settings.retailerCompensation
                 ? ["var(--wine-vitt)", "Märkta länkar", "Vi kan få ersättning från webbutiker när du köper via våra länkar. De länkarna är märkta, och ersättningen påverkar inte rankningen."]
                 : ["var(--wine-vitt)", "Ingen ersättning från butikerna", "Varken Systembolaget eller webbutikerna betalar oss. Om det ändras står det här, och länkarna till den butiken märks."],
-              ["var(--accent)", "Egen import märks alltid", "Sajten drivs av Simon och Stefan på vinimporten Kellner & Kellner. Deras viner märks \"Egen import\" och får ingen extra poäng i kompassen."],
+              ["var(--accent)", "Egen import märks alltid", "Sajten drivs av Simon och Stefan på vinimporten Kellner & Kellner. Deras viner märks \"Egen import\" och får ingen förtur i kompassen eller i Topp 100."],
               ["var(--ink)", "Klick räknas utan kakor", "Vi räknar hur många som klickar vidare till varje butik, utan kakor och utan att spara IP-adresser."],
             ].map(([color, title, text]) => (
               <div key={title} className={`${card} p-6`}>
@@ -325,13 +325,13 @@ export default async function OmOssPage() {
             <div>
               <h3 className="font-semibold text-[var(--fg)] mb-2">Topp 100</h3>
               <p>
-                Topplistan börjar med naturvinerna på Systembolaget, ordnade efter ett snitt av vårt betyg och besökarnas betyg, där vårt betyg väger lika mycket som en röst. Räcker de inte till 100 fylls resten av platserna med naturviner med hemleverans från Flaskvis, i importörsordningen Kellner &amp; Kellner, Backyard Wines, Wine Rebels och Nordic 4 Wines.
+                Topplistan börjar med naturvinerna på Systembolaget, ordnade efter ett snitt av vårt betyg och besökarnas betyg, där vårt betyg väger lika mycket som en röst. Räcker de inte till 100 fylls resten av platserna med naturviner med hemleverans från Flaskvis, från Kellner &amp; Kellner, Backyard Wines, Wine Rebels och Nordic 4 Wines. De ordnas också efter betyg, och ingen importör får förtur.
               </p>
             </div>
             <div>
               <h3 className="font-semibold text-[var(--fg)] mb-2">Egen import</h3>
               <p>
-                Naturvinstipset drivs av Simon och Stefan på vinimporten Kellner &amp; Kellner. Därför märks viner som Kellner &amp; Kellner importerar med &quot;Egen import&quot; överallt där de visas. I Vinkompassen ger egen import ingen extra poäng, och det kontrolleras av ett automatiskt test i koden. I Topp 100 kommer Kellner &amp; Kellners viner först bland webbutiksvinerna som fyller ut listan efter Systembolaget-vinerna.
+                Naturvinstipset drivs av Simon och Stefan på vinimporten Kellner &amp; Kellner. Därför märks viner som Kellner &amp; Kellner importerar med &quot;Egen import&quot; överallt där de visas. Egen import ger ingen extra poäng i Vinkompassen och ingen förtur i Topp 100. Båda delarna kontrolleras av automatiska tester i koden.
               </p>
             </div>
             <div>
