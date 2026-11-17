@@ -36,14 +36,14 @@ export default function CookieBanner() {
       {consent === "all" && (
         <>
           <Script
-            src="https://www.googletagmanager.com/gtag/js?id=G-P7KKXJ1XYD"
+            src="https://www.googletagmanager.com/gtag/js?id=G-57LY59HCNH"
             strategy="afterInteractive"
           />
           <Script id="google-analytics" strategy="afterInteractive">{`
             window.dataLayer = window.dataLayer || [];
             function gtag(){dataLayer.push(arguments);}
             gtag('js', new Date());
-            gtag('config', 'G-P7KKXJ1XYD');
+            gtag('config', 'G-57LY59HCNH');
           `}</Script>
           <Script id="meta-pixel" strategy="afterInteractive">{`
             !function(f,b,e,v,n,t,s)
