@@ -21,12 +21,23 @@ describe("Topp 100", () => {
     wine("vn", { importer: "Kellner & Kellner", offers: [offer("Vin & Natur")] }),
   ];
 
-  it("Systembolaget först efter betyg, sedan Flaskvis i importörsordning upp till 100", () => {
+  it("Systembolaget först efter betyg, sedan Flaskvis efter betyg upp till 100", () => {
     const list = topHundred([...fv, ...sb], []);
     expect(list).toHaveLength(TOP_SIZE);
     expect(list.slice(0, 96).every((e) => !e.filler && e.wine.id.startsWith("sb"))).toBe(true);
     expect(list[0].rating).toBe(5);
-    expect(list.slice(96).map((e) => e.wine.id)).toEqual(["kk", "backyard", "rebels-a", "rebels-b"]);
+    // Lika betyg: bokstavsordning efter namn. Kellner & Kellner får ingen förtur.
+    expect(list.slice(96).map((e) => e.wine.id)).toEqual(["rebels-a", "rebels-b", "backyard", "kk"]);
+  });
+
+  it("egen import får ingen förtur: utfyllnaden följer betyget", () => {
+    const fill = [
+      wine("kk-lagt", { importer: "Kellner & Kellner", adminRating: 2, offers: [offer("Flaskvis")] }),
+      wine("backyard-hogt", { importer: "Backyard Wines", adminRating: 5, offers: [offer("Flaskvis")] }),
+      wine("nordic-mitt", { importer: "Nordic 4 Wines", adminRating: 4, offers: [offer("Flaskvis")] }),
+    ];
+    const list = topHundred([...fill, ...sb], []);
+    expect(list.slice(96).map((e) => e.wine.id)).toEqual(["backyard-hogt", "nordic-mitt", "kk-lagt"]);
   });
 
   it("utan lediga platser fylls inget", () => {
