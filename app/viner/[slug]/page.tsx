@@ -15,6 +15,7 @@ import JsonLd from "@/components/JsonLd";
 import { breadcrumbJsonLd } from "@/lib/seo";
 import { countrySlug, grapeSlug, grapesOf, producerName, producerSlug } from "@/lib/entities";
 import type { Wine } from "@/lib/blob";
+import { hasWinePage, isSoldOut, similarWines } from "@/lib/soldOut";
 
 const TYPE_WORD: Record<string, string> = { "Rött": "rött", "Vitt": "vitt", Orange: "orange", "Rosé": "rosé", Mousserande: "mousserande", "Pét Nat": "pét-nat" };
 
@@ -55,7 +56,7 @@ function wineMetaDescription(w: Wine): string {
 export async function generateMetadata({ params }: { params: Promise<{ slug: string }> }): Promise<Metadata> {
   const { slug } = await params;
   const wines = await getWines();
-  const wine = wines.find((w) => w.slug === slug && w.published);
+  const wine = wines.find((w) => w.slug === slug && hasWinePage(w));
   if (!wine) return { title: "Vin" };
   const pageTitle = wineHeadline(wine);
   const ogTitle = `${pageTitle} – Naturvinstipset`;
@@ -100,7 +101,7 @@ const typeField: Record<string, string> = {
 export default async function WinePage({ params }: { params: Promise<{ slug: string }> }) {
   const { slug } = await params;
   const [wines, ratings, settings] = await Promise.all([getWines(), getRatings(), getSettings()]);
-  const wine = wines.find((w) => w.slug === slug && w.published);
+  const wine = wines.find((w) => w.slug === slug && hasWinePage(w));
   if (!wine) notFound();
 
   const wineRatings = ratings.filter((r) => r.wineId === wine.id);
@@ -131,6 +132,9 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
   const producerWines = wine.producer
     ? wines.filter((w) => w.published && w.id !== wine.id && !!w.producer && producerSlug(w.producer) === producerSlug(wine.producer)).slice(0, 4)
     : [];
+
+  const soldOut = isSoldOut(wine);
+  const similar = soldOut ? similarWines(wine, wines) : [];
 
   const regionalWines = (wine.region || wine.country)
     ? wines
@@ -239,7 +243,31 @@ export default async function WinePage({ params }: { params: Promise<{ slug: str
               <p className="text-center text-xs text-[var(--muted)] mt-1.5">{l.how}</p>
             </div>
           ))}
-          {!links.length && hasAnyOffer(wine) ? (
+          {soldOut ? (
+            <div className="border-[3px] border-[var(--ink)] bg-[var(--paper)] p-5 mb-4">
+              <p className="font-bold text-lg mb-1">Slut just nu</p>
+              <p className="text-[var(--muted)]">
+                Vinet finns inte i lager i någon av butikerna vi följer. Sidan ligger kvar, och vinet dyker upp i kompassen
+                och listorna igen när det går att köpa.
+              </p>
+              {similar.length ? (
+                <>
+                  <p className="font-bold mt-4 mb-2">Liknande viner som finns nu</p>
+                  <ul className="space-y-1.5">
+                    {similar.map((w) => (
+                      <li key={w.id}>
+                        <Link href={`/viner/${w.slug}`} className="underline underline-offset-2 decoration-2 hover:text-[var(--accent)]">
+                          {w.name}{w.year ? ` ${w.year}` : ""}
+                        </Link>
+                        <span className="text-sm text-[var(--muted)]"> · {w.producer}</span>
+                      </li>
+                    ))}
+                  </ul>
+                </>
+              ) : null}
+            </div>
+          ) : null}
+          {!links.length && hasAnyOffer(wine) && !soldOut ? (
             <p className="text-center font-bold border-[3px] border-[var(--ink)] rounded-full px-6 py-3">Tillfälligt slut</p>
           ) : null}
           {links.length ? (
