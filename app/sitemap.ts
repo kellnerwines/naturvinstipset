@@ -1,4 +1,5 @@
 import type { MetadataRoute } from "next";
+import { hasWinePage } from "@/lib/soldOut";
 import { getWines, getBlogs, isPostLive } from "@/lib/blob";
 import { bars } from "@/lib/bars";
 import { ANSWER_PAGES } from "@/lib/answers";
@@ -43,10 +44,11 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     priority: 0.7,
   }));
 
-  // Alla publicerade viner, både från Systembolaget och från webbutikerna (BRIEF-KOMPASSEN.md, 9).
+  // Alla publicerade viner, både från Systembolaget och från webbutikerna (BRIEF-KOMPASSEN.md, 9),
+  // plus viner som bara är slut för stunden, så att deras sidor behåller sin plats (lib/soldOut.ts).
   // lastModified är senaste synken av vinets erbjudanden, annars när vinet skapades.
   const wineRoutes = wines
-    .filter((w) => w.published)
+    .filter(hasWinePage)
     .map((w) => {
       const synced = (w.offers ?? []).map((o) => Date.parse(o.lastSyncedAt)).filter(Number.isFinite);
       const created = Date.parse(w.createdAt);
