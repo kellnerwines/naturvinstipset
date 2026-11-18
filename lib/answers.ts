@@ -86,7 +86,7 @@ export const ANSWER_PAGES: AnswerPage[] = [
   { slug: "basta-orangevin", question: "Vilket orangevin ska man välja?", lead: "Orangevin är vita druvor som fått ligga på skalen, med textur och lite grepp.", params: { farg: "orange" } },
   { slug: "pet-nat-och-bubbel", question: "Vilken pét-nat eller mousserande naturvin ska man välja?", lead: "Pét-nat och andra mousserande naturviner passar som fördrink och till mingel.", params: { farg: "bubbel" } },
   { slug: "naturvin-rose", question: "Vilken rosé ska man välja bland naturvinerna?", lead: "En naturvinsrosé ska vara torr och frisk.", params: { farg: "rose" } },
-  { slug: "naturvin-med-hemleverans", question: "Vilket naturvin kan man köpa online med hemleverans?", lead: "Webbutikerna här säljer till Sverige med svensk alkoholskatt inräknad i priset.", params: { butik: "webbutik" } },
+  { slug: "naturvin-med-hemleverans", question: "Var kan man köpa naturvin online med hemleverans?", lead: "Naturvin går att köpa online från svenska webbutiker som levererar hem. Butikerna här säljer till svenska konsumenter med svensk alkoholskatt inräknad i priset, så det tillkommer ingen skatt efteråt.", params: { butik: "webbutik" } },
   { slug: "naturvin-pa-systembolaget", question: "Vilket naturvin ska man köpa på Systembolaget?", lead: "Bland naturvinerna på Systembolaget finns allt från lättdrucket till riktigt funkigt.", params: { butik: "systembolaget" } },
 ];
 

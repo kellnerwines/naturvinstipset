@@ -4,6 +4,8 @@ import Link from "next/link";
 import { getSettings, getWines, getRatings } from "@/lib/blob";
 import { answer } from "@/lib/answers";
 import { toCompassWine, type CompassWine } from "@/lib/compass/engine";
+import JsonLd from "@/components/JsonLd";
+import { SITE, publisherRef } from "@/lib/seo";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/om-oss" },
@@ -25,6 +27,20 @@ const EXAMPLE = { farg: "rott", budget: "199", mat: "kott", syra: "4", fyllighet
 const EXAMPLE_AXES: [string, keyof typeof EXAMPLE, "syra" | "fyllighet" | "stravhet" | "funk"][] = [
   ["Syra", "syra", "syra"], ["Fyllighet", "fyllighet", "fyllighet"], ["Strävhet", "stravhet", "stravhet"], ["Funk", "funk", "funk"],
 ];
+
+// Vilka som står bakom sajten, som strukturerad data (samma uppgifter som i "Vem står bakom?").
+const KELLNER = { "@type": "Organization", name: "Kellner & Kellner", url: "https://www.kellnerwines.se" };
+const aboutJsonLd = {
+  "@context": "https://schema.org",
+  "@type": "AboutPage",
+  url: `${SITE}/om-oss`,
+  name: "Så funkar Naturvinstipset",
+  about: publisherRef,
+  mainEntity: [
+    { "@type": "Person", name: "Simon Kellner", worksFor: KELLNER, memberOf: publisherRef, image: `${SITE}/om/simon-och-stefan.jpg` },
+    { "@type": "Person", name: "Stefan Kellner", worksFor: KELLNER, memberOf: publisherRef, image: `${SITE}/om/simon-och-stefan.jpg` },
+  ],
+};
 
 const card = "border-[3px] border-[var(--ink)] bg-[var(--paper)]";
 const h3 = "font-display font-black uppercase text-[var(--ink)] leading-none";
@@ -78,6 +94,7 @@ export default async function OmOssPage() {
 
   return (
     <div>
+      <JsonLd data={aboutJsonLd} />
       {/* 1. Rubrik och faktarad */}
       <section className="px-6 pt-16 md:pt-20 pb-10">
         <div className="max-w-6xl mx-auto">
