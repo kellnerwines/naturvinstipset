@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
       updated: new Date().toISOString().slice(0, 10),
       currency: "SEK",
       priceNote: "Priserna inkluderar moms och svensk alkoholskatt. Webbutikerna säljer till svenska konsumenter.",
-      disclosure: "Naturvinstipset drivs av grundaren av vinimportören Kellner & Kellner. Viner från egen import är märkta (ownImport) och får ingen fördel i kompassens poäng.",
+      disclosure: "Naturvinstipset drivs av Simon och Stefan på vinimportören Kellner & Kellner. Viner från egen import är märkta (ownImport) och får ingen fördel i kompassens poäng.",
       openInCompass: SITE + compassLink(a.query),
       ...a,
     },

@@ -32,7 +32,7 @@ Uppdaterat ${day}: ${W.length} naturviner i lager, från ${shops.join(", ")}.
 - Bara webbutiker som säljer till svenska konsumenter med svensk alkoholskatt inräknad i priset (${web.join(", ")}). Butiker där köparen själv betalar skatten är uteslutna.
 - Bara naturvin. Varje vin har en smakprofil 1–5 för syra, fyllighet, strävhet och funk, smaktaggar och matförslag utifrån regionen.
 - Redaktionella betyg plus besökarnas betyg. Rankningen redovisas öppet: ${SITE}/om-oss#sa-rankar-vi
-- Naturvinstipset drivs av grundaren av vinimportören Kellner & Kellner. Viner från egen import är märkta och får ingen fördel i Vinkompassen.
+- Naturvinstipset drivs av Simon och Stefan på vinimportören Kellner & Kellner. Viner från egen import är märkta och får ingen fördel i Vinkompassen.
 
 ## Fråga Vinkompassen (JSON)
 GET ${SITE}/api/kompass?farg=rott&budget=199&mat=kott

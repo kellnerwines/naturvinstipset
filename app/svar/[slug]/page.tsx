@@ -8,6 +8,7 @@ import { getWines } from "@/lib/blob";
 import { ANSWER_PAGES, SITE, answer, answerPage, compassLink } from "@/lib/answers";
 import { RETAILER_DISCLAIMER } from "@/lib/compass/links";
 import OwnImportBadge from "@/components/OwnImportBadge";
+import { SHOPS, shopCounts } from "@/lib/shops";
 
 export const dynamic = "force-dynamic";
 
@@ -27,7 +28,11 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
 export default async function SvarPage({ params }: { params: Promise<{ slug: string }> }) {
   const page = answerPage((await params).slug);
   if (!page) notFound();
-  const a = answer(await getWines(), page.params);
+  const wines = await getWines();
+  const a = answer(wines, page.params);
+  // Frågan om hemleverans får en lista över webbutikerna, med antal naturviner hos var och en.
+  const counts = page.params.butik === "webbutik" ? shopCounts(wines.filter((w) => w.published)) : null;
+  const webShops = counts ? SHOPS.filter((s) => s.web && (counts.get(s.name) ?? 0) > 0) : [];
   const top3 = a.results.slice(0, 3);
   const summary = top3.length
     ? `Vinkompassens bästa förslag just nu är ${names(top3.map((r) => `${r.name} från ${r.producer} (${r.price} kr, ${r.shop})`))}.`
@@ -55,6 +60,20 @@ export default async function SvarPage({ params }: { params: Promise<{ slug: str
         Uppdaterat {today()} · {a.count} naturviner passar · priser inklusive svensk alkoholskatt
         {a.note ? ` · ${a.note}` : ""}
       </p>
+
+      {webShops.length ? (
+        <div className="mb-10">
+          <h2 className="text-3xl mb-3">Webbutikerna</h2>
+          <ul className="space-y-1.5">
+            {webShops.map((s) => (
+              <li key={s.slug}>
+                <Link href={`/butiker/${s.slug}`} className="font-bold underline underline-offset-2">{s.name}</Link>
+                <span className="text-sm text-[var(--muted)]"> · {counts!.get(s.name)} naturviner just nu</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      ) : null}
 
       <ol className="space-y-3 mb-8">
         {a.results.map((r) => (
@@ -84,7 +103,7 @@ export default async function SvarPage({ params }: { params: Promise<{ slug: str
       </Link>
 
       <p className="text-[11px] text-[var(--muted)] leading-snug mt-8">
-        {RETAILER_DISCLAIMER} Naturvinstipset drivs av grundaren av vinimportören Kellner &amp; Kellner. Viner från egen import är märkta och får ingen fördel i Vinkompassen.
+        {RETAILER_DISCLAIMER} Naturvinstipset drivs av Simon och Stefan på vinimportören Kellner &amp; Kellner. Viner från egen import är märkta och får ingen fördel i Vinkompassen.
       </p>
 
       <h2 className="text-sm font-semibold uppercase tracking-wider text-[var(--muted)] mt-14 mb-3">Fler frågor</h2>
