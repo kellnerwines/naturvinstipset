@@ -11,18 +11,24 @@ import { breadcrumbJsonLd, wineItemListJsonLd } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  title: { absolute: "Topp 100 – naturviner på Systembolaget och med hemleverans – Naturvinstipset" },
-  alternates: { canonical: "/topp-100" },
-  description:
-    "Topp 100 naturviner: de bäst betygsatta på Systembolaget, kompletterade med naturviner med hemleverans från Flaskvis.",
-  openGraph: {
-    title: "Topp 100 – naturviner på Systembolaget och med hemleverans",
-    description: "De bäst betygsatta naturvinerna på Systembolaget, kompletterade med naturviner med hemleverans.",
-    url: "https://www.naturvinstipset.se/topp-100",
-    images: [{ url: "/og-logo.png", width: 1200, height: 630, alt: "Naturvinstipset" }],
-  },
-};
+// Årtalet i titeln följer med när listan uppdateras; folk söker på "bästa naturvin Systembolaget 2026".
+const year = () => new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/Stockholm", year: "numeric" });
+
+export function generateMetadata(): Metadata {
+  const title = `Bästa naturvin på Systembolaget ${year()} – Topp 100`;
+  return {
+    title: { absolute: `${title} – Naturvinstipset` },
+    alternates: { canonical: "/topp-100" },
+    description:
+      "De bäst betygsatta naturvinerna på Systembolaget just nu, efter vårt betyg och besökarnas. Listan uppdateras när pris och lager ändras.",
+    openGraph: {
+      title,
+      description: "De bäst betygsatta naturvinerna på Systembolaget just nu, efter vårt betyg och besökarnas.",
+      url: "https://www.naturvinstipset.se/topp-100",
+      images: [{ url: "/og-logo.png", width: 1200, height: 630, alt: "Naturvinstipset" }],
+    },
+  };
+}
 
 const jsonLd = {
   "@context": "https://schema.org",
@@ -52,7 +58,7 @@ export default async function Topp100Page() {
         <div className="relative max-w-6xl mx-auto px-5 md:px-8 pt-16 pb-10 md:pt-24 md:pb-14 min-h-[300px] md:min-h-[42svh] flex flex-col justify-end gap-5 text-[var(--paper)]">
           <h1 className="text-[84px] md:text-[150px] text-[var(--paper)]">Topp 100</h1>
           <p className="text-lg md:text-xl leading-relaxed max-w-xl">
-            De högst betygsatta naturvinerna på Systembolaget, och de bästa du kan få hem från webbutiker i Sverige.
+            De bästa naturvinerna på Systembolaget {year()}, efter vårt betyg och besökarnas. Räcker de inte till hundra fylls listan med naturviner du kan få hem från webbutiker.
           </p>
         </div>
       </section>

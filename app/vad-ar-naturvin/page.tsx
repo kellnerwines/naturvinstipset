@@ -3,11 +3,11 @@ import Link from "next/link";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/vad-ar-naturvin" },
-  title: "Vad är naturvin? – 15 vanliga frågor besvarade",
+  title: "Vad är naturvin? Vanliga frågor besvarade",
   description:
     "Varför är det grumligt? Blir man bakis? Vad är orange vin? Vi svarar på frågorna du googlar kl 22 — komplett guide till naturvin för nybörjare och nyfikna.",
   openGraph: {
-    title: "Vad är naturvin? – 15 vanliga frågor besvarade",
+    title: "Vad är naturvin? Vanliga frågor besvarade",
     description: "Varför är det grumligt? Blir man bakis? Vad är orange vin? Komplett guide till naturvin för nybörjare och nyfikna.",
     url: "https://www.naturvinstipset.se/vad-ar-naturvin",
     images: [{ url: "/og-image.png", width: 1200, height: 630, alt: "Guide till naturvin – Naturvinstipset" }],
@@ -22,6 +22,11 @@ const faqJsonLd = {
       "@type": "Question",
       name: "Vad är naturvin?",
       acceptedAnswer: { "@type": "Answer", text: "Enkelt förklarat: naturvin är vin gjort med så lite inblandning som möjligt. Druvan får tala, platsen får synas, och vinmakaren håller händerna i fickan så mycket det går." },
+    },
+    {
+      "@type": "Question",
+      name: "Vad är skillnaden mellan naturvin och vanligt vin?",
+      acceptedAnswer: { "@type": "Answer", text: "Den stora skillnaden sitter i källaren. Vanligt vin får jäsas med odlad jäst och justeras med tillsatser som socker, syra och tanniner, och det klarnas och filtreras ofta. Naturvin jäser med druvornas egen jäst, görs utan sådana justeringar, filtreras sällan och får lite eller inget svavel. I Sverige finns ingen officiell definition av naturvin." },
     },
     {
       "@type": "Question",
@@ -91,6 +96,17 @@ Det finns ingen officiell definition — naturvin är mer en filosofi än ett re
 Resultatet? Viner som verkligen avspeglar sin växtplats — det som på vinspråk kallas terroir. Jordmån, klimat, höjd över havet. Du kan nästan smaka var vinet kommer ifrån. Mer levande, mer oförutsägbara, mer karaktär.
 
 Och nej — naturvin behöver inte smaka funky. Det är en av de vanligaste missuppfattningarna. Många naturviner är rena, friska och lättdruckna. Funky är en stil, inte en regel.`,
+  },
+  {
+    id: "skillnad-vanligt-vin",
+    question: "Vad är skillnaden mellan naturvin och vanligt vin?",
+    answer: `Den stora skillnaden sitter i källaren. Vanligt vin får jäsas med odlad jäst och justeras med tillsatser som socker, syra, tanniner och enzymer. Det klarnas och filtreras ofta, och svavel tillsätts för att vinet ska hålla.
+
+Naturvin jäser med druvornas egen jäst och görs utan sådana justeringar. Det klarnas och filtreras sällan, och svavel tillsätts inte alls eller bara lite när vinet buteljeras. Druvorna odlas ekologiskt eller biodynamiskt och plockas för hand.
+
+Därför kan naturvin skilja sig mer mellan flaskor och årgångar, och ibland vara grumligt eller lite pirrigt. Det betyder inte att det är sämre, bara att mindre har ändrats på vägen från druva till glas.
+
+I Sverige finns ingen officiell definition, så ordet naturvin är inte skyddat. I Frankrike finns sedan 2020 märkningen Vin Méthode Nature med fasta regler.`,
   },
   {
     id: "skillnad-ekologiskt",
