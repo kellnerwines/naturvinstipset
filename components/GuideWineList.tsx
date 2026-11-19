@@ -2,6 +2,7 @@ import Link from "next/link";
 import type { Wine, Rating } from "@/lib/blob";
 import { combinedRating } from "@/lib/blob";
 import { buyLinks, retailerNote } from "@/lib/buyLinks";
+import { isRated } from "@/lib/guideOrder";
 import OwnImportBadge, { OWN_IMPORT_HREF } from "./OwnImportBadge";
 import WhereFilter, { type Where } from "./WhereFilter";
 
@@ -71,9 +72,11 @@ export default function GuideWineList({ wines, ratings }: Props) {
                     )}
                   </div>
                   <div className="shrink-0 text-right">
-                    <p className="text-sm font-semibold text-[var(--fg)]">
-                      {score.toFixed(1)}
-                    </p>
+                    {isRated(wine, ratings) ? (
+                      <p className="text-sm font-semibold text-[var(--fg)]">
+                        {score.toFixed(1).replace(".", ",")}
+                      </p>
+                    ) : null}
                     <p className="text-xs text-[var(--muted)]">{wine.wineType}</p>
                     {wine.price && (
                       <p className="text-xs text-[var(--muted)] mt-1">{wine.price} kr</p>
@@ -95,7 +98,7 @@ export default function GuideWineList({ wines, ratings }: Props) {
           {note}
           {wines.some((w) => w.ownImport) ? (
             <>
-              {note ? " " : ""}Viner märkta &quot;Egen import&quot; importeras av Kellner &amp; Kellner, som drivs av sajtens grundare.{" "}
+              {note ? " " : ""}Viner märkta &quot;Egen import&quot; importeras av Kellner &amp; Kellner, som drivs av Simon och Stefan som också står bakom sajten.{" "}
               <Link href={OWN_IMPORT_HREF} className="underline underline-offset-2">Så rankar vi</Link>.
             </>
           ) : null}

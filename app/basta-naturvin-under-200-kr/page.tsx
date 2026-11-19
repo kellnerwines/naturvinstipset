@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getWines, getRatings, combinedRating } from "@/lib/blob";
+import { getWines, getRatings } from "@/lib/blob";
+import { guideOrder } from "@/lib/guideOrder";
 import GuideWineList from "@/components/GuideWineList";
 import GuideSeo from "@/components/GuideSeo";
 
@@ -32,14 +33,13 @@ const jsonLd = {
 export default async function BastaNaturvinUnder200Page() {
   const [wines, ratings] = await Promise.all([getWines(), getRatings()]);
 
-  const filtered = wines
+  const filtered = guideOrder(wines
     .filter((w) => {
       if (!w.published) return false;
       if (!w.price) return false;
       const price = parseFloat(w.price.replace(",", "."));
       return !isNaN(price) && price < 200;
-    })
-    .sort((a, b) => combinedRating(b, ratings) - combinedRating(a, ratings));
+    }), ratings);
 
   return (
     <div>
@@ -71,7 +71,7 @@ export default async function BastaNaturvinUnder200Page() {
         </p>
         <GuideWineList wines={filtered} ratings={ratings} />
         <GuideSeo name="Bästa naturvinet under 200 kr" path="/basta-naturvin-under-200-kr" crumbs={[{ name: "Naturvin under 200 kr", path: "/basta-naturvin-under-200-kr" }]}
-          wines={filtered} nouns={{ best: "naturvinet under 200 kr", one: "naturvin under 200 kr", many: "naturviner under 200 kr" }} />
+          wines={filtered} ratings={ratings} nouns={{ best: "naturvinet under 200 kr", one: "naturvin under 200 kr", many: "naturviner under 200 kr" }} />
 
         <div className="mt-16 pt-12 border-t border-[var(--rule)]">
           <p className="text-sm font-semibold text-[var(--muted)] mb-4 uppercase tracking-wider">

@@ -34,6 +34,8 @@ export default async function SvarPage({ params }: { params: Promise<{ slug: str
   const counts = page.params.butik === "webbutik" ? shopCounts(wines.filter((w) => w.published)) : null;
   const webShops = counts ? SHOPS.filter((s) => s.web && (counts.get(s.name) ?? 0) > 0) : [];
   const top3 = a.results.slice(0, 3);
+  // Utan smakval får alla viner samma matchning, och då säger siffran ingenting.
+  const showMatch = new Set(a.results.map((r) => r.match)).size > 1;
   const summary = top3.length
     ? `Vinkompassens bästa förslag just nu är ${names(top3.map((r) => `${r.name} från ${r.producer} (${r.price} kr, ${r.shop})`))}.`
     : "Just nu hittar Vinkompassen inget vin som passar.";
@@ -84,7 +86,7 @@ export default async function SvarPage({ params }: { params: Promise<{ slug: str
                 {r.vintage && r.vintage !== "NV" ? ` ${r.vintage}` : ""}
                 {r.ownImport ? <OwnImportBadge className="ml-2 align-middle" /> : null}
               </p>
-              <span className="text-xs text-[var(--muted)] whitespace-nowrap">{r.match} % matchning</span>
+              {showMatch ? <span className="text-xs text-[var(--muted)] whitespace-nowrap">{r.match} % matchning</span> : null}
             </div>
             <p className="text-sm text-[var(--muted)] mt-0.5">{[r.producer, r.type, r.country, r.grape].filter(Boolean).join(" · ")}</p>
             {r.foodPairing ? <p className="text-sm mt-2"><span className="font-semibold">Passar till:</span> {r.foodPairing}</p> : null}
