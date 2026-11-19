@@ -54,7 +54,7 @@ export default function Footer({ retailerCompensation = false, lang = "sv" }: { 
               <p className="font-bold text-[var(--ink)] mb-3">{tr(lang, "Kontakt", "Contact")}</p>
               <nav className="flex flex-col gap-2">
                 <Link href={lang === "en" ? "/en/om-oss" : "/om-oss"} className="hover:text-[var(--accent)] transition-colors">{tr(lang, "Om oss", "About us")}</Link>
-                <a href="mailto:hej@naturvinstipset.se" className="hover:text-[var(--accent)] transition-colors">hej@naturvinstipset.se</a>
+                <Link href={lang === "en" ? "/en/kontakt" : "/kontakt"} className="hover:text-[var(--accent)] transition-colors">{tr(lang, "Kontaktformulär", "Contact form")}</Link>
               </nav>
             </div>
           </div>
@@ -66,12 +66,12 @@ export default function Footer({ retailerCompensation = false, lang = "sv" }: { 
             <p className="font-[family-name:var(--font-display)] font-black uppercase text-3xl leading-none text-[var(--ink)] mb-2">{tr(lang, "Saknar du ett vin?", "Missing a wine?")}</p>
             <p className="text-[15px]">{tr(lang, "Tipsa oss, så lägger vi in det om det går att köpa i Sverige.", "Tell us, and we will add it if it can be bought in Sweden.")}</p>
           </div>
-          <a
-            href="mailto:hej@naturvinstipset.se?subject=Vintips"
+          <Link
+            href={lang === "en" ? "/en/kontakt?amne=Vintips" : "/kontakt?amne=Vintips"}
             className="shrink-0 rounded-full bg-[var(--accent)] text-[var(--fg)] border-[3px] border-[var(--ink)] font-bold px-6 py-3 hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors"
           >
-            hej@naturvinstipset.se
-          </a>
+            {tr(lang, "Tipsa oss", "Tell us")}
+          </Link>
         </div>
 
         {/* Bottom */}

@@ -136,13 +136,13 @@ export default function AboutTheListPage() {
         <section className="border-t border-[var(--rule)] pt-12">
           <p className="text-[var(--muted)] leading-relaxed text-[15px]">
             Questions about how we rate, or missing a wine? Get in touch
-            at{" "}
-            <a
-              href="mailto:hej@naturvinstipset.se"
+            through{" "}
+            <Link
+              href="/en/kontakt"
               className="text-[var(--fg)] underline underline-offset-2 hover:opacity-70 transition-opacity"
             >
-              hej@naturvinstipset.se
-            </a>
+              our contact form
+            </Link>
           </p>
         </section>
       </div>

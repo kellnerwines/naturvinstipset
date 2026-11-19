@@ -33,6 +33,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/smakprofil/funk`,       lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
     { url: `${BASE}/vinprovning`,     lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/om-oss`,         lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
+    { url: `${BASE}/kontakt`,        lastModified: new Date(), changeFrequency: "yearly", priority: 0.3 },
   ];
 
   // Sidorna som finns på engelska: hreflang på den svenska och en egen post för /en-adressen.

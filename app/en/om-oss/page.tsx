@@ -325,7 +325,7 @@ export default async function AboutUsPage() {
               natural wine from Portugal and France ourselves, and that is why our own wines are labelled wherever they appear here.
             </p>
             <p className="text-lg text-[var(--muted)] mt-4">
-              Questions, tips or a missing wine? Write to <a href="mailto:hej@naturvinstipset.se" className="underline text-[var(--ink)]">hej@naturvinstipset.se</a>.
+              Questions, tips or a missing wine? <Link href="/en/kontakt" className="underline text-[var(--ink)]">Write to us</Link>.
             </p>
           </div>
         </div>
