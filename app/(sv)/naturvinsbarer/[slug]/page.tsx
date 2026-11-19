@@ -1,9 +1,10 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import Image from "next/image";
 import { notFound } from "next/navigation";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbJsonLd } from "@/lib/seo";
-import { bars, citySlug, getBarBySlug, getBarsByCity, instagramUrl, mapsUrl } from "@/lib/bars";
+import { bars, citySlug, getBarBySlug, getBarsByCity, imageSource, instagramUrl, mapsUrl } from "@/lib/bars";
 
 export async function generateStaticParams() {
   return bars.map((b) => ({ slug: b.slug }));
@@ -18,7 +19,7 @@ export async function generateMetadata({ params }: { params: Promise<{ slug: str
     title,
     description: bar.description,
     alternates: { canonical: `/naturvinsbarer/${slug}` },
-    openGraph: { title, description: bar.description, url: `https://www.naturvinstipset.se/naturvinsbarer/${slug}` },
+    openGraph: { title, description: bar.description, url: `https://www.naturvinstipset.se/naturvinsbarer/${slug}`, ...(bar.image ? { images: [{ url: bar.image, alt: bar.name }] } : {}) },
   };
 }
 
@@ -36,6 +37,7 @@ export default async function BarPage({ params }: { params: Promise<{ slug: stri
     address: { "@type": "PostalAddress", streetAddress: bar.address, addressLocality: bar.city, addressCountry: "SE" },
     geo: { "@type": "GeoCoordinates", latitude: bar.lat, longitude: bar.lng },
     ...(bar.website ? { url: bar.website } : {}),
+    ...(bar.image ? { image: `https://www.naturvinstipset.se${bar.image}` } : {}),
     ...(bar.instagram ? { sameAs: [instagramUrl(bar.instagram)] } : {}),
   };
   const link = "inline-flex items-center text-sm font-bold border-2 border-[var(--ink)] text-[var(--ink)] rounded-full px-4 py-2 hover:bg-[var(--ink)] hover:text-[var(--paper)] transition-colors";
@@ -53,6 +55,14 @@ export default async function BarPage({ params }: { params: Promise<{ slug: stri
       </p>
       {bar.opening ? <p className="inline-block ml-2 bg-[var(--paper)] text-[var(--fg)] border-2 border-[var(--ink)] text-sm font-bold px-2 py-0.5 mb-4">{bar.opening}</p> : null}
       <h1 className="text-6xl md:text-8xl mb-5">{bar.name}</h1>
+      {bar.image ? (
+        <figure className="mb-8">
+          <div className="relative aspect-[3/2] border-[3px] border-[var(--ink)] overflow-hidden bg-[var(--surface)]">
+            <Image src={bar.image} alt={`${bar.name}, ${bar.neighborhood}`} fill sizes="(max-width: 768px) 100vw, 672px" className="object-cover" priority />
+          </div>
+          <figcaption className="text-xs text-[var(--muted)] mt-1.5">Foto: {imageSource(bar)}</figcaption>
+        </figure>
+      ) : null}
       <p className="leading-relaxed mb-8 text-lg">{bar.description}</p>
 
       <div className="flex flex-wrap gap-3 mb-10">
