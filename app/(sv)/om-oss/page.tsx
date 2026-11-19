@@ -323,7 +323,7 @@ export default async function OmOssPage() {
               naturvin från Portugal och Frankrike, och därför märks våra egna viner överallt där de syns här.
             </p>
             <p className="text-lg text-[var(--muted)] mt-4">
-              Frågor, tips eller ett vin som saknas? Skriv till <a href="mailto:hej@naturvinstipset.se" className="underline text-[var(--ink)]">hej@naturvinstipset.se</a>.
+              Frågor, tips eller ett vin som saknas? <Link href="/kontakt" className="underline text-[var(--ink)]">Skriv till oss</Link>.
             </p>
           </div>
         </div>

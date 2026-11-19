@@ -4,7 +4,7 @@
 export type Lang = "sv" | "en";
 
 /** Svenska sökvägar som har en engelsk version under /en. */
-export const EN_PAGES = ["/", "/vad-ar-naturvin", "/om-listan", "/om-oss"];
+export const EN_PAGES = ["/", "/vad-ar-naturvin", "/om-listan", "/om-oss", "/kontakt"];
 
 export const langOf = (pathname: string): Lang => (pathname === "/en" || pathname.startsWith("/en/") ? "en" : "sv");
 

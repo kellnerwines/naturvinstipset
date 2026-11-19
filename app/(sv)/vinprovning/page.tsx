@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import Link from "next/link";
 
 export const metadata: Metadata = {
   alternates: { canonical: "/vinprovning" },
@@ -41,12 +42,12 @@ export default function VinprovningPage() {
       <div className="bg-white border border-black/10 p-8 text-center">
         <h2 className="text-xl font-bold text-[var(--green-dark)] mb-2">Hör av dig</h2>
         <p className="text-black/60 mb-6 text-sm">Så hittar vi ett upplägg som passar er.</p>
-        <a
-          href="mailto:hej@naturvinstipset.se?subject=Vinprovningsförfrågan"
+        <Link
+          href="/kontakt?amne=Vinprovning"
           className="inline-block bg-[var(--green)] text-white font-semibold px-8 py-3 hover:bg-[var(--green-dark)] transition-colors"
         >
-          hej@naturvinstipset.se →
-        </a>
+          Skicka en förfrågan →
+        </Link>
       </div>
     </div>
   );

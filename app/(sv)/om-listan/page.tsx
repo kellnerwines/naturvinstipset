@@ -141,13 +141,13 @@ export default function OmListanPage() {
         <section className="border-t border-[var(--rule)] pt-12">
           <p className="text-[var(--muted)] leading-relaxed text-[15px]">
             Har du frågor om hur vi betygsätter eller saknar ett vin? Hör av dig
-            till{" "}
-            <a
-              href="mailto:hej@naturvinstipset.se"
+            via{" "}
+            <Link
+              href="/kontakt"
               className="text-[var(--fg)] underline underline-offset-2 hover:opacity-70 transition-opacity"
             >
-              hej@naturvinstipset.se
-            </a>
+              vårt kontaktformulär
+            </Link>
           </p>
         </section>
       </div>
