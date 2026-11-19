@@ -1,28 +1,11 @@
 import type { Metadata } from "next";
-import { Big_Shoulders_Display, Karla } from "next/font/google";
-import "./globals.css";
+import "../globals.css";
 import SiteShell from "@/components/SiteShell";
 import { getSettings } from "@/lib/blob";
 import CookieBanner from "@/components/CookieBanner";
 import JsonLd from "@/components/JsonLd";
 import { siteJsonLd } from "@/lib/seo";
-
-/*
-  Stilriktningen "Etiketten" (2026-11-13): smal, tung rubrikstil som på naturvinsetiketter
-  och affischer, och Karla för brödtext. Färgerna är två tryckfärger, se globals.css.
-*/
-const display = Big_Shoulders_Display({
-  subsets: ["latin"],
-  variable: "--font-display-face",
-  weight: ["700", "900"],
-  display: "swap",
-});
-const body = Karla({
-  subsets: ["latin"],
-  variable: "--font-body-face",
-  weight: ["400", "500", "700"],
-  display: "swap",
-});
+import { display, body } from "../fonts";
 
 export const metadata: Metadata = {
   metadataBase: new URL("https://www.naturvinstipset.se"),

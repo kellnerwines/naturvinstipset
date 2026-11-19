@@ -2,14 +2,19 @@
 
 import { useEffect, useState } from "react";
 import Script from "next/script";
+import { usePathname } from "next/navigation";
+import { langOf, tr } from "@/lib/i18n";
 
 const CONSENT_KEY = "cookie-consent";
 type Consent = "all" | "necessary";
 
 export default function CookieBanner() {
+  const lang = langOf(usePathname());
   const [consent, setConsent] = useState<Consent | null>(null);
   const [visible, setVisible] = useState(false);
 
+  // Läser webbläsarens lagring en gång vid start.
+  /* eslint-disable react-hooks/set-state-in-effect */
   useEffect(() => {
     const stored = localStorage.getItem(CONSENT_KEY) as Consent | null;
     if (stored === "all" || stored === "necessary") {
@@ -18,6 +23,7 @@ export default function CookieBanner() {
       setVisible(true);
     }
   }, []);
+  /* eslint-enable react-hooks/set-state-in-effect */
 
   function acceptAll() {
     localStorage.setItem(CONSENT_KEY, "all");
@@ -75,24 +81,25 @@ export default function CookieBanner() {
             className="mx-auto max-w-2xl rounded-xl bg-white px-5 py-4 shadow-[0_4px_32px_rgba(13,13,13,0.12)] border border-[var(--rule)]"
           >
             <p className="text-[13px] leading-relaxed text-[var(--fg)] mb-1 font-medium">
-              Den här sajten använder cookies
+              {tr(lang, "Den här sajten använder cookies", "This site uses cookies")}
             </p>
             <p className="text-[12px] leading-relaxed text-[var(--muted)] mb-4">
-              Vi använder Google Analytics och Meta Pixel för att förstå hur sajten används och
-              nå ut till fler vinnördar. Ditt val sparas och kan ändras när som helst.
+              {tr(lang,
+                "Vi använder Google Analytics och Meta Pixel för att förstå hur sajten används och nå ut till fler vinnördar. Ditt val sparas och kan ändras när som helst.",
+                "We use Google Analytics and Meta Pixel to understand how the site is used and to reach more wine lovers. Your choice is saved and can be changed at any time.")}
             </p>
             <div className="flex flex-col sm:flex-row gap-2">
               <button
                 onClick={acceptAll}
                 className="flex-1 rounded-lg bg-[var(--fg)] px-4 py-2.5 text-[13px] font-medium text-[var(--bg)] transition-opacity hover:opacity-80"
               >
-                Acceptera alla
+                {tr(lang, "Acceptera alla", "Accept all")}
               </button>
               <button
                 onClick={acceptNecessary}
                 className="flex-1 rounded-lg border border-[var(--rule)] px-4 py-2.5 text-[13px] font-medium text-[var(--muted)] transition-colors hover:border-[var(--fg)] hover:text-[var(--fg)]"
               >
-                Endast nödvändiga
+                {tr(lang, "Endast nödvändiga", "Necessary only")}
               </button>
             </div>
           </div>

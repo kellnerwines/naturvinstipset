@@ -1,4 +1,5 @@
 import type { Metadata } from "next";
+import { langAlternates } from "@/lib/i18n";
 import Image from "next/image";
 import Link from "next/link";
 import { getSettings, getWines, getRatings } from "@/lib/blob";
@@ -8,7 +9,7 @@ import JsonLd from "@/components/JsonLd";
 import { SITE, publisherRef } from "@/lib/seo";
 
 export const metadata: Metadata = {
-  alternates: { canonical: "/om-oss" },
+  alternates: langAlternates("sv", "/om-oss"),
   title: "Så funkar Naturvinstipset",
   description:
     "Hur Vinkompassen matchar naturvin mot din smak, vad betygen betyder, vem som står bakom och varför butikerna inte betalar för att synas.",

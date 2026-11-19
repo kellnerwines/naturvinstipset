@@ -1,7 +1,8 @@
 import Link from "next/link";
 import Image from "next/image";
+import { tr, type Lang } from "@/lib/i18n";
 
-export default function Footer({ retailerCompensation = false }: { retailerCompensation?: boolean }) {
+export default function Footer({ retailerCompensation = false, lang = "sv" }: { retailerCompensation?: boolean; lang?: Lang }) {
   return (
     <footer className="border-t-[3px] border-[var(--ink)] mt-24 px-5 md:px-8 pt-14 pb-10">
       <div className="max-w-6xl mx-auto">
@@ -13,13 +14,26 @@ export default function Footer({ retailerCompensation = false }: { retailerCompe
             <div>
               <p className="font-[family-name:var(--font-display)] font-black uppercase text-5xl leading-none text-[var(--ink)] mb-3">Naturvinstipset</p>
               <p className="text-[15px] max-w-xs leading-relaxed">
-                Naturvin som går att köpa i Sverige, på Systembolaget eller med hemleverans från webbutiker.
+                {tr(lang, "Naturvin som går att köpa i Sverige, på Systembolaget eller med hemleverans från webbutiker.", "Natural wine you can buy in Sweden, at Systembolaget or with home delivery from online shops.")}
               </p>
             </div>
           </div>
 
           {/* Nav columns */}
           <div className="flex flex-wrap gap-x-16 gap-y-8 text-[15px]">
+            {lang === "en" ? (
+            <div>
+              <p className="font-bold text-[var(--ink)] mb-3">Explore</p>
+              <nav className="flex flex-col gap-2">
+                <Link href="/en" className="hover:text-[var(--accent)] transition-colors">Wine Compass</Link>
+                <Link href="/en/vad-ar-naturvin" className="hover:text-[var(--accent)] transition-colors">What is natural wine?</Link>
+                <Link href="/en/om-listan" className="hover:text-[var(--accent)] transition-colors">About the list</Link>
+                <Link href="/topp-100" hrefLang="sv" className="hover:text-[var(--accent)] transition-colors">Top 100 (in Swedish)</Link>
+                <Link href="/viner" hrefLang="sv" className="hover:text-[var(--accent)] transition-colors">All wines (in Swedish)</Link>
+                <Link href="/naturvinsbarer" hrefLang="sv" className="hover:text-[var(--accent)] transition-colors">Natural wine bars (in Swedish)</Link>
+              </nav>
+            </div>
+            ) : (
             <div>
               <p className="font-bold text-[var(--ink)] mb-3">Utforska</p>
               <nav className="flex flex-col gap-2">
@@ -35,10 +49,11 @@ export default function Footer({ retailerCompensation = false }: { retailerCompe
                 <Link href="/svar" className="hover:text-[var(--accent)] transition-colors">Vanliga frågor om naturvin</Link>
               </nav>
             </div>
+            )}
             <div>
-              <p className="font-bold text-[var(--ink)] mb-3">Kontakt</p>
+              <p className="font-bold text-[var(--ink)] mb-3">{tr(lang, "Kontakt", "Contact")}</p>
               <nav className="flex flex-col gap-2">
-                <Link href="/om-oss" className="hover:text-[var(--accent)] transition-colors">Om oss</Link>
+                <Link href={lang === "en" ? "/en/om-oss" : "/om-oss"} className="hover:text-[var(--accent)] transition-colors">{tr(lang, "Om oss", "About us")}</Link>
                 <a href="mailto:hej@naturvinstipset.se" className="hover:text-[var(--accent)] transition-colors">hej@naturvinstipset.se</a>
               </nav>
             </div>
@@ -48,8 +63,8 @@ export default function Footer({ retailerCompensation = false }: { retailerCompe
         {/* Tip CTA */}
         <div className="border-t-2 border-[var(--ink)] pt-8 pb-4 flex flex-col md:flex-row md:items-center md:justify-between gap-4">
           <div>
-            <p className="font-[family-name:var(--font-display)] font-black uppercase text-3xl leading-none text-[var(--ink)] mb-2">Saknar du ett vin?</p>
-            <p className="text-[15px]">Tipsa oss, så lägger vi in det om det går att köpa i Sverige.</p>
+            <p className="font-[family-name:var(--font-display)] font-black uppercase text-3xl leading-none text-[var(--ink)] mb-2">{tr(lang, "Saknar du ett vin?", "Missing a wine?")}</p>
+            <p className="text-[15px]">{tr(lang, "Tipsa oss, så lägger vi in det om det går att köpa i Sverige.", "Tell us, and we will add it if it can be bought in Sweden.")}</p>
           </div>
           <a
             href="mailto:hej@naturvinstipset.se?subject=Vintips"
@@ -62,15 +77,17 @@ export default function Footer({ retailerCompensation = false }: { retailerCompe
         {/* Bottom */}
         <div className="border-t-2 border-[var(--ink)] pt-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4 text-xs text-[var(--muted)]">
           <p>
-            Naturvinstipset drivs av Simon och Stefan på vinimportören Kellner &amp; Kellner. Viner från egen import är märkta och får ingen fördel i Vinkompassen.
-            {retailerCompensation ? " Naturvinstipset kan få ersättning från webbutiker när du köper via våra länkar. Det påverkar inte rankningen." : ""}
+            {tr(lang,
+              "Naturvinstipset drivs av Simon och Stefan på vinimportören Kellner & Kellner. Viner från egen import är märkta och får ingen fördel i Vinkompassen.",
+              "Naturvinstipset is run by Simon and Stefan of the wine importer Kellner & Kellner. Wines from their own import are labelled and get no advantage in the Wine Compass.")}
+            {retailerCompensation ? tr(lang, " Naturvinstipset kan få ersättning från webbutiker när du köper via våra länkar. Det påverkar inte rankningen.", " Naturvinstipset may receive compensation from online shops when you buy through our links. It does not affect the ranking.") : ""}
           </p>
           <div className="flex items-center gap-4">
             <a
               href="https://www.instagram.com/naturvinstipset/"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Naturvinstipset på Instagram"
+              aria-label={tr(lang, "Naturvinstipset på Instagram", "Naturvinstipset on Instagram")}
               className="text-[var(--muted)] hover:text-[var(--accent)] transition-colors"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round">
@@ -83,7 +100,7 @@ export default function Footer({ retailerCompensation = false }: { retailerCompe
               href="https://www.tiktok.com/@naturvinstipset"
               target="_blank"
               rel="noopener noreferrer"
-              aria-label="Naturvinstipset på TikTok"
+              aria-label={tr(lang, "Naturvinstipset på TikTok", "Naturvinstipset on TikTok")}
               className="text-[var(--muted)] hover:text-[var(--accent)] transition-colors"
             >
               <svg xmlns="http://www.w3.org/2000/svg" width="18" height="18" viewBox="0 0 24 24" fill="currentColor">

@@ -5,21 +5,23 @@ import { getWines, getRatings, combinedRating, getSettings, type Wine } from "@/
 import { toCompassWine, type CompassWine } from "@/lib/compass/engine";
 import Vinkompassen from "@/components/compass/Vinkompassen";
 import HomeFaq from "@/components/HomeFaq";
+import { langAlternates, wordEn } from "@/lib/i18n";
 
+// Engelska startsidan. Vinkompassen är på svenska; texterna runt den är översatta från app/(sv)/page.tsx.
 export const dynamic = "force-dynamic";
 
-const TITLE = "Naturvinstipset – hitta rätt naturvin på Systembolaget eller från webbutiker med hemleverans";
+const TITLE = "Naturvinstipset – find the right natural wine at Systembolaget or from online shops with home delivery";
 const DESCRIPTION =
-  "Svara på tre snabba frågor och få naturvin som passar din smak, din budget och din mat. På Systembolaget eller från webbutiker med hemleverans, med smakprofiler, matförslag och köptips.";
+  "Answer three quick questions and get natural wines that suit your taste, your budget and your food. At Systembolaget or from online shops with home delivery, with taste profiles, food pairings and buying tips.";
 
 export const metadata: Metadata = {
   title: { absolute: TITLE },
   description: DESCRIPTION,
-  alternates: { canonical: "/" },
+  alternates: langAlternates("en", "/"),
   openGraph: {
     title: TITLE,
     description: DESCRIPTION,
-    url: "https://www.naturvinstipset.se",
+    url: "https://www.naturvinstipset.se/en",
     images: [{ url: "/og-logo.png", width: 1200, height: 630, alt: "Naturvinstipset" }],
   },
 };
@@ -27,7 +29,9 @@ export const metadata: Metadata = {
 const atSystembolaget = (w: Wine) =>
   !!w.systembolagetUrl || (w.offers ?? []).some((o) => o.shop === "Systembolaget");
 
-export default async function HomePage() {
+const link = "underline underline-offset-4";
+
+export default async function EnglishHomePage() {
   const [wines, ratings, settings] = await Promise.all([getWines(), getRatings(), getSettings()]);
   const compassWines = wines.map(toCompassWine).filter((w): w is CompassWine => !!w);
   const shops = new Set(compassWines.map((w) => w.shop));
@@ -41,14 +45,9 @@ export default async function HomePage() {
 
   return (
     <div>
-
-      {/* ── Vinkompassen: videon ligger fast bakom rubriken och hela chatten medan man scrollar ──
-          Videolagret är sticky och lika högt som skärmen; den negativa marginalen gör att innehållet
-          börjar ovanpå det i stället för under det. Det släpper när sektionen tar slut. */}
-      {/* clip-path klipper videon vid sektionens slut utan att bli en scrollcontainer (overflow-hidden skulle stoppa sticky). */}
+      {/* Samma upplägg som den svenska startsidan: videon ligger fast bakom rubriken och kompassen. */}
       <section className="relative bg-[var(--hero-dark)]" style={{ clipPath: "inset(0)" }}>
         <div className="sticky top-[67px] h-[calc(100svh-67px)] -mb-[calc(100svh-67px)] overflow-hidden" aria-hidden="true">
-          {/* Videon i gråskala under blått bläck, som ett tvåfärgstryck */}
           <div className="absolute inset-0" style={{ filter: "grayscale(1) contrast(1.15)" }}>
             <HeroVideo src="/hero-video.mp4" />
           </div>
@@ -58,56 +57,60 @@ export default async function HomePage() {
         <div className="relative max-w-2xl mx-auto px-4 pb-16 md:pb-24">
           <div className="min-h-[calc(52svh-3.5rem)] flex flex-col justify-end items-center text-center pt-12 pb-8 md:pb-10 text-[var(--paper)]">
             <h1 className="text-6xl md:text-[112px] mb-5 text-[var(--paper)]">
-              Vilket naturvin passar dig?
+              Which natural wine suits you?
             </h1>
             <p className="text-lg md:text-xl leading-relaxed max-w-xl">
-              Bland {count} naturviner på Systembolaget eller från webbutiker med hemleverans. Tre frågor, sedan dina förslag.
+              Among {count} natural wines at Systembolaget or from online shops with home delivery. Three questions, then your suggestions.
+            </p>
+            <p lang="en" className="mt-5 text-[15px] leading-relaxed max-w-xl bg-[var(--paper)] text-[var(--fg)] border-[3px] border-[var(--ink)] px-4 py-3 text-left">
+              The Wine Compass is in Swedish for now. The first question is the colour: Rött is red, Vitt is white and
+              Bubbel is sparkling. Then budget, and whether the wine should go with food.
             </p>
           </div>
-          <Vinkompassen wines={compassWines} compensation={settings.retailerCompensation} />
+          <div lang="sv">
+            <Vinkompassen wines={compassWines} compensation={settings.retailerCompensation} />
+          </div>
         </div>
       </section>
 
-      {/* ── SEO-text ─────────────────────────────────────────────────────── */}
       <section className="max-w-2xl mx-auto px-4 pt-20 pb-6">
-        <h2 className="text-4xl md:text-5xl mb-5">Naturvin på Systembolaget eller med hemleverans</h2>
+        <h2 className="text-4xl md:text-5xl mb-5">Natural wine at Systembolaget or with home delivery</h2>
         <div className="space-y-4 text-[17px] leading-relaxed text-[var(--fg)]">
           <p>
-            Naturvinstipset hjälper dig hitta ett naturvin som passar din smak, din budget och maten du ska äta.
-            Vi går igenom naturviner som du hämtar på Systembolaget eller får hem från {shops.size > 1 ? `${shops.size - 1} webbutiker` : "webbutiker"} med
-            hemleverans. Webbutikerna säljer till svenska konsumenter med svensk alkoholskatt inräknad i priset.
+            Naturvinstipset helps you find a natural wine that suits your taste, your budget and the food you are going to eat.
+            We go through natural wines that you collect at Systembolaget or get delivered from {shops.size > 1 ? `${shops.size - 1} online shops` : "online shops"} with
+            home delivery. The online shops sell to Swedish consumers with Swedish alcohol tax included in the price.
           </p>
           <p>
-            Varje vin har en smakprofil för syra, fyllighet, strävhet och funk, och ett matförslag skrivet utifrån
-            trakten vinet kommer från. Kompassen väger ihop dina svar och visar hur väl varje vin matchar.
-            Viner från egen import är märkta och får ingen fördel i kompassen. <Link href="/om-oss" className="underline underline-offset-4">Läs mer om oss</Link>.
+            Every wine has a taste profile for acidity, body, tannin and funk, and a food pairing written with the region
+            the wine comes from in mind. The compass weighs up your answers and shows how well each wine matches.
+            Wines from our own import are labelled and get no advantage in the compass. <Link href="/en/om-oss" className={link}>Read more about us</Link>.
           </p>
           <p>
-            Ny på naturvin? Börja med <Link href="/vad-ar-naturvin" className="underline underline-offset-4">vår guide om vad naturvin är</Link>,
-            eller bläddra bland <Link href="/orange" className="underline underline-offset-4">orangevin</Link>,{" "}
-            <Link href="/bubbel" className="underline underline-offset-4">naturvin med bubbel</Link>,{" "}
-            <Link href="/rott" className="underline underline-offset-4">rött</Link> och{" "}
-            <Link href="/vitt" className="underline underline-offset-4">vitt</Link>.
+            New to natural wine? Start with <Link href="/en/vad-ar-naturvin" className={link}>our guide to what natural wine is</Link>,
+            or browse (in Swedish) <Link href="/orange" hrefLang="sv" className={link}>orange wine</Link>,{" "}
+            <Link href="/bubbel" hrefLang="sv" className={link}>natural wine with bubbles</Link>,{" "}
+            <Link href="/rott" hrefLang="sv" className={link}>red</Link> and{" "}
+            <Link href="/vitt" hrefLang="sv" className={link}>white</Link>.
           </p>
         </div>
       </section>
 
-      {/* ── Topp 100-teaser ──────────────────────────────────────────────── */}
       {top3.length ? (
         <section className="max-w-2xl mx-auto px-4 py-12">
           <div className="border-t-[3px] border-[var(--ink)] pt-8">
             <div className="flex items-baseline justify-between gap-4 mb-6">
-              <h2 className="text-5xl">Topp 100</h2>
-              <Link href="/topp-100" className="font-bold whitespace-nowrap text-[var(--ink)] border-b-2 border-[var(--ink)] hover:text-[var(--accent)] hover:border-[var(--accent)]">Hela listan</Link>
+              <h2 className="text-5xl">Top 100</h2>
+              <Link href="/topp-100" hrefLang="sv" className="font-bold whitespace-nowrap text-[var(--ink)] border-b-2 border-[var(--ink)] hover:text-[var(--accent)] hover:border-[var(--accent)]">Full list (in Swedish)</Link>
             </div>
             <ol className="divide-y-2 divide-[var(--ink)] border-y-[3px] border-[var(--ink)]">
               {top3.map(({ w, r }, i) => (
                 <li key={w.id}>
-                  <Link href={`/viner/${w.slug}`} className="flex items-baseline gap-4 py-4 group">
+                  <Link href={`/viner/${w.slug}`} hrefLang="sv" className="flex items-baseline gap-4 py-4 group">
                     <span className="font-[family-name:var(--font-display)] font-black text-4xl leading-none text-[var(--accent)] w-8">{i + 1}</span>
                     <span className="flex-1 min-w-0">
                       <span className="block font-[family-name:var(--font-display)] font-black uppercase text-2xl leading-none truncate text-[var(--ink)] group-hover:text-[var(--accent)]">{w.name}{w.year && w.year !== "NV" ? ` ${w.year}` : ""}</span>
-                      <span className="block text-sm text-[var(--muted)] mt-1">{w.producer} · {w.wineType} · {w.country}</span>
+                      <span className="block text-sm text-[var(--muted)] mt-1">{w.producer} · {wordEn(w.wineType)} · {wordEn(w.country)}</span>
                     </span>
                     <span className="text-sm font-bold">{r.toFixed(1)}</span>
                   </Link>
@@ -118,7 +121,7 @@ export default async function HomePage() {
         </section>
       ) : null}
 
-      <HomeFaq />
+      <HomeFaq lang="en" />
     </div>
   );
 }
