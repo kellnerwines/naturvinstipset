@@ -318,7 +318,7 @@ export default async function OmOssPage() {
           <div>
             <h2 className="text-[clamp(38px,5.6vw,68px)]">Vem står bakom?</h2>
             <p className="text-lg text-[var(--muted)] mt-5 max-w-2xl">
-              Naturvinstipset görs av Simon och Stefan, som driver vinimporten Kellner &amp; Kellner. Vi importerar själva
+              Naturvinstipset görs av Simon och Stefan, som driver vinimporten <a href="https://www.kellnerwines.se" className="underline text-[var(--ink)]">Kellner &amp; Kellner</a>. Vi importerar själva
               naturvin från Portugal och Frankrike, och därför märks våra egna viner överallt där de syns här.
             </p>
             <p className="text-lg text-[var(--muted)] mt-4">

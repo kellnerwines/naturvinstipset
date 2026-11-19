@@ -12,6 +12,10 @@ const KELLNER_PRODUCER_SLUGS: Record<string, string> = {
   "Arribas Wine Company": "arribas-wine-company",
   "Barroca da Malhada": "barroca-da-malhada",
   "Purista Vinhos": "purista",
+  // Tillagda 2026-11-19 efter kontroll av producentsidorna på båda sajterna.
+  "Desviso Vinhos": "vinhos-desviso",
+  "Adega Belém": "adega-belem",
+  "Gardunha Sul": "gardunha-sul",
 };
 
 export function kellnerProducerUrl(producerName: string): string | undefined {
