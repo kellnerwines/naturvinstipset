@@ -53,7 +53,7 @@ export default function Nav() {
         {/* Logo */}
         <Link href={lang === "en" ? "/en" : "/"} className="flex items-center gap-2.5 text-[var(--ink)] hover:text-[var(--accent)] transition-colors">
           <Image src="/logo.png" alt="" width={22} height={33} className="shrink-0" unoptimized />
-          <span className="font-[family-name:var(--font-display)] font-black uppercase text-[26px] leading-none">Naturvinstipset</span>
+          <span className="font-[family-name:var(--font-display)] font-black uppercase text-[22px] sm:text-[26px] leading-none">Naturvinstipset</span>
         </Link>
 
         {/* Desktop nav */}
