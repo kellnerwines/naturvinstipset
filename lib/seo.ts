@@ -71,3 +71,18 @@ export function faqJsonLd(faq: { q: string; a: string }[]) {
     mainEntity: faq.map(({ q, a }) => ({ "@type": "Question", name: q, acceptedAnswer: { "@type": "Answer", text: a } })),
   };
 }
+
+/** Innevarande år i Sverige, för titlar som "Bästa naturvin på Systembolaget 2026". */
+export const currentYear = () => new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/Stockholm", year: "numeric" });
+
+/** Länkarna mellan stil- och guidesidorna. Varje sida visar alla utom sig själv. */
+export const GUIDE_LINKS = [
+  { href: "/rott", label: "Rött naturvin" },
+  { href: "/vitt", label: "Vitt naturvin" },
+  { href: "/orange", label: "Orange naturvin" },
+  { href: "/bubbel", label: "Naturvin med bubbel" },
+  { href: "/pet-nat", label: "Pét nat" },
+  { href: "/basta-naturvin-under-200-kr", label: "Under 200 kr" },
+  { href: "/basta-naturvin-for-nyborjare", label: "För nybörjare" },
+  { href: "/basta-naturvin-till-mat", label: "Till mat" },
+];

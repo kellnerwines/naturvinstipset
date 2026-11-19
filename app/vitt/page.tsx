@@ -1,39 +1,49 @@
 import type { Metadata } from "next";
 import CategoryGuidePage from "@/components/CategoryGuidePage";
+import { GUIDE_LINKS, currentYear } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-export const metadata: Metadata = {
-  alternates: { canonical: "/vitt" },
-  title: "Bästa vita naturvinet på Systembolaget eller från webbutiker med hemleverans",
-  description:
-    "De bästa vita naturvinerna på Systembolaget eller från webbutiker med hemleverans — friska, mineraliska och gjorda med minimal inblandning. Handplockade av Naturvinstipset med direktlänkar.",
-  openGraph: {
-    title: "Bästa vita naturvinet på Systembolaget eller från webbutiker med hemleverans",
-    description: "De bästa vita naturvinerna på Systembolaget eller från webbutiker med hemleverans. Handplockade av Naturvinstipset.",
-    url: "https://www.naturvinstipset.se/vitt",
+export function generateMetadata(): Metadata {
+  const title = `Vitt naturvin – bästa vita naturvinerna på Systembolaget ${currentYear()} och med hemleverans`;
+  const description = "Vita naturviner i Sverige just nu, först de på Systembolaget och sedan de med hemleverans. Hur vitt naturvin skiljer sig från vanligt vitt och vad det passar till.";
+  return {
+    alternates: { canonical: "/vitt" },
+    title,
+    description,
+    openGraph: { title, description, url: "https://www.naturvinstipset.se/vitt" },
+  };
+}
+
+// Allmänt kända fakta om stilen, inga påståenden om enskilda producenter.
+const FAQ = [
+  {
+    q: "Vad är vitt naturvin?",
+    a: "Vitt naturvin görs på gröna druvor som odlas ekologiskt eller biodynamiskt, plockas för hand och jäser med druvornas egen jäst. Vinet justeras inte med tillsatser, filtreras sällan och får lite eller inget svavel.",
   },
-};
+  {
+    q: "Varför är vitt naturvin ibland grumligt?",
+    a: "Det filtreras och klarnas sällan, så små partiklar från druvorna och jästen finns kvar. Det påverkar inte kvaliteten. Vill du ha ett klarare glas kan du låta flaskan stå upprätt en stund innan du häller upp.",
+  },
+  {
+    q: "Vad är skillnaden mellan vitt naturvin och orangevin?",
+    a: "Ett vitt vin pressas direkt så att musten skiljs från skalen. Ett orangevin får jäsa med skalen, vilket ger färg och lite strävhet. Orangevinerna finns på en egen sida.",
+  },
+];
 
 export default function VittPage() {
   return (
     <CategoryGuidePage
       path="/vitt"
-      title="Bästa vita naturvinet på Systembolaget eller från webbutiker med hemleverans"
-      description="Vitt naturvin görs på ekologiskt eller biodynamiskt odlade druvor, ofta ofiltrerat och utan tillsatt syra eller socker. Friskt, mineraliskt och rakt igenom — ett bra val för den som vill prova naturvin för första gången. Här är de bästa vita naturvinerna på Systembolaget eller från webbutiker med hemleverans enligt Naturvinstipset."
+      title="Vitt naturvin"
+      description="Vita naturviner som går att köpa i Sverige just nu, först de som finns på Systembolaget och sedan de du kan få hem från webbutiker. Från friska och lätta till fylliga viner med lite textur."
       wineTypes={["Vitt"]}
-      nounSingular="vitt vin"
-      nounPlural="vita viner"
+      nounSingular="vitt naturvin"
+      nounPlural="vita naturviner"
       faqNouns={{ best: "vita naturvinet", one: "vitt naturvin", many: "vita naturviner" }}
       crumb="Vitt naturvin"
-      guideLinks={[
-        { href: "/rott", label: "Bästa röda naturvinet" },
-        { href: "/orange", label: "Bästa orangevinet" },
-        { href: "/pet-nat", label: "Bästa pét nat" },
-        { href: "/basta-naturvin-under-200-kr", label: "Under 200 kr" },
-        { href: "/basta-naturvin-for-nyborjare", label: "För nybörjare" },
-        { href: "/basta-naturvin-till-mat", label: "Till mat" },
-      ]}
+      faq={FAQ}
+      guideLinks={GUIDE_LINKS.filter((g) => g.href !== "/vitt")}
     />
   );
 }

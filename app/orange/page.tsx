@@ -1,13 +1,11 @@
 import type { Metadata } from "next";
 import CategoryGuidePage from "@/components/CategoryGuidePage";
+import { GUIDE_LINKS, currentYear } from "@/lib/seo";
 
 export const dynamic = "force-dynamic";
 
-// Årtalet följer med när sidan visas; folk söker på "bästa orange vin systembolaget".
-const year = () => new Date().toLocaleDateString("sv-SE", { timeZone: "Europe/Stockholm", year: "numeric" });
-
 export function generateMetadata(): Metadata {
-  const title = `Orange naturvin – bästa orangevinerna på Systembolaget ${year()} och med hemleverans`;
+  const title = `Orange naturvin – bästa orangevinerna på Systembolaget ${currentYear()} och med hemleverans`;
   const description =
     "Orangevin bland naturvinerna i Sverige just nu, först de på Systembolaget och sedan de med hemleverans. Vad orangevin är, hur det görs och vad det passar till.";
   return {
@@ -50,14 +48,7 @@ export default function OrangePage() {
       faqNouns={{ best: "orangevinet", one: "orangevin", many: "orangeviner" }}
       crumb="Orangevin"
       faq={FAQ}
-      guideLinks={[
-        { href: "/rott", label: "Bästa röda naturvinet" },
-        { href: "/vitt", label: "Bästa vita naturvinet" },
-        { href: "/pet-nat", label: "Bästa pét nat" },
-        { href: "/basta-naturvin-under-200-kr", label: "Under 200 kr" },
-        { href: "/basta-naturvin-for-nyborjare", label: "För nybörjare" },
-        { href: "/basta-naturvin-till-mat", label: "Till mat" },
-      ]}
+      guideLinks={GUIDE_LINKS.filter((g) => g.href !== "/orange")}
     />
   );
 }

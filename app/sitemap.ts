@@ -24,6 +24,7 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/vitt`,     lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE}/orange`,   lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE}/pet-nat`,  lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
+    { url: `${BASE}/bubbel`,   lastModified: new Date(), changeFrequency: "weekly", priority: 0.8 },
     { url: `${BASE}/smakprofil/mineralisk`, lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
     { url: `${BASE}/smakprofil/fruktig`,    lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
     { url: `${BASE}/smakprofil/jordig`,     lastModified: new Date(), changeFrequency: "weekly", priority: 0.7 },
