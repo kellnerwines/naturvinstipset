@@ -1,8 +1,9 @@
 import type { Metadata } from "next";
+import { langAlternates } from "@/lib/i18n";
 import Link from "next/link";
 
 export const metadata: Metadata = {
-  alternates: { canonical: "/vad-ar-naturvin" },
+  alternates: langAlternates("sv", "/vad-ar-naturvin"),
   title: "Vad är naturvin? Vanliga frågor besvarade",
   description:
     "Varför är det grumligt? Blir man bakis? Vad är orange vin? Vi svarar på frågorna du googlar kl 22 — komplett guide till naturvin för nybörjare och nyfikna.",

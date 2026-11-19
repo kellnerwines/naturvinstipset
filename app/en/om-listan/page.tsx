@@ -1,49 +1,51 @@
 import type { Metadata } from "next";
 import Link from "next/link";
+import { langAlternates } from "@/lib/i18n";
 
+// Engelsk version av app/(sv)/om-listan/page.tsx. Ändras den svenska texten behöver den här ändras för hand.
 export const metadata: Metadata = {
-  alternates: { canonical: "/om-listan" },
-  title: "Om listan – Hur vi betygsätter naturvin",
+  alternates: langAlternates("en", "/om-listan"),
+  title: "About the list – How we rate natural wine",
   description:
-    "Alla viner på Naturvinstipsets lista håller hög kvalitet. Vi betygsätter på fyra parametrar: syra, fyllighet, strävhet och funk — så att du hittar rätt stil, inte bara ett generiskt bra vin.",
+    "Every wine on Naturvinstipset's list is of high quality. We rate on four parameters: acidity, body, tannin and funk — so that you find the right style, not just a generically good wine.",
   openGraph: {
-    title: "Om listan – Hur vi betygsätter naturvin",
-    description:
-      "Vi betygsätter naturvin på fyra parametrar: syra, fyllighet, strävhet och funk. Så här fungerar listan.",
-    url: "https://www.naturvinstipset.se/om-listan",
+    title: "About the list – How we rate natural wine",
+    description: "We rate natural wine on four parameters: acidity, body, tannin and funk. This is how the list works.",
+    url: "https://www.naturvinstipset.se/en/om-listan",
   },
 };
 
 const parameters = [
   {
-    name: "Syra",
+    name: "Acidity",
     description:
-      "Hur friskt och levande vinet känns i munnen. Högt syravärde ger en syrlig, pigg karaktär. Lågt syravärde ger ett mjukare, rundare vin.",
+      "How fresh and lively the wine feels in the mouth. High acidity gives a tangy, vibrant character. Low acidity gives a softer, rounder wine.",
   },
   {
-    name: "Fyllighet",
+    name: "Body",
     description:
-      "Vinets kropp och vikt. Ett lätt vin känns luftigt och lättdrucket. Ett fylligt vin har mer substans och passar bättre till mat.",
+      "The wine's body and weight. A light wine feels airy and easy to drink. A full-bodied wine has more substance and goes better with food.",
   },
   {
-    name: "Strävhet",
+    name: "Tannin",
     description:
-      "Tanninerna — den snuddande, torra känslan som framförallt finns i röda viner. Högt värde passar den som gillar klassiska, stadiga röda. Lågt värde passar lättare stilar.",
+      "The tannins — the grippy, drying feeling found mainly in red wines. A high value suits those who like classic, sturdy reds. A low value suits lighter styles.",
   },
   {
     name: "Funk",
     description:
-      "Hur utmanande vinet är smakmässigt — från rent och tillgängligt till brett och komplext. Funk är inte ett fel och inte ett krav. Det är en stil.",
+      "How challenging the wine is in taste — from clean and accessible to broad and complex. Funk is not a fault and not a requirement. It is a style.",
   },
 ];
 
 const schemaJsonLd = {
   "@context": "https://schema.org",
   "@type": "WebPage",
-  name: "Om listan – Naturvinstipset",
+  name: "About the list – Naturvinstipset",
   description:
-    "Hur Naturvinstipset väljer ut och betygsätter naturvin. Fyra smakparametrar: syra, fyllighet, strävhet och funk.",
-  url: "https://www.naturvinstipset.se/om-listan",
+    "How Naturvinstipset selects and rates natural wine. Four taste parameters: acidity, body, tannin and funk.",
+  url: "https://www.naturvinstipset.se/en/om-listan",
+  inLanguage: "en",
   publisher: {
     "@type": "Organization",
     name: "Naturvinstipset",
@@ -51,7 +53,7 @@ const schemaJsonLd = {
   },
 };
 
-export default function OmListanPage() {
+export default function AboutTheListPage() {
   return (
     <div>
       <script
@@ -59,42 +61,39 @@ export default function OmListanPage() {
         dangerouslySetInnerHTML={{ __html: JSON.stringify(schemaJsonLd) }}
       />
 
-      {/* Hero */}
       <div className="border-b-[3px] border-[var(--ink)] pt-16 pb-14 px-6">
         <div className="max-w-2xl mx-auto">
           <p className="inline-block self-start bg-[var(--accent)] text-[var(--fg)] border-2 border-[var(--ink)] text-sm font-bold px-2 py-0.5 mb-4">
-            Om listan
+            About the list
           </p>
           <h1 className="text-5xl md:text-7xl mb-4">
-            Hur vi betygsätter
+            How we rate
           </h1>
           <p className="text-base text-[var(--muted)] leading-relaxed max-w-lg">
-            Alla viner håller hög kvalitet. Men kvalitet säger ingenting om vad
-            just du tycker om.
+            Every wine is of high quality. But quality says nothing about what
+            you in particular like.
           </p>
         </div>
       </div>
 
       <div className="max-w-2xl mx-auto px-6 py-16 space-y-16">
-        {/* Intro */}
         <section>
           <p className="text-[var(--muted)] leading-relaxed text-[15px] mb-4">
-            Alla viner på vår lista håller hög kvalitet. Det är utgångspunkten.
-            Vi lägger inte upp viner vi inte tror på — listan är ett resultat av
-            noggrant urval i samarbete med Sveriges seriösaste
-            naturvinsimportörer.
+            Every wine on our list is of high quality. That is the starting point.
+            We don&apos;t list wines we don&apos;t believe in — the list is the result of
+            careful selection in collaboration with Sweden&apos;s most serious
+            natural wine importers.
           </p>
           <p className="text-[var(--muted)] leading-relaxed text-[15px]">
-            Men kvalitet säger ingenting om vad just du tycker om. Därför
-            betygsätter vi varje vin på fyra parametrar som hjälper dig hitta
-            rätt stil, inte bara ett generiskt bra vin.
+            But quality says nothing about what you in particular like. That is why
+            we rate every wine on four parameters that help you find the
+            right style, not just a generically good wine.
           </p>
         </section>
 
-        {/* Parameters */}
         <section>
           <h2 className="text-xl md:text-2xl font-bold text-[var(--fg)] leading-tight mb-8">
-            De fyra parametrarna
+            The four parameters
           </h2>
           <div className="space-y-8">
             {parameters.map((p) => (
@@ -112,35 +111,32 @@ export default function OmListanPage() {
           </div>
         </section>
 
-        {/* Editorial */}
         <section>
           <h2 className="text-xl md:text-2xl font-bold text-[var(--fg)] leading-tight mb-4">
-            Det redaktionella betyget
+            The editorial rating
           </h2>
           <p className="text-[var(--muted)] leading-relaxed text-[15px]">
-            Parametrarna sätts av redaktionen på Naturvinstipset, grundade i
-            praktisk erfarenhet av naturvin och nära kontakt med de importörer
-            och producenter vars viner finns på listan.
+            The parameters are set by the Naturvinstipset editors, based on
+            practical experience of natural wine and close contact with the importers
+            and producers whose wines are on the list.
           </p>
         </section>
 
-        {/* Community */}
         <section>
           <h2 className="text-xl md:text-2xl font-bold text-[var(--fg)] leading-tight mb-4">
-            Community-betyget
+            The community rating
           </h2>
           <p className="text-[var(--muted)] leading-relaxed text-[15px]">
-            Utöver det redaktionella betyget kan du som användare betygsätta med
-            stjärnor och skriva egna recensioner. Community-betyget visas separat
-            på varje vinkort så att du alltid ser skillnaden.
+            In addition to the editorial rating, you as a user can rate with
+            stars and write your own reviews. The community rating is shown separately
+            on every wine card, so that you always see the difference.
           </p>
         </section>
 
-        {/* Contact */}
         <section className="border-t border-[var(--rule)] pt-12">
           <p className="text-[var(--muted)] leading-relaxed text-[15px]">
-            Har du frågor om hur vi betygsätter eller saknar ett vin? Hör av dig
-            till{" "}
+            Questions about how we rate, or missing a wine? Get in touch
+            at{" "}
             <a
               href="mailto:hej@naturvinstipset.se"
               className="text-[var(--fg)] underline underline-offset-2 hover:opacity-70 transition-opacity"
@@ -151,22 +147,22 @@ export default function OmListanPage() {
         </section>
       </div>
 
-      {/* CTA */}
       <div className="border-t border-[var(--rule)] py-16 px-6">
         <div className="max-w-2xl mx-auto flex flex-col md:flex-row md:items-center md:justify-between gap-6">
           <div>
             <h2 className="text-2xl font-bold text-[var(--fg)] mb-1">
-              Se listan
+              See the list
             </h2>
             <p className="text-sm text-[var(--muted)]">
-              Rankad lista med direktlänkar till Systembolaget.
+              Ranked list with direct links to Systembolaget (in Swedish).
             </p>
           </div>
           <Link
-            href="/"
+            href="/topp-100"
+            hrefLang="sv"
             className="shrink-0 inline-flex items-center gap-2 text-sm font-semibold text-[var(--fg)] border border-[var(--fg)] px-5 py-3 hover:bg-[var(--fg)] hover:text-[var(--bg)] transition-colors"
           >
-            Se Topp 100 →
+            See Top 100 →
           </Link>
         </div>
       </div>

@@ -5,6 +5,7 @@ import { bars } from "@/lib/bars";
 import { ANSWER_PAGES } from "@/lib/answers";
 import { SHOPS } from "@/lib/shops";
 import { countriesOf, grapesIn, MIN_INDEXED, producersOf } from "@/lib/entities";
+import { EN_PAGES } from "@/lib/i18n";
 
 const BASE = "https://www.naturvinstipset.se";
 
@@ -33,6 +34,20 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     { url: `${BASE}/vinprovning`,     lastModified: new Date(), changeFrequency: "monthly", priority: 0.7 },
     { url: `${BASE}/om-oss`,         lastModified: new Date(), changeFrequency: "monthly", priority: 0.6 },
   ];
+
+  // Sidorna som finns på engelska: hreflang på den svenska och en egen post för /en-adressen.
+  const languages = (path: string) => {
+    const sv = path === "/" ? BASE : `${BASE}${path}`;
+    return { sv, en: `${BASE}/en${path === "/" ? "" : path}`, "x-default": sv };
+  };
+  for (const r of staticRoutes) {
+    const path = r.url === BASE ? "/" : r.url.slice(BASE.length);
+    if (EN_PAGES.includes(path)) r.alternates = { languages: languages(path) };
+  }
+  const englishRoutes: MetadataRoute.Sitemap = EN_PAGES.map((path) => ({
+    url: languages(path).en, lastModified: new Date(), changeFrequency: "monthly", priority: path === "/" ? 0.8 : 0.6,
+    alternates: { languages: languages(path) },
+  }));
 
   const barCityRoutes: MetadataRoute.Sitemap = [
     { url: `${BASE}/naturvinsbarer`, lastModified: new Date(), changeFrequency: "monthly", priority: 0.9 },
@@ -79,5 +94,5 @@ export default async function sitemap(): Promise<MetadataRoute.Sitemap> {
     ...ANSWER_PAGES.map((p) => ({ url: `${BASE}/svar/${p.slug}`, lastModified: new Date(), changeFrequency: "weekly" as const, priority: 0.8 })),
   ];
 
-  return [...staticRoutes, ...answerRoutes, ...barCityRoutes, ...barRoutes, ...entityRoutes, ...wineRoutes, ...blogRoutes];
+  return [...staticRoutes, ...englishRoutes, ...answerRoutes, ...barCityRoutes, ...barRoutes, ...entityRoutes, ...wineRoutes, ...blogRoutes];
 }

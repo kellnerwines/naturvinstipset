@@ -81,6 +81,10 @@ Redaktionellt betyg 1–5 från Naturvinstipset, vägt ihop med besökarnas rös
 - [Vinkompassen](${SITE}/): chatt som ger förslag efter tre frågor
 - [Om oss och så rankar vi](${SITE}/om-oss)
 - [Sitemap](${SITE}/sitemap.xml)
+
+## English
+
+The home page and three pages are also in English: [Home](${SITE}/en), [What is natural wine?](${SITE}/en/vad-ar-naturvin), [About the list](${SITE}/en/om-listan) and [How Naturvinstipset works](${SITE}/en/om-oss). The Wine Compass and the wine pages are in Swedish.
 `;
   return new Response(body, { headers: { "Content-Type": "text/plain; charset=utf-8", "Cache-Control": "public, max-age=3600" } });
 }

@@ -1,3 +1,33 @@
+import type { Lang } from "@/lib/i18n";
+
+const FAQS_EN = [
+  {
+    question: "What is natural wine?",
+    answer:
+      "Natural wine is wine made with minimal intervention — organically or biodynamically grown grapes, wild yeasts and few or no additives in the cellar. There is no official definition, but the principle is always the same: the grape and the place should show in the glass.",
+  },
+  {
+    question: "Does natural wine contain sulphites?",
+    answer:
+      "Yes, almost all wine contains some sulphites, since they form naturally during fermentation. Natural wine, however, rarely has extra sulphur added in the cellar, which often gives considerably lower sulphite levels than conventional wine.",
+  },
+  {
+    question: "Where can you buy natural wine online in Sweden?",
+    answer:
+      "You can order natural wine from online shops with home delivery, for example Vin & Natur, Flaskvis, Philipson Wine, Wine Trade and Just Wine, or collect it at Systembolaget. The Wine Compass here on Naturvinstipset shows wines from both. We only list online shops that sell to Sweden with Swedish alcohol tax included in the price, so the price you see is what you pay for the wine.",
+  },
+  {
+    question: "Is alcohol tax included when you buy wine from an online shop in the EU?",
+    answer:
+      "Not always. When wine is sent to your home in Sweden, Swedish alcohol tax must be paid. Some online shops include it in the price, while others let you as the buyer pay the tax yourself afterwards. The online shops on Naturvinstipset have Swedish alcohol tax included in the price. Always check the terms before ordering from a shop we don't list.",
+  },
+  {
+    question: "How do you find natural wine at Systembolaget?",
+    answer:
+      "Most natural wines are sold through Systembolaget's temporary range and order range rather than on the regular shelf, so they can be hard to find on your own. The easiest way is to search for the producer or item number directly on systembolaget.se — or use our Top 100 list here on Naturvinstipset, with direct links to each wine.",
+  },
+];
+
 const FAQS = [
   {
     question: "Vad är naturvin?",
@@ -26,11 +56,12 @@ const FAQS = [
   },
 ];
 
-export default function HomeFaq() {
+export default function HomeFaq({ lang = "sv" }: { lang?: Lang }) {
+  const faqs = lang === "en" ? FAQS_EN : FAQS;
   const jsonLd = {
     "@context": "https://schema.org",
     "@type": "FAQPage",
-    mainEntity: FAQS.map((f) => ({
+    mainEntity: faqs.map((f) => ({
       "@type": "Question",
       name: f.question,
       acceptedAnswer: { "@type": "Answer", text: f.answer },
@@ -42,10 +73,10 @@ export default function HomeFaq() {
       <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
       <div className="max-w-3xl mx-auto px-6 py-20">
         <h2 className="text-5xl md:text-6xl mb-10">
-          Vanliga frågor om naturvin
+          {lang === "en" ? "Common questions about natural wine" : "Vanliga frågor om naturvin"}
         </h2>
         <div className="space-y-8">
-          {FAQS.map((f) => (
+          {faqs.map((f) => (
             <div key={f.question}>
               <h3 className="font-bold text-[var(--fg)] mb-2">{f.question}</h3>
               <p className="text-sm text-[var(--muted)] leading-relaxed">{f.answer}</p>
