@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getWines, getRatings, combinedRating } from "@/lib/blob";
+import { getWines, getRatings } from "@/lib/blob";
+import { guideOrder } from "@/lib/guideOrder";
 import GuideWineList from "@/components/GuideWineList";
 import GuideSeo from "@/components/GuideSeo";
 
@@ -33,14 +34,13 @@ export default async function BastaNaturvinTillMatPage() {
   const [wines, ratings] = await Promise.all([getWines(), getRatings()]);
 
   // Matviner: hög fyllighet (≥3) eller hög syra (≥3) — viner med substans
-  const filtered = wines
+  const filtered = guideOrder(wines
     .filter(
       (w) =>
         w.published &&
         ((w.fyllighet != null && w.fyllighet >= 3) ||
           (w.syra != null && w.syra >= 3))
-    )
-    .sort((a, b) => combinedRating(b, ratings) - combinedRating(a, ratings));
+    ), ratings);
 
   const sections = [
     {
@@ -103,7 +103,7 @@ export default async function BastaNaturvinTillMatPage() {
         )}
 
         <GuideSeo name="Bästa naturvinet till mat" path="/basta-naturvin-till-mat" crumbs={[{ name: "Naturvin till mat", path: "/basta-naturvin-till-mat" }]}
-          wines={filtered} nouns={{ best: "naturvinet till mat", one: "naturvin till mat", many: "naturviner till mat" }} />
+          wines={filtered} ratings={ratings} nouns={{ best: "naturvinet till mat", one: "naturvin till mat", many: "naturviner till mat" }} />
 
         <div className="pt-12 border-t border-[var(--rule)]">
           <p className="text-sm font-semibold text-[var(--muted)] mb-4 uppercase tracking-wider">

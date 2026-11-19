@@ -85,7 +85,7 @@ export default async function HomePage() {
           <p>
             Ny på naturvin? Börja med <Link href="/vad-ar-naturvin" className="underline underline-offset-4">vår guide om vad naturvin är</Link>,
             eller bläddra bland <Link href="/orange" className="underline underline-offset-4">orangevin</Link>,{" "}
-            <Link href="/pet-nat" className="underline underline-offset-4">pét-nat</Link>,{" "}
+            <Link href="/bubbel" className="underline underline-offset-4">naturvin med bubbel</Link>,{" "}
             <Link href="/rott" className="underline underline-offset-4">rött</Link> och{" "}
             <Link href="/vitt" className="underline underline-offset-4">vitt</Link>.
           </p>

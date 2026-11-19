@@ -1,7 +1,8 @@
 // Strukturerad data och vanliga frågor för listsidor (kategorier, guider, smakprofiler).
 // Svaren räknas fram ur samma viner som listan visar, så de stämmer alltid med sidan.
 
-import type { Wine } from "@/lib/blob";
+import type { Rating, Wine } from "@/lib/blob";
+import { isRated } from "@/lib/guideOrder";
 import JsonLd from "@/components/JsonLd";
 import { breadcrumbJsonLd, faqJsonLd, wineItemListJsonLd } from "@/lib/seo";
 
@@ -14,14 +15,16 @@ const and = (xs: string[]) => (xs.length > 1 ? `${xs.slice(0, -1).join(", ")} oc
 /** Ordformer för frågorna, t.ex. { best: "röda naturvinet", one: "rött naturvin", many: "röda naturviner" }. */
 export type GuideNouns = { best: string; one: string; many: string };
 
-export function guideFaq(wines: Wine[], { best: bestNoun, one: noun, many: nounPlural }: GuideNouns): { q: string; a: string }[] {
+export function guideFaq(wines: Wine[], { best: bestNoun, one: noun, many: nounPlural }: GuideNouns, ratings: Rating[] = []): { q: string; a: string }[] {
   if (!wines.length) return [];
-  const [best, ...rest] = wines;
-  const faq: { q: string; a: string }[] = [{
+  // Frågan om bästa vinet ställs bara när vinerna har betyg; annars finns inget att svara.
+  const rated = wines.filter((w) => isRated(w, ratings));
+  const [best, ...rest] = rated;
+  const faq: { q: string; a: string }[] = best ? [{
     q: `Vilket är det bästa ${bestNoun} just nu?`,
     a: `Högst betyg på Naturvinstipset har ${best.name} från ${best.producer}${best.country ? ` (${best.country})` : ""}${price(best) ? `, ${price(best)} kr` : ""}.`
       + (rest.length ? ` Därefter kommer ${and(rest.slice(0, 2).map((w) => `${w.name} från ${w.producer}`))}.` : ""),
-  }];
+  }] : [];
 
   const prices = wines.map(price).filter((p) => p > 0).sort((a, b) => a - b);
   if (prices.length >= 3) {
@@ -48,14 +51,16 @@ export function guideFaq(wines: Wine[], { best: bestNoun, one: noun, many: nounP
 }
 
 /** ItemList, brödsmulor och FAQ-schema plus synliga vanliga frågor. */
-export default function GuideSeo({ name, path, crumbs, wines, nouns }: {
+export default function GuideSeo({ name, path, crumbs, wines, nouns, ratings = [], extraFaq = [] }: {
   name: string;
   path: string;
   crumbs: { name: string; path: string }[];
   wines: Wine[];
   nouns: GuideNouns;
+  ratings?: Rating[];
+  extraFaq?: { q: string; a: string }[];
 }) {
-  const faq = guideFaq(wines, nouns);
+  const faq = [...extraFaq, ...guideFaq(wines, nouns, ratings)];
   return (
     <>
       <JsonLd data={[

@@ -1,6 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
-import { getWines, getRatings, combinedRating } from "@/lib/blob";
+import { getWines, getRatings } from "@/lib/blob";
+import { guideOrder } from "@/lib/guideOrder";
 import GuideWineList from "@/components/GuideWineList";
 import GuideSeo from "@/components/GuideSeo";
 
@@ -33,9 +34,8 @@ export default async function BastaNaturvinNyborjarePage() {
   const [wines, ratings] = await Promise.all([getWines(), getRatings()]);
 
   // Nybörjare: låg funk (≤2), publicerade viner sorterade efter betyg
-  const filtered = wines
-    .filter((w) => w.published && (w.funk == null || w.funk <= 2))
-    .sort((a, b) => combinedRating(b, ratings) - combinedRating(a, ratings));
+  const filtered = guideOrder(wines
+    .filter((w) => w.published && (w.funk == null || w.funk <= 2)), ratings);
 
   return (
     <div>
@@ -67,7 +67,7 @@ export default async function BastaNaturvinNyborjarePage() {
         </p>
         <GuideWineList wines={filtered} ratings={ratings} />
         <GuideSeo name="Bästa naturvinet för nybörjare" path="/basta-naturvin-for-nyborjare" crumbs={[{ name: "Naturvin för nybörjare", path: "/basta-naturvin-for-nyborjare" }]}
-          wines={filtered} nouns={{ best: "naturvinet för nybörjare", one: "naturvin för nybörjare", many: "naturviner för nybörjare" }} />
+          wines={filtered} ratings={ratings} nouns={{ best: "naturvinet för nybörjare", one: "naturvin för nybörjare", many: "naturviner för nybörjare" }} />
 
         <div className="mt-16 pt-12 border-t border-[var(--rule)]">
           <h2 className="text-lg font-bold text-[var(--fg)] mb-4">

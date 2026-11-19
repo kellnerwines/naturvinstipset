@@ -1,6 +1,7 @@
 import Link from "next/link";
 import { publisherRef } from "@/lib/seo";
 import { getWines, getRatings, combinedRating } from "@/lib/blob";
+import { guideOrder, isRated } from "@/lib/guideOrder";
 import GuideWineList from "@/components/GuideWineList";
 import GuideSeo, { type GuideNouns } from "@/components/GuideSeo";
 
@@ -17,6 +18,8 @@ type Props = {
   guideLinks: GuideLink[];  // "Fler guider" cross-links (excluding self)
   faqNouns: GuideNouns;     // ordformer för vanliga frågor, t.ex. "röda naturvinet"
   crumb: string;            // kort namn i brödsmulorna, t.ex. "Rött naturvin"
+  /** Förklarande frågor och svar om stilen, visas under listan och i FAQ-datan. */
+  faq?: { q: string; a: string }[];
 };
 
 export default async function CategoryGuidePage({
@@ -30,12 +33,11 @@ export default async function CategoryGuidePage({
   guideLinks,
   faqNouns,
   crumb,
+  faq = [],
 }: Props) {
   const [wines, ratings] = await Promise.all([getWines(), getRatings()]);
 
-  const filtered = wines
-    .filter((w) => w.published && wineTypes.includes(w.wineType))
-    .sort((a, b) => combinedRating(b, ratings) - combinedRating(a, ratings));
+  const filtered = guideOrder(wines.filter((w) => w.published && wineTypes.includes(w.wineType)), ratings);
 
   const top3 = filtered.slice(0, 3);
 
@@ -75,7 +77,7 @@ export default async function CategoryGuidePage({
               return (
                 <li key={w.id}>
                   {i + 1}. {w.name}
-                  {w.year ? ` ${w.year}` : ""} – Betyg {score.toFixed(1)}/5
+                  {w.year ? ` ${w.year}` : ""}{isRated(w, ratings) ? `, betyg ${score.toFixed(1).replace(".", ",")} av 5` : ""}
                 </li>
               );
             })}
@@ -87,7 +89,7 @@ export default async function CategoryGuidePage({
         </p>
         <GuideWineList wines={filtered} ratings={ratings} />
 
-        <GuideSeo name={title} path={path} crumbs={[{ name: crumb, path }]} wines={filtered} nouns={faqNouns} />
+        <GuideSeo name={title} path={path} crumbs={[{ name: crumb, path }]} wines={filtered} nouns={faqNouns} ratings={ratings} extraFaq={faq} />
 
         {guideLinks.length > 0 && (
           <div className="mt-16 pt-12 border-t border-[var(--rule)]">
