@@ -1,7 +1,8 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import BarMap from "@/components/BarMap";
-import { bars, CITIES, citySlug, getBarsByCity, instagramUrl, mapsUrl, type Bar } from "@/lib/bars";
+import { bars, CITIES, citySlug, getBarsByCity, imageSource, instagramUrl, mapsUrl, type Bar } from "@/lib/bars";
+import Image from "next/image";
 
 const TITLE = "Naturvinsbarer i Sverige 2026";
 const DESCRIPTION =
@@ -37,6 +38,11 @@ function BarCard({ bar }: { bar: Bar }) {
   const link = "text-sm font-semibold text-[var(--fg)] underline underline-offset-4 decoration-[var(--rule)] hover:decoration-[var(--fg)]";
   return (
     <article className="border-[3px] border-[var(--ink)] p-5 bg-[var(--paper)]">
+      {bar.image ? (
+        <Link href={`/naturvinsbarer/${bar.slug}`} className="block relative aspect-[3/2] -mx-5 -mt-5 mb-4 border-b-[3px] border-[var(--ink)] overflow-hidden" aria-label={bar.name}>
+          <Image src={bar.image} alt={`${bar.name}, ${bar.neighborhood}`} fill sizes="(max-width: 768px) 100vw, 400px" className="object-cover" title={`Foto: ${imageSource(bar)}`} />
+        </Link>
+      ) : null}
       <p className="text-sm font-bold text-[var(--accent)] mb-1.5">
         {bar.type} · {bar.neighborhood}
         {bar.opening ? <span className="inline-block bg-[var(--accent)] text-[var(--fg)] border-2 border-[var(--ink)] text-xs font-bold px-1.5 py-0.5 ml-2 align-middle">{bar.opening}</span> : null}

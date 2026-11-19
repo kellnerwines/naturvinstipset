@@ -21,6 +21,10 @@ export type Bar = {
   description: string;
   /** Ställen som inte har öppnat än, t.ex. "Öppnar snart" eller "Öppnar i december". Tas bort när de öppnat. */
   opening?: string;
+  /** Foto från ställets egen webbplats, i public/barer/. Fotografen/stället står som källa under bilden. */
+  image?: string;
+  /** Har stället godkänt att bilden används? Simon frågar alla (november 2026); byts till true vid ja, och bilden tas bort vid nej. */
+  imageApproved?: boolean;
 };
 
 /** Städer i den ordning de visas. */
@@ -32,6 +36,7 @@ export const bars: Bar[] = [
     lat: 59.34148, lng: 18.03211, website: "https://ambarvinbar.se", instagram: "ambarwinebar",
     type: "Vinbar", wine_focus: "Naturvin utan tillsatser, orangevin", food: true,
     description: "Liten vinbar vid S:t Eriksplan som bara serverar naturligt vin utan tillsatser, till japansk husmanskost. Listan har gott om orangevin och viner med skalkontakt.",
+    image: "/barer/ambar-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "alba-vinbar-stockholm", name: "Alba Nytorget", city: "Stockholm", address: "Skånegatan 88", neighborhood: "Södermalm",
@@ -44,6 +49,7 @@ export const bars: Bar[] = [
     lat: 59.29208, lng: 18.07862, website: "https://www.hosoistockholm.com", instagram: "hosoisthlm",
     type: "Restaurang", wine_focus: "Naturvin", food: true,
     description: "Restaurang och bar i Slakthusområdet där musiken står i centrum. Lokal och säsongsbetonad mat, naturvin i glaset och dj:s och dans framåt kvällen.",
+    image: "/barer/hosoi-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "matateljen-stockholm", name: "Matateljén", city: "Stockholm", address: "Hallvägen 9", neighborhood: "Slakthusområdet",
@@ -56,6 +62,7 @@ export const bars: Bar[] = [
     lat: 59.30996, lng: 18.08487, website: "https://ringkatarina.se", instagram: "ring_katarina",
     type: "Vinbar", wine_focus: "Naturvin", food: true,
     description: "Liten vin- och matbar i hörnet mot Ringvägen, med ett tjugotal platser inne och uteservering på sommaren. Naturvin och små rätter med europeiska influenser, och menyn byts ofta. Samma gäng står bakom Racamaca.",
+    image: "/barer/ring-katarina-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "folii-stockholm", name: "Folii", city: "Stockholm", address: "Erstagatan 21", neighborhood: "Södermalm",
@@ -86,12 +93,14 @@ export const bars: Bar[] = [
     lat: 59.31781, lng: 18.075, website: "https://woodstockholm.com",
     type: "Restaurang", wine_focus: "Naturvin, mest Frankrike och Spanien", food: true,
     description: "Bistro vid Mosebacke torg som också tillverkar möbler, därav namnet. Vinlistan lutar åt Frankrike och Spanien och har gott om naturvin.",
+    image: "/barer/woodstockholm-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "gaia-matbar-stockholm", name: "Gaia Matbar", city: "Stockholm", address: "Vattenledningsvägen 44", neighborhood: "Midsommarkransen",
     lat: 59.30247, lng: 18.00881, website: "https://www.gaiamatbar.se", instagram: "gaia_matbar",
     type: "Restaurang", wine_focus: "Naturvin", food: true,
     description: "Nordisk bistro med säsongsmat och globala influenser i Midsommarkransen. Naturvin, noga utvalt, med några mer klassiska flaskor bredvid.",
+    image: "/barer/gaia-matbar-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "chewies-bar-stockholm", name: "Chewie's Bar", city: "Stockholm", address: "Norr Mälarstrand 32", neighborhood: "Kungsholmen",
@@ -116,18 +125,21 @@ export const bars: Bar[] = [
     lat: 59.31743, lng: 18.0634, website: "https://www.dryckvinbar.se", instagram: "dryckvinbar",
     type: "Vinbar", wine_focus: "Naturvin från mindre producenter", food: true,
     description: "Vinbar vid Mariatorget som började som ekologisk matbutik. Här dricker man naturviner från mindre producenter och äter enkel mat att dela.",
+    image: "/barer/dryck-wine-bar-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "grus-grus-stockholm", name: "Grus Grus", city: "Stockholm", address: "Karlbergsvägen 14", neighborhood: "Vasastan",
     lat: 59.34291, lng: 18.04886, website: "https://grusgrusvinbaren.se", instagram: "grus_grus_",
     type: "Vinbar", wine_focus: "Hantverksvin, ekologiskt och naturligt", food: true,
     description: "Vinbaren bredvid restaurang Tranan vid Odenplan. Hantverksviner från småskaliga, ofta ekologiska och naturliga odlare, och mat som följer säsongen.",
+    image: "/barer/grus-grus-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "nektar-mat-vin-stockholm", name: "Nektar mat & vin", city: "Stockholm", address: "Rörstrandsgatan 12", neighborhood: "Vasastan",
     lat: 59.34008, lng: 18.03391, website: "https://www.nektarstockholm.com", instagram: "nektar.sthlm",
     type: "Restaurang", wine_focus: "Naturvin till vegetarisk mat", food: true,
-    description: "Liten restaurang och vinbar vid S:t Eriksplan. Medelhavsinspirerad, mest vegetarisk mat och ett brett urval naturviner.",
+    description: "Kvarterskrog vid S:t Eriksplan i Vasastan med ett seriöst vinfokus och mat från Europas södra delar, mest vegetarisk. Råvarorna kommer från småskaliga producenter i närheten, och både mat och vinlista byts ofta. Boka bord eller ta en plats i baren.",
+    image: "/barer/nektar-mat-vin-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "agnes-stockholm", name: "Agnes", city: "Stockholm", address: "Norra Agnegatan 43", neighborhood: "Kungsholmen",
@@ -139,19 +151,22 @@ export const bars: Bar[] = [
     slug: "savant-bar-stockholm", name: "Savant", city: "Stockholm", address: "Tegnérgatan 4", neighborhood: "Vasastan",
     lat: 59.34057, lng: 18.06346, website: "https://www.savantbar.se", instagram: "savantbar",
     type: "Vinbar", wine_focus: "Naturvin och säsongsmat", food: true,
-    description: "Liten naturvinsbar med ett trettiotal platser. Kaffe på dagen och naturvin med säsongsbetonade smårätter på kvällen.",
+    description: "Liten naturvinsbar med ett trettiotal platser och fler än tio viner på glas. Köket lagar säsongsrätter på mest svenska grönsaker, och inredningen är byggd av återbrukat material. Savant importerar också eget naturvin och ordnar varje år en naturvinsfestival i Stockholm. Det går inte att boka bord.",
+    image: "/barer/savant-bar-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "tyge-sessil-stockholm", name: "Tyge & Sessil", city: "Stockholm", address: "Brahegatan 4", neighborhood: "Östermalm",
     lat: 59.33707, lng: 18.07555, website: "https://tygesessil.se", instagram: "tygesessil",
     type: "Vinbar", wine_focus: "Naturvin med lite eller inget svavel", food: true,
     description: "Vincafé på Östermalm som kallar sig Stockholms äldsta (nästan) sulfitfria vinbar. Naturliga viner på glas och flaska och enkel mat.",
+    image: "/barer/tyge-sessil-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "vina-stockholm", name: "Vina", city: "Stockholm", address: "Sofiagatan 1", neighborhood: "Södermalm",
     lat: 59.31154, lng: 18.08202, website: "https://vinaaa.squarespace.com", instagram: "vinavidgarbostorg",
     type: "Vinbar", wine_focus: "Levande vin från små producenter", food: true,
     description: "Kvarterskrog vid Greta Garbos torg med en vinlista från små producenter och europeiska smårätter. På sommaren tar man glaset ut på torget.",
+    image: "/barer/vina-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "bar-ninja-stockholm", name: "Bar Ninja", city: "Stockholm", address: "Katarina Bangata 29", neighborhood: "Södermalm",
@@ -170,24 +185,26 @@ export const bars: Bar[] = [
     lat: 59.30444, lng: 18.07379, website: "https://www.restaurangvaxthuset.se", instagram: "restaurangvaxthuset",
     type: "Restaurang", wine_focus: "Biodynamiskt, naturvin och egna fermenteringar", food: true,
     description: "Växtbaserad restaurang vid Skanstull med säsongsmeny. Till maten serveras biodynamiska och naturliga viner och egna fermenterade drycker.",
+    image: "/barer/vaxthuset-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "triton-stockholm", name: "Restaurang Triton", city: "Stockholm", address: "Ringvägen 87", neighborhood: "Södermalm",
     lat: 59.3084, lng: 18.06621, website: "https://www.triton.restaurant", instagram: "restaurangtriton",
     type: "Restaurang", wine_focus: "Naturvin till avsmakningsmeny", food: true,
-    description: "Bib Gourmand-restaurang på Södermalm med en treråtters meny som byts ofta och en vinlista med mycket naturvin.",
+    description: "Bib Gourmand-restaurang på Södermalm med en treråtters meny som byts ofta och bara står på svarta tavlan i restaurangen. Vinlistan har mycket naturvin. Boka gärna i god tid, helgerna kan vara fullbokade en månad framåt.",
   },
   {
     slug: "schmaltz-stockholm", name: "Schmaltz", city: "Stockholm", address: "Nybrogatan 19", neighborhood: "Östermalm",
     lat: 59.33524, lng: 18.07671, website: "https://schmaltz.se", instagram: "schmaltzdelicatessen",
     type: "Delikatess", wine_focus: "Naturvin till deli och bistro", food: true,
-    description: "Bar, restaurang och delikatessbutik på Östermalm, med naturvin på listan.",
+    description: "Deli, bar och restaurang ett stenkast från Östermalmstorg, i ett hus från början av 1900-talet. Man kan ta en kaffe i steget, äta lunch eller stanna för några glas vin på kvällen, och naturvin finns på listan.",
   },
   {
     slug: "matbaren-mathias-dahlgren-stockholm", name: "Matbaren Mathias Dahlgren", city: "Stockholm", address: "Södra Blasieholmshamnen 6", neighborhood: "Blasieholmen",
     lat: 59.32932, lng: 18.07622, website: "https://mathiasdahlgren.se/matbaren/", instagram: "bymathiasdahlgren",
     type: "Restaurang", wine_focus: "Naturvin till smårätter", food: true,
     description: "Mathias Dahlgrens matbar på Grand Hôtel, med Bib Gourmand i Michelinguiden. Små rätter från ett kök med mycket grönsaker, och naturvin på glas vid baren.",
+    image: "/barer/matbaren-mathias-dahlgren-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "bar-oas-stockholm", name: "Bar Oas", city: "Stockholm", address: "Drottninggatan 73C", neighborhood: "City",
@@ -224,48 +241,55 @@ export const bars: Bar[] = [
     lat: 57.70091, lng: 11.95203, website: "https://folkgbg.se", instagram: "folkgbg",
     type: "Bar", wine_focus: "Naturvin, ostron och livemusik", food: true,
     description: "Bar och restaurang i Folkteaterns foajé vid Järntorget, och en av de första i Göteborg att satsa på naturvin. Ostron, vegetariskt kök och livemusik sent på helgerna.",
+    image: "/barer/folk-goteborg.jpg", imageApproved: false,
   },
   {
     slug: "bar-minimal-goteborg", name: "Bar Minimal", city: "Göteborg", address: "Skanstorget 9", neighborhood: "Haga",
     lat: 57.69528, lng: 11.95757, website: "https://www.barminimal.com", instagram: "barminimal",
     type: "Restaurang", wine_focus: "Naturvin till pizza", food: true,
-    description: "Neapolitansk pizza och naturvin på Skanstorget, i kanten av Haga.",
+    description: "Neapolitansk pizzeria och naturvinsbar på Skanstorget, i kanten av Haga. Degen jäser långsamt, det som hamnar på pizzan följer säsongen och vinet är naturvin. Det går också att beställa hem.",
   },
   {
     slug: "julie-malmo", name: "Julie", city: "Malmö", address: "Tegelgårdsgatan 9", neighborhood: "Gamla Väster",
     lat: 55.60456, lng: 12.99637, website: "https://juliemalmo.se", instagram: "juliemalmo",
     type: "Vinbar", wine_focus: "Mest naturvin, vin på tapp", food: true,
-    description: "Vinbar i Gamla Väster där det mesta på listan är naturvin. Många glas på tapp och en vitrin med ost och chark.",
+    description: "Vinbar i ett gammalt hus i kvarteret Druvan i Gamla Väster, öppen sedan 2018. Ett sextontal viner på glas som byts hela tiden, mycket naturvin, pét nat och champagne från odlare, och till det ost, chark utan tillsatser och små säsongsrätter. Det går inte att boka bord.",
+    image: "/barer/julie-malmo.jpg", imageApproved: false,
   },
   {
     slug: "ava-vinbar-malmo", name: "Ava Vinbar", city: "Malmö", address: "Karlskronaplan 7", neighborhood: "Sorgenfri",
     lat: 55.59344, lng: 13.01876, website: "https://avavinbar.se", instagram: "avavinbar",
     type: "Vinbar", wine_focus: "Naturvin, ofta nya flaskor", food: true,
-    description: "Liten naturvinsbar vid Karlskronaplan med en vinlista som byts ofta.",
+    description: "Liten vinbar vid Karlskronaplan på Sorgenfri med naturvin och mellanrätter som burrata, pasta, pinsa och dippar med grillat bröd. Vinlistan byts ofta, så fråga vad de har just nu. Uteservering när vädret tillåter.",
+    image: "/barer/ava-vinbar-malmo.jpg", imageApproved: false,
   },
   {
     slug: "far-i-hatten-malmo", name: "Far i Hatten", city: "Malmö", address: "Amiralsgatan 35", neighborhood: "Folkets Park",
     lat: 55.59458, lng: 13.01488, website: "https://www.farihatten.se", instagram: "farihatten",
     type: "Restaurang", wine_focus: "Naturvin till vedugnspizza", food: true,
-    description: "Restaurang i Folkets Park med vedugnspizza. Vinerna är främst naturviner, och det finns alltid några på glas.",
+    description: "Restaurang och bar i en stuga mitt i Folkets Park, öppen året runt och med en stor uteservering. Köket bakar pizza i vedugn och lagar säsongsrätter på råvaror från lokala producenter. Vinerna är främst naturviner, och det finns alltid några på glas.",
+    image: "/barer/far-i-hatten-malmo.jpg", imageApproved: false,
   },
   {
     slug: "riket-malmo", name: "Riket", city: "Malmö", address: "Erik Dahlbergsgatan 5", neighborhood: "Davidshall",
     lat: 55.5987, lng: 12.99754, website: "https://riket.net", instagram: "restaurangriket",
     type: "Restaurang", wine_focus: "Merparten naturvin", food: true,
-    description: "Restaurang och bar vid Davidshallstorg där merparten av vinerna är naturviner och maten följer säsongen.",
+    description: "Restaurang och bar vid Davidshallstorg där merparten av vinerna är naturviner. Maten följer säsongen, från rå fisk till grönsaker från lokala odlare, och stämningen är avslappnad: kom för ett glas eller stanna för middag.",
+    image: "/barer/riket-malmo.jpg", imageApproved: false,
   },
   {
     slug: "vinkiosken-orebro", name: "Vinkiosken", city: "Örebro", address: "Järntorgsgatan 4", neighborhood: "Centrum",
     lat: 59.27503, lng: 15.2121, website: "https://vinkiosken.se", instagram: "vinkioskenorebro",
     type: "Vinbar", wine_focus: "Naturvin och sake", food: false,
-    description: "Vinbar bakom sushirestaurangen Hachi med fokus på naturvin och sake av hög kvalitet.",
+    description: "Vinbar i centrala Örebro, bakom sushirestaurangen Hachi, med nästan 200 naturviner och sake. Glaslistan byts varje dag, och till vinet finns ostron och snacks.",
+    image: "/barer/vinkiosken-orebro.jpg", imageApproved: false,
   },
   {
     slug: "lokal-uppsala", name: "Lokal", city: "Uppsala", address: "Geijersgatan 23A", neighborhood: "Luthagen",
     lat: 59.86147, lng: 17.61776, website: "https://lokalluthagen.se", instagram: "lokalvinbar",
     type: "Vinbar", wine_focus: "Naturvin", food: true,
     description: "Vinbar i hörnet Geijersgatan–Kyrkogårdsgatan i Luthagen, en samlingspunkt för vinälskare i Uppsala. Här ordnas också vinprovningar, och bord går att boka.",
+    image: "/barer/lokal-uppsala.jpg", imageApproved: false,
   },
   {
     slug: "la-ruelle-uppsala", name: "La Ruelle", city: "Uppsala", address: "Bredgränd 4", neighborhood: "Centrum",
@@ -289,3 +313,6 @@ export function getBarBySlug(slug: string): Bar | undefined {
 export const instagramUrl = (handle: string) => `https://www.instagram.com/${handle}/`;
 export const mapsUrl = (b: Pick<Bar, "name" | "address" | "city">) =>
   `https://www.google.com/maps/search/?api=1&query=${encodeURIComponent(`${b.name}, ${b.address}, ${b.city}`)}`;
+
+/** Webbplatsens namn utan www, som källa under bilden, t.ex. "ambarvinbar.se". */
+export const imageSource = (b: Bar) => (b.website ? new URL(b.website).hostname.replace(/^www\./, "") : b.name);
