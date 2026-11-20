@@ -227,6 +227,7 @@ export const bars: Bar[] = [
     lat: 59.33265, lng: 18.06263,
     type: "Vinbar", wine_focus: "Naturvin och cava", food: true,
     description: "Liten, hemtrevlig vinbar mitt på Drottninggatan. Naturviner, cava och smårätter i tapasstil, en lugn oas mitt i city.",
+    image: "/barer/bar-oas-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "fabelbar-stockholm", name: "Fabelbar", city: "Stockholm", address: "Hägerstensvägen 132", neighborhood: "Aspudden",
@@ -261,9 +262,11 @@ export const bars: Bar[] = [
   },
   {
     slug: "bar-minimal-goteborg", name: "Bar Minimal", city: "Göteborg", address: "Skanstorget 9", neighborhood: "Haga",
-    lat: 57.69528, lng: 11.95757, website: "https://www.barminimal.com", instagram: "barminimal",
-    type: "Restaurang", wine_focus: "Naturvin till pizza", food: true,
-    description: "Neapolitansk pizzeria och naturvinsbar på Skanstorget, i kanten av Haga. Degen jäser långsamt, det som hamnar på pizzan följer säsongen och vinet är naturvin. Det går också att beställa hem.",
+    lat: 57.69528, lng: 11.95757, website: "https://www.barminimal.com", wineList: "https://www.barminimal.com/sv/wine/", instagram: "barminimal",
+    type: "Restaurang", wine_focus: "Naturvin till pizza, från Jura till Georgien", food: true,
+    description: "Neapolitansk pizzeria och naturvinsbar på Skanstorget, i kanten av Haga. Degen jäser i över 48 timmar och gräddas snabbt i en mycket het ugn, och på pizzorna hamnar svenska råvaror efter säsong, som kantareller, Västerbottenost och inlagd sill. Vinlistan är bara naturvin och byts ofta. Senast fanns där orangevin från Pheasant's Tears i Georgien, Pinot noir och crémant från Le Clos des Grives i Jura och flera viner från Burgenland och Ungern. Öppet tisdag till lördag. Drop-in går bra, men större sällskap bör boka. Pizzorna finns också som takeaway.",
+    producers: [["markus-altenburger", "Markus Altenburger"], ["kolonia-52", "Kolonia 52"]],
+    image: "/barer/bar-minimal-goteborg.jpg", imageApproved: false,
   },
   {
     slug: "julie-malmo", name: "Julie", city: "Malmö", address: "Tegelgårdsgatan 9", neighborhood: "Gamla Väster",
