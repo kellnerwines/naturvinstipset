@@ -253,8 +253,8 @@ export const bars: Bar[] = [
     slug: "julie-malmo", name: "Julie", city: "Malmö", address: "Tegelgårdsgatan 9", neighborhood: "Gamla Väster",
     lat: 55.60456, lng: 12.99637, website: "https://juliemalmo.se", instagram: "juliemalmo",
     type: "Vinbar", wine_focus: "Mest naturvin, vin på tapp", food: true,
-    description: "Vinbar i ett gammalt hus i kvarteret Druvan i Gamla Väster, öppen sedan 2018. Ett sextontal viner på glas som byts hela tiden, mycket naturvin, pét nat och champagne från odlare, och till det ost, chark utan tillsatser och små säsongsrätter. Det går inte att boka bord.",
-    image: "/barer/julie-malmo.jpg", imageApproved: false,
+    description: "Vinbar i ett gammalt hus i kvarteret Druvan i Gamla Väster, öppen sedan 2018. Ett sextontal viner på glas som byts hela tiden, mycket naturvin, pét nat och champagne från odlare, och till det ost, chark utan tillsatser och små säsongsrätter. Det går inte att boka bord i baren, men sällskap kan boka hela det avskilda rummet, en chambre séparée för upp till 14 till middag eller 24 till mingel. På onsdagar finns öppna vinprovningar som bokas och betalas på hemsidan och brukar ta slut fort.",
+    image: "/barer/julie-malmo.jpg", imageApproved: true,
   },
   {
     slug: "ava-vinbar-malmo", name: "Ava Vinbar", city: "Malmö", address: "Karlskronaplan 7", neighborhood: "Sorgenfri",
