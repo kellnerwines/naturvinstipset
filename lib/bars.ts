@@ -81,6 +81,7 @@ export const bars: Bar[] = [
     lat: 59.34225, lng: 18.04524,
     type: "Restaurang", wine_focus: "Naturvin", food: true,
     description: "Liten fransk bistro i Vasastan som öppnade 2020 och snabbt blev svår att få bord på. Små rätter, gärna med skaldjur, och naturvin till.",
+    image: "/barer/frammat-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "bar-montan-stockholm", name: "Bar Montan", city: "Stockholm", address: "Förbindelsehallen", neighborhood: "Slakthusområdet",
@@ -126,6 +127,13 @@ export const bars: Bar[] = [
     type: "Vinbar", wine_focus: "Hantverksviner från små producenter i Europa", food: true,
     description: "Vinbar intill Mariatorget där ägarinnan började med en ekologisk matbutik. Sedan tio år serveras hantverksviner från små vinproducenter runt om i Europa. Det lilla köket erbjuder en kort och råvarufokuserad säsongsmeny.",
     image: "/barer/dryck-wine-bar-stockholm.jpg", imageApproved: true,
+  },
+  {
+    slug: "racamaca-stockholm", name: "Racamaca", city: "Stockholm", address: "Wollmar Yxkullsgatan 5B", neighborhood: "Södermalm",
+    lat: 59.31686, lng: 18.06392, website: "https://racamaca.se", instagram: "racamaca_food",
+    type: "Vinbar", wine_focus: "Spanien och Frankrike, med naturvin från bland andra Matassa och Envínate", food: true,
+    description: "Vinbar och restaurang nära Mariatorget med spanska och sydeuropeiska smårätter som pintxos, pulpo och slidrar med baskisk korv. Vinlistan är mest spansk och fransk, med naturvin från bland andra Matassa, Envínate och Andreas Tscheppe, och det finns ett bra urval sherry. Bara drop-in, men en chambre séparée för 8–12 personer går att boka.",
+    image: "/barer/racamaca-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "grus-grus-stockholm", name: "Grus Grus", city: "Stockholm", address: "Karlbergsvägen 14", neighborhood: "Vasastan",
