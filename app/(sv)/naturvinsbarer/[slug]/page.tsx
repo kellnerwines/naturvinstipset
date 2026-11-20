@@ -75,6 +75,17 @@ export default async function BarPage({ params }: { params: Promise<{ slug: stri
           ))}
         </p>
       ) : null}
+      {bar.wines?.length ? (
+        <p className="mb-8 -mt-4">
+          Samma vin finns här:{" "}
+          {bar.wines.map(([slug, name], i) => (
+            <span key={slug}>
+              {i ? ", " : ""}
+              <Link href={`/viner/${slug}`} className="font-bold text-[var(--ink)] underline hover:text-[var(--accent)]">{name}</Link>
+            </span>
+          ))}
+        </p>
+      ) : null}
 
       <div className="flex flex-wrap gap-3 mb-10">
         {bar.wineList ? <a href={bar.wineList} target="_blank" rel="noopener" className={link}>Vinlista</a> : null}

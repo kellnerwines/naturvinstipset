@@ -17,6 +17,8 @@ export type Bar = {
   wineList?: string;
   /** Producenter på ställets vinlista som har en egen sida här, som [slug, namn]. Bara sådant vi sett på deras lista. */
   producers?: [string, string][];
+  /** Viner på ställets lista som har en egen vinsida här, som [slug, namn]. Samma vin, kontrollerat mot listan. */
+  wines?: [string, string][];
   /** Instagramnamn utan @. */
   instagram?: string;
   type: BarType;
@@ -61,6 +63,7 @@ export const bars: Bar[] = [
     lat: 59.29291, lng: 18.07536, website: "https://matateljen.se", instagram: "matateljen",
     type: "Restaurang", wine_focus: "Naturvin från Jura, Loire och Beaujolais bredvid klassisk Bourgogne", food: true,
     description: "Restaurang i Kylhuset i Slakthusområdet med säsongsmenyer från ett öppet kök. Den långa vinlistan har gott om naturvin från bland andra Jura, Loire, Beaujolais och Auvergne, bredvid klassisk Bourgogne och Piemonte. Det finns också en deli.",
+    image: "/barer/matateljen-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "ring-katarina-stockholm", name: "Ring Katarina", city: "Stockholm", address: "Katarina Bangata 66", neighborhood: "Södermalm",
@@ -68,12 +71,15 @@ export const bars: Bar[] = [
     type: "Vinbar", wine_focus: "Naturvin", food: true,
     description: "Liten vin- och matbar i hörnet mot Ringvägen, med ett tjugotal platser inne och uteservering på sommaren. Naturvin och små rätter med europeiska influenser, och menyn byts ofta. Samma gäng står bakom Racamaca.",
     image: "/barer/ring-katarina-stockholm.jpg", imageApproved: false,
+    producers: [["arianna-occhipinti", "Arianna Occhipinti"], ["arribas-wine-company", "Arribas Wine Company"], ["calabretta", "Calabretta"], ["cascina-ebreo", "Cascina Ebreo"], ["domaine-de-la-loue", "Domaine de la Loue"], ["domaine-derain", "Domaine Derain"], ["domaine-joubert", "Domaine Joubert"], ["domaine-la-boheme", "Domaine La Bohème"], ["joiseph", "Joiseph"], ["maziere", "Mazière"]],
+    wines: [["saroto-palhete-2024", "Arribas Saroto Palhete 2024"], ["jw-cascina-ebreo-segreto-2018", "Cascina Ebreo Segreto 2018"]],
   },
   {
     slug: "folii-stockholm", name: "Folii", city: "Stockholm", address: "Erstagatan 21", neighborhood: "Södermalm",
     lat: 59.31402, lng: 18.09038, website: "https://folii.se", wineList: "https://starwinelist.com/folii/", instagram: "folii_sthlm",
     type: "Vinbar", wine_focus: "Naturvin och hållbart odlat, över hundra viner på glas", food: true,
     description: "Sommelierdriven vinbar på SoFo med över hundra viner på glas och fokus på naturvin och hållbart odlat. Säsongsbetonade småplock, och musiken spelas som hela album på vinyl.",
+    image: "/barer/folii-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "hornstulls-bodega-stockholm", name: "Hornstulls Bodega", city: "Stockholm", address: "Hornsbruksgatan 24", neighborhood: "Hornstull",
@@ -128,6 +134,7 @@ export const bars: Bar[] = [
     lat: 59.31417, lng: 18.08354, website: "https://cafenizza.se",
     type: "Restaurang", wine_focus: "Mest naturvin, några klassiker", food: true,
     description: "Bistro på östra Söder med sydeuropeisk mat. Vinkällaren består till största delen av naturviner, med några klassiska flaskor vid sidan av.",
+    image: "/barer/cafe-nizza-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "dryck-wine-bar-stockholm", name: "Dryck Vinbar", city: "Stockholm", address: "Swedenborgsgatan 1", neighborhood: "Södermalm",
@@ -141,8 +148,9 @@ export const bars: Bar[] = [
     lat: 59.31686, lng: 18.06392, website: "https://racamaca.se", instagram: "racamaca_food",
     type: "Vinbar", wine_focus: "Spanien och Frankrike, med naturvin från bland andra Matassa och Envínate", food: true,
     description: "Vinbar och restaurang nära Mariatorget med spanska och sydeuropeiska smårätter som pintxos, pulpo och slidrar med baskisk korv. Vinlistan är mest spansk och fransk, med naturvin från bland andra Matassa, Envínate och Andreas Tscheppe, och det finns ett bra urval sherry. Bara drop-in, men en chambre séparée för 8–12 personer går att boka.",
-    producers: [["envinate", "Envínate"], ["laherte-freres", "Laherte Frères"], ["celler-frisach", "Celler Frisach"], ["domaine-de-majas", "Domaine de Majas"]],
     image: "/barer/racamaca-stockholm.jpg", imageApproved: false,
+    producers: [["envinate", "Envínate"], ["laherte-freres", "Laherte Frères"], ["celler-frisach", "Celler Frisach"], ["domaine-de-majas", "Domaine de Majas"]],
+    wines: [["vn-ultradition-extra-brut", "Laherte Frères Ultradition Extra Brut"]],
   },
   {
     slug: "grus-grus-stockholm", name: "Grus Grus", city: "Stockholm", address: "Karlbergsvägen 14", neighborhood: "Vasastan",
@@ -171,6 +179,7 @@ export const bars: Bar[] = [
     type: "Vinbar", wine_focus: "Naturvin och säsongsmat", food: true,
     description: "Liten naturvinsbar med ett trettiotal platser och fler än tio viner på glas. Köket lagar säsongsrätter på mest svenska grönsaker, och inredningen är byggd av återbrukat material. Savant importerar också eget naturvin och ordnar varje år en naturvinsfestival i Stockholm. Det går inte att boka bord.",
     image: "/barer/savant-bar-stockholm.jpg", imageApproved: false,
+    producers: [["finca-parera", "Finca Parera"]],
   },
   {
     slug: "tyge-sessil-stockholm", name: "Tyge & Sessil", city: "Stockholm", address: "Brahegatan 4", neighborhood: "Östermalm",
@@ -210,6 +219,7 @@ export const bars: Bar[] = [
     lat: 59.3084, lng: 18.06621, website: "https://www.triton.restaurant", instagram: "restaurangtriton",
     type: "Restaurang", wine_focus: "Naturvin till avsmakningsmeny", food: true,
     description: "Bib Gourmand-restaurang på Södermalm med en treråtters meny som byts ofta och bara står på svarta tavlan i restaurangen. Vinlistan har mycket naturvin. Boka gärna i god tid, helgerna kan vara fullbokade en månad framåt.",
+    image: "/barer/triton-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "schmaltz-stockholm", name: "Schmaltz", city: "Stockholm", address: "Nybrogatan 19", neighborhood: "Östermalm",
@@ -237,24 +247,30 @@ export const bars: Bar[] = [
     lat: 59.30567, lng: 18.00058, website: "https://fabelbar.se", instagram: "_fabelbar_",
     type: "Bar", wine_focus: "Naturvin och smårätter", food: true,
     description: "Kvartersbar i Aspudden sedan 2018 med naturvin, drinkar och smårätter. Ett mysigt häng för par och kompisar söder om Liljeholmen.",
+    image: "/barer/fabelbar-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "kakes-kompis-stockholm", name: "Kåkes Kompis", city: "Stockholm", address: "Sjöbjörnsvägen 36", neighborhood: "Gröndal",
     lat: 59.31631, lng: 18.00974, website: "https://www.kakeskompis.se", instagram: "kakeskompis",
     type: "Restaurang", wine_focus: "Naturvin", food: true, opening: "Öppnar snart",
     description: "Ny bistro och café i Gröndal som vill bli ett stammisställe söder om söder, både för en vanlig fredag och för att fira något större. Mat, kaffe och naturvin.",
+    image: "/barer/kakes-kompis-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "klover-stockholm", name: "Klöver", city: "Stockholm", address: "Rålambsvägen 54", neighborhood: "Fredhäll",
     lat: 59.3303, lng: 18.00316, website: "https://www.klovervinbar.se", wineList: "https://www.klovervinbar.se/sv/bottles", instagram: "klovervinbar",
     type: "Vinbar", wine_focus: "Naturvin från mindre franska producenter", food: true,
     description: "Vinbar i hörnet mot Frödingsvägen i Fredhäll, öppnad i slutet av 2025 av paret Suzanna El Khoury och Måns Magnusson. Naturvinerna kommer mest från mindre franska producenter och lutar åt det eleganta snarare än det funkiga. Till det medelhavsinspirerade smårätter. Det går inte att boka bord.",
+    image: "/barer/klover-stockholm.jpg", imageApproved: false,
+    producers: [["arianna-occhipinti", "Arianna Occhipinti"], ["dard-ribo", "Dard & Ribo"], ["envinate", "Envínate"], ["jean-foillard", "Jean Foillard"], ["testalonga", "Testalonga"], ["vino-di-anna", "Vino di Anna"]],
+    wines: [["wt-dard-ribo-crozes-hermitage-2024", "Dard & Ribo Crozes-Hermitage 2024"]],
   },
   {
     slug: "bar-la-lune-goteborg", name: "Bar La Lune", city: "Göteborg", address: "Vasa Kyrkogata 1", neighborhood: "Vasastaden",
     lat: 57.69651, lng: 11.97168, website: "https://barlalune.se", instagram: "barlalune",
     type: "Vinbar", wine_focus: "Handplockat naturvin", food: true,
     description: "Vinbar och restaurang i ett källarvalv i Vasastaden. Handplockad naturvinslista som byts ofta och mat gjord för att passa vinet.",
+    image: "/barer/bar-la-lune-goteborg.jpg", imageApproved: false,
   },
   {
     slug: "folk-goteborg", name: "Folk", city: "Göteborg", address: "Olof Palmes plats 1", neighborhood: "Järntorget",
@@ -268,8 +284,9 @@ export const bars: Bar[] = [
     lat: 57.69528, lng: 11.95757, website: "https://www.barminimal.com", wineList: "https://www.barminimal.com/sv/wine/", instagram: "barminimal",
     type: "Restaurang", wine_focus: "Naturvin till pizza, från Jura till Georgien", food: true,
     description: "Neapolitansk pizzeria och naturvinsbar på Skanstorget, i kanten av Haga. Degen jäser i över 48 timmar och gräddas snabbt i en mycket het ugn, och på pizzorna hamnar svenska råvaror efter säsong, som kantareller, Västerbottenost och inlagd sill. Vinlistan är bara naturvin och byts ofta. Senast fanns där orangevin från Pheasant's Tears i Georgien, Pinot noir och crémant från Le Clos des Grives i Jura och flera viner från Burgenland och Ungern. Öppet tisdag till lördag. Drop-in går bra, men större sällskap bör boka. Pizzorna finns också som takeaway.",
-    producers: [["markus-altenburger", "Markus Altenburger"], ["kolonia-52", "Kolonia 52"]],
     image: "/barer/bar-minimal-goteborg.jpg", imageApproved: false,
+    producers: [["markus-altenburger", "Markus Altenburger"], ["kolonia-52", "Kolonia 52"]],
+    wines: [["chardonnay-vom-kalk-2023", "Markus Altenburger Chardonnay vom Kalk"], ["sb-7806401", "Markus Altenburger Ois Erleben"]],
   },
   {
     slug: "julie-malmo", name: "Julie", city: "Malmö", address: "Tegelgårdsgatan 9", neighborhood: "Gamla Väster",
@@ -318,6 +335,7 @@ export const bars: Bar[] = [
     lat: 59.85733, lng: 17.64035, website: "https://www.laruelle.se", wineList: "https://starwinelist.com/wine-place/la-ruelle",
     type: "Restaurang", wine_focus: "Naturvin och bra råvaror", food: true,
     description: "Restaurang och vinbar i en gränd i centrala Uppsala, stadens självklara adress för den som gillar naturvin och bra råvaror.",
+    image: "/barer/la-ruelle-uppsala.jpg", imageApproved: false,
   },
 ];
 
