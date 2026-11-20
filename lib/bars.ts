@@ -123,9 +123,9 @@ export const bars: Bar[] = [
   {
     slug: "dryck-wine-bar-stockholm", name: "Dryck Vinbar", city: "Stockholm", address: "Swedenborgsgatan 1", neighborhood: "Södermalm",
     lat: 59.31743, lng: 18.0634, website: "https://www.dryckvinbar.se", instagram: "dryckvinbar",
-    type: "Vinbar", wine_focus: "Naturvin från mindre producenter", food: true,
-    description: "Vinbar vid Mariatorget som började som ekologisk matbutik. Här dricker man naturviner från mindre producenter och äter enkel mat att dela.",
-    image: "/barer/dryck-wine-bar-stockholm.jpg", imageApproved: false,
+    type: "Vinbar", wine_focus: "Hantverksviner från små producenter i Europa", food: true,
+    description: "Vinbar intill Mariatorget där ägarinnan började med en ekologisk matbutik. Sedan tio år serveras hantverksviner från små vinproducenter runt om i Europa. Det lilla köket erbjuder en kort och råvarufokuserad säsongsmeny.",
+    image: "/barer/dryck-wine-bar-stockholm.jpg", imageApproved: true,
   },
   {
     slug: "grus-grus-stockholm", name: "Grus Grus", city: "Stockholm", address: "Karlbergsvägen 14", neighborhood: "Vasastan",
