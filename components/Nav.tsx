@@ -49,15 +49,15 @@ export default function Nav() {
 
   return (
     <header className="sticky top-0 z-50 bg-[var(--bg)] border-b-[3px] border-[var(--ink)]">
-      <div className="max-w-6xl mx-auto px-5 md:px-8 h-16 flex items-center justify-between">
+      <div className="max-w-6xl xl:max-w-7xl mx-auto px-5 md:px-8 h-16 flex items-center justify-between">
         {/* Logo */}
-        <Link href={lang === "en" ? "/en" : "/"} className="flex items-center gap-2.5 text-[var(--ink)] hover:text-[var(--accent)] transition-colors">
+        <Link href={lang === "en" ? "/en" : "/"} className="flex items-center gap-2.5 shrink-0 text-[var(--ink)] hover:text-[var(--accent)] transition-colors">
           <Image src="/logo.png" alt="" width={22} height={33} className="shrink-0" unoptimized />
           <span className="font-[family-name:var(--font-display)] font-black uppercase text-[22px] sm:text-[26px] leading-none">Naturvinstipset</span>
         </Link>
 
         {/* Desktop nav */}
-        <nav className="hidden lg:flex gap-6 text-[15px] font-bold">
+        <nav className="hidden xl:flex ml-auto pl-12 gap-6 text-[15px] font-bold whitespace-nowrap">
           {links.map((l) => (
             <Link
               key={l.href}
@@ -74,11 +74,11 @@ export default function Nav() {
           ))}
         </nav>
 
-        <div className="flex items-center gap-4 lg:gap-0 lg:ml-6">
+        <div className="flex items-center gap-4 xl:gap-0 xl:ml-8">
         <LangSwitch pathname={pathname} />
         {/* Mobile burger */}
         <button
-          className="lg:hidden flex flex-col gap-[5px] p-2 -mr-2"
+          className="xl:hidden flex flex-col gap-[5px] p-2 -mr-2"
           onClick={() => setOpen(!open)}
           aria-label={tr(lang, "Meny", "Menu")}
           aria-expanded={open}
@@ -92,7 +92,7 @@ export default function Nav() {
 
       {/* Mobile menu */}
       {open && (
-        <div className="lg:hidden border-t-[3px] border-[var(--ink)] bg-[var(--bg)]">
+        <div className="xl:hidden border-t-[3px] border-[var(--ink)] bg-[var(--bg)]">
           {links.map((l) => (
             <Link
               key={l.href}
