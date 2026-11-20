@@ -87,7 +87,7 @@ export const bars: Bar[] = [
     slug: "bar-montan-stockholm", name: "Bar Montan", city: "Stockholm", address: "Förbindelsehallen", neighborhood: "Slakthusområdet",
     lat: 59.29235, lng: 18.07872, instagram: "barmontan",
     type: "Restaurang", wine_focus: "Naturvin", food: true,
-    description: "Bistro i Förbindelsehallen i Slakthusområdet, öppnad 2023, med naturvin och smaksäkra, vällagade rätter i små och stora portioner. Lokalen har sex meter i takhöjd.",
+    description: "Bistro i Förbindelsehallen i Slakthusområdet, öppnad 2023, med naturvin och smaksäkra, vällagade rätter i små och stora portioner. Lokalen har sex meter i takhöjd. Den råa industrimiljön runt omkring lovar inte så mycket, men personalen är kunnig och vänlig, och menyn är kortfattad men maten desto bättre.",
     image: "/barer/bar-montan-stockholm.jpg", imageApproved: false,
   },
   {
