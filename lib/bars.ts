@@ -166,7 +166,7 @@ export const bars: Bar[] = [
     lat: 59.31154, lng: 18.08202, website: "https://vinaaa.squarespace.com", instagram: "vinavidgarbostorg",
     type: "Vinbar", wine_focus: "Levande vin från små producenter", food: true,
     description: "Kvarterskrog vid Greta Garbos torg med en vinlista från små producenter och europeiska smårätter. På sommaren tar man glaset ut på torget.",
-    image: "/barer/vina-stockholm.jpg", imageApproved: false,
+    image: "/barer/vina-stockholm.jpg", imageApproved: true,
   },
   {
     slug: "bar-ninja-stockholm", name: "Bar Ninja", city: "Stockholm", address: "Katarina Bangata 29", neighborhood: "Södermalm",
