@@ -125,7 +125,7 @@ export const bars: Bar[] = [
     lat: 59.31743, lng: 18.0634, website: "https://www.dryckvinbar.se", instagram: "dryckvinbar",
     type: "Vinbar", wine_focus: "Hantverksviner från små producenter i Europa", food: true,
     description: "Vinbar intill Mariatorget där ägarinnan började med en ekologisk matbutik. Sedan tio år serveras hantverksviner från små vinproducenter runt om i Europa. Det lilla köket erbjuder en kort och råvarufokuserad säsongsmeny.",
-    image: "/barer/dryck-wine-bar-stockholm.jpg", imageApproved: false,
+    image: "/barer/dryck-wine-bar-stockholm.jpg", imageApproved: true,
   },
   {
     slug: "grus-grus-stockholm", name: "Grus Grus", city: "Stockholm", address: "Karlbergsvägen 14", neighborhood: "Vasastan",
