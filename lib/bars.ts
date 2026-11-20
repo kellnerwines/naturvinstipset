@@ -78,16 +78,17 @@ export const bars: Bar[] = [
   },
   {
     slug: "frammat-stockholm", name: "Främmat", city: "Stockholm", address: "Dalagatan 54", neighborhood: "Vasastan",
-    lat: 59.34225, lng: 18.04524,
+    lat: 59.34225, lng: 18.04524, website: "https://frammat.com",
     type: "Restaurang", wine_focus: "Naturvin", food: true,
-    description: "Liten fransk bistro i Vasastan som öppnade 2020 och snabbt blev svår att få bord på. Små rätter, gärna med skaldjur, och naturvin till.",
+    description: "Liten och stimmig krog på Dalagatan i Vasastan som öppnade 2020. Köket har ena foten i det klassiska franska och den andra i något friare, med små rätter, gärna skaldjur. Både mat- och vinlistan byts hela tiden, och det mesta i glasen är naturvin. Bord släpps 60 dagar i förväg och blir snabbt fullbokade, men det finns alltid några platser för drop-in. På lördagar öppnar de redan klockan 13.",
     image: "/barer/frammat-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "bar-montan-stockholm", name: "Bar Montan", city: "Stockholm", address: "Förbindelsehallen", neighborhood: "Slakthusområdet",
     lat: 59.29235, lng: 18.07872, instagram: "barmontan",
     type: "Restaurang", wine_focus: "Naturvin", food: true,
-    description: "Bistro i Förbindelsehallen i Slakthusområdet, öppnad 2023, med säsongsmat i små och stora portioner och naturvin. Industriell lokal med loppisinredning.",
+    description: "Bistro i Förbindelsehallen i Slakthusområdet, öppnad 2023, med naturvin och smaksäkra, vällagade rätter i små och stora portioner. Lokalen har sex meter i takhöjd. Den råa industrimiljön runt omkring lovar inte så mycket, men personalen är kunnig och vänlig, och menyn är kortfattad men maten desto bättre.",
+    image: "/barer/bar-montan-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "woodstockholm-stockholm", name: "Woodstockholm", city: "Stockholm", address: "Mosebacke torg 9", neighborhood: "Södermalm",
