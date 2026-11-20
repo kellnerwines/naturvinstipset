@@ -137,9 +137,9 @@ export const bars: Bar[] = [
   {
     slug: "nektar-mat-vin-stockholm", name: "Nektar mat & vin", city: "Stockholm", address: "Rörstrandsgatan 12", neighborhood: "Vasastan",
     lat: 59.34008, lng: 18.03391, website: "https://www.nektarstockholm.com", instagram: "nektar.sthlm",
-    type: "Restaurang", wine_focus: "Naturvin till vegetarisk mat", food: true,
-    description: "Kvarterskrog vid S:t Eriksplan i Vasastan med ett seriöst vinfokus och mat från Europas södra delar, mest vegetarisk. Råvarorna kommer från småskaliga producenter i närheten, och både mat och vinlista byts ofta. Boka bord eller ta en plats i baren.",
-    image: "/barer/nektar-mat-vin-stockholm.jpg", imageApproved: false,
+    type: "Restaurang", wine_focus: "Naturvin till mat från södra Europa", food: true,
+    description: "Kvarterskrog vid S:t Eriksplan i Vasastan med ett seriöst vinfokus och mat från Europas södra delar. Råvarorna kommer från småskaliga producenter i närheten, och både mat och vinlista byts ofta. Boka bord eller ta en plats i baren.",
+    image: "/barer/nektar-mat-vin-stockholm.jpg", imageApproved: true,
   },
   {
     slug: "agnes-stockholm", name: "Agnes", city: "Stockholm", address: "Norra Agnegatan 43", neighborhood: "Kungsholmen",
