@@ -227,6 +227,7 @@ export const bars: Bar[] = [
     lat: 59.33265, lng: 18.06263,
     type: "Vinbar", wine_focus: "Naturvin och cava", food: true,
     description: "Liten, hemtrevlig vinbar mitt på Drottninggatan. Naturviner, cava och smårätter i tapasstil, en lugn oas mitt i city.",
+    image: "/barer/bar-oas-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "fabelbar-stockholm", name: "Fabelbar", city: "Stockholm", address: "Hägerstensvägen 132", neighborhood: "Aspudden",
