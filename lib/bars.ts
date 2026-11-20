@@ -114,6 +114,7 @@ export const bars: Bar[] = [
     type: "Vinbar", wine_focus: "Naturvin, svensk hantverksöl och cider", food: false,
     opening: "Stängt till 22 januari",
     description: "Kungsholmens första naturvinsbar, öppnad 2022 på soliga Norr Mälarstrand och döpt efter ägarnas hund Chewie. Husvinerna kommer från bland andra Josep i Pau i Penedès och Château Saint Cyrgues i Rhône, och utöver vinet finns svensk hantverkscider från Brutes och Underjord och suröl från Stockholm Brewing som lagrats på fat. Maten är borta sedan hösten 2026, nu blir det bara snacks som oliver och mandlar. Bara drop-in, och snälla hundar är välkomna.",
+    image: "/barer/chewies-bar-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "post-bar-stockholm", name: "Post Bar", city: "Stockholm", address: "Nytorget 4", neighborhood: "Södermalm",
