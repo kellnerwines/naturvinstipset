@@ -64,8 +64,20 @@ export default async function BarPage({ params }: { params: Promise<{ slug: stri
         </figure>
       ) : null}
       <p className="leading-relaxed mb-8 text-lg">{bar.description}</p>
+      {bar.producers?.length ? (
+        <p className="mb-8 -mt-4">
+          På vinlistan, och här på sajten:{" "}
+          {bar.producers.map(([slug, name], i) => (
+            <span key={slug}>
+              {i ? ", " : ""}
+              <Link href={`/producenter/${slug}`} className="font-bold text-[var(--ink)] underline hover:text-[var(--accent)]">{name}</Link>
+            </span>
+          ))}
+        </p>
+      ) : null}
 
       <div className="flex flex-wrap gap-3 mb-10">
+        {bar.wineList ? <a href={bar.wineList} target="_blank" rel="noopener" className={link}>Vinlista</a> : null}
         {bar.website ? <a href={bar.website} target="_blank" rel="noopener" className={link}>Webbplats</a> : null}
         {bar.instagram ? <a href={instagramUrl(bar.instagram)} target="_blank" rel="noopener" className={link}>Instagram @{bar.instagram}</a> : null}
         <a href={mapsUrl(bar)} target="_blank" rel="noopener" className={link}>Vägbeskrivning</a>
