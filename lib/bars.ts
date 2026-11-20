@@ -13,6 +13,10 @@ export type Bar = {
   lat: number;
   lng: number;
   website?: string;
+  /** Länk till ställets egen vinlista eller dryckesmeny, om den ligger på en fast adress. */
+  wineList?: string;
+  /** Producenter på ställets vinlista som har en egen sida här, som [slug, namn]. Bara sådant vi sett på deras lista. */
+  producers?: [string, string][];
   /** Instagramnamn utan @. */
   instagram?: string;
   type: BarType;
@@ -106,9 +110,10 @@ export const bars: Bar[] = [
   },
   {
     slug: "chewies-bar-stockholm", name: "Chewie's Bar", city: "Stockholm", address: "Norr Mälarstrand 32", neighborhood: "Kungsholmen",
-    lat: 59.32687, lng: 18.04304,
-    type: "Bar", wine_focus: "Naturvin, hantverksöl och cider", food: true,
-    description: "Bar vid vattnet på Norr Mälarstrand med naturvin, hantverksöl och cider och vegansk mat. Hundar är välkomna. Hette tidigare Folk & Friends.",
+    lat: 59.32687, lng: 18.04304, website: "https://chewiesbar.com", wineList: "https://chewiesbar.com/drink-menu", instagram: "chewies_bar",
+    type: "Vinbar", wine_focus: "Naturvin, svensk hantverksöl och cider", food: false,
+    opening: "Stängt till 22 januari",
+    description: "Kungsholmens första naturvinsbar, öppnad 2022 på soliga Norr Mälarstrand och döpt efter ägarnas hund Chewie. Husvinerna kommer från bland andra Josep i Pau i Penedès och Château Saint Cyrgues i Rhône, och utöver vinet finns svensk hantverkscider från Brutes och Underjord och suröl från Stockholm Brewing som lagrats på fat. Maten är borta sedan hösten 2026, nu blir det bara snacks som oliver och mandlar. Bara drop-in, och snälla hundar är välkomna.",
   },
   {
     slug: "post-bar-stockholm", name: "Post Bar", city: "Stockholm", address: "Nytorget 4", neighborhood: "Södermalm",
@@ -134,6 +139,7 @@ export const bars: Bar[] = [
     lat: 59.31686, lng: 18.06392, website: "https://racamaca.se", instagram: "racamaca_food",
     type: "Vinbar", wine_focus: "Spanien och Frankrike, med naturvin från bland andra Matassa och Envínate", food: true,
     description: "Vinbar och restaurang nära Mariatorget med spanska och sydeuropeiska smårätter som pintxos, pulpo och slidrar med baskisk korv. Vinlistan är mest spansk och fransk, med naturvin från bland andra Matassa, Envínate och Andreas Tscheppe, och det finns ett bra urval sherry. Bara drop-in, men en chambre séparée för 8–12 personer går att boka.",
+    producers: [["envinate", "Envínate"], ["laherte-freres", "Laherte Frères"], ["celler-frisach", "Celler Frisach"], ["domaine-de-majas", "Domaine de Majas"]],
     image: "/barer/racamaca-stockholm.jpg", imageApproved: false,
   },
   {
