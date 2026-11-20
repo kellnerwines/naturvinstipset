@@ -81,6 +81,7 @@ export const bars: Bar[] = [
     lat: 59.34225, lng: 18.04524,
     type: "Restaurang", wine_focus: "Naturvin", food: true,
     description: "Liten fransk bistro i Vasastan som öppnade 2020 och snabbt blev svår att få bord på. Små rätter, gärna med skaldjur, och naturvin till.",
+    image: "/barer/frammat-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "bar-montan-stockholm", name: "Bar Montan", city: "Stockholm", address: "Förbindelsehallen", neighborhood: "Slakthusområdet",
