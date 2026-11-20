@@ -47,6 +47,7 @@ export const bars: Bar[] = [
     lat: 59.31244, lng: 18.08148, website: "https://albavinbar.se", instagram: "alba_nytorget",
     type: "Vinbar", wine_focus: "Naturvin från småskaliga producenter", food: true,
     description: "Vinbar och restaurang vid Nytorget där naturvin från småskaliga producenter står i centrum. Ett avslappnat kvartersställe som passar lika bra för ett glas efter jobbet som för en hel middag.",
+    image: "/barer/alba-vinbar-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "hosoi-stockholm", name: "Hosoi", city: "Stockholm", address: "Styckmästargatan 5", neighborhood: "Slakthusområdet",
@@ -63,14 +64,14 @@ export const bars: Bar[] = [
   },
   {
     slug: "ring-katarina-stockholm", name: "Ring Katarina", city: "Stockholm", address: "Katarina Bangata 66", neighborhood: "Södermalm",
-    lat: 59.30996, lng: 18.08487, website: "https://ringkatarina.se", instagram: "ring_katarina",
+    lat: 59.30996, lng: 18.08487, website: "https://ringkatarina.se", wineList: "https://ringkatarina.se/vinlista/", instagram: "ring_katarina",
     type: "Vinbar", wine_focus: "Naturvin", food: true,
     description: "Liten vin- och matbar i hörnet mot Ringvägen, med ett tjugotal platser inne och uteservering på sommaren. Naturvin och små rätter med europeiska influenser, och menyn byts ofta. Samma gäng står bakom Racamaca.",
     image: "/barer/ring-katarina-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "folii-stockholm", name: "Folii", city: "Stockholm", address: "Erstagatan 21", neighborhood: "Södermalm",
-    lat: 59.31402, lng: 18.09038, website: "https://folii.se", instagram: "folii_sthlm",
+    lat: 59.31402, lng: 18.09038, website: "https://folii.se", wineList: "https://starwinelist.com/folii/", instagram: "folii_sthlm",
     type: "Vinbar", wine_focus: "Naturvin och hållbart odlat, över hundra viner på glas", food: true,
     description: "Sommelierdriven vinbar på SoFo med över hundra viner på glas och fokus på naturvin och hållbart odlat. Säsongsbetonade småplock, och musiken spelas som hela album på vinyl.",
   },
@@ -159,20 +160,21 @@ export const bars: Bar[] = [
   },
   {
     slug: "agnes-stockholm", name: "Agnes", city: "Stockholm", address: "Norra Agnegatan 43", neighborhood: "Kungsholmen",
-    lat: 59.3326, lng: 18.04299, website: "https://restaurangagnes.com", instagram: "restaurang_agnes",
+    lat: 59.3326, lng: 18.04299, website: "https://restaurangagnes.com", wineList: "https://starwinelist.com/wine-place/agnes", instagram: "restaurang_agnes",
     type: "Restaurang", wine_focus: "Prisbelönt vinlista med naturvin", food: true,
     description: "Bistro på Kungsholmen med smårätter som ostron och chark. Vinlistan har prisats av Star Wine List och har gott om naturvin.",
+    image: "/barer/agnes-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "savant-bar-stockholm", name: "Savant", city: "Stockholm", address: "Tegnérgatan 4", neighborhood: "Vasastan",
-    lat: 59.34057, lng: 18.06346, website: "https://www.savantbar.se", instagram: "savantbar",
+    lat: 59.34057, lng: 18.06346, website: "https://www.savantbar.se", wineList: "https://menu.savantbar.se", instagram: "savantbar",
     type: "Vinbar", wine_focus: "Naturvin och säsongsmat", food: true,
     description: "Liten naturvinsbar med ett trettiotal platser och fler än tio viner på glas. Köket lagar säsongsrätter på mest svenska grönsaker, och inredningen är byggd av återbrukat material. Savant importerar också eget naturvin och ordnar varje år en naturvinsfestival i Stockholm. Det går inte att boka bord.",
     image: "/barer/savant-bar-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "tyge-sessil-stockholm", name: "Tyge & Sessil", city: "Stockholm", address: "Brahegatan 4", neighborhood: "Östermalm",
-    lat: 59.33707, lng: 18.07555, website: "https://tygesessil.se", instagram: "tygesessil",
+    lat: 59.33707, lng: 18.07555, website: "https://tygesessil.se", wineList: "https://starwinelist.com/tyge-sessil/", instagram: "tygesessil",
     type: "Vinbar", wine_focus: "Naturvin med lite eller inget svavel", food: true,
     description: "Vincafé på Östermalm som kallar sig Stockholms äldsta (nästan) sulfitfria vinbar. Naturliga viner på glas och flaska och enkel mat.",
     image: "/barer/tyge-sessil-stockholm.jpg", imageApproved: false,
@@ -214,6 +216,7 @@ export const bars: Bar[] = [
     lat: 59.33524, lng: 18.07671, website: "https://schmaltz.se", instagram: "schmaltzdelicatessen",
     type: "Delikatess", wine_focus: "Naturvin till deli och bistro", food: true,
     description: "Deli, bar och restaurang ett stenkast från Östermalmstorg, i ett hus från början av 1900-talet. Man kan ta en kaffe i steget, äta lunch eller stanna för några glas vin på kvällen, och naturvin finns på listan.",
+    image: "/barer/schmaltz-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "matbaren-mathias-dahlgren-stockholm", name: "Matbaren Mathias Dahlgren", city: "Stockholm", address: "Södra Blasieholmshamnen 6", neighborhood: "Blasieholmen",
@@ -243,7 +246,7 @@ export const bars: Bar[] = [
   },
   {
     slug: "klover-stockholm", name: "Klöver", city: "Stockholm", address: "Rålambsvägen 54", neighborhood: "Fredhäll",
-    lat: 59.3303, lng: 18.00316, website: "https://www.klovervinbar.se", instagram: "klovervinbar",
+    lat: 59.3303, lng: 18.00316, website: "https://www.klovervinbar.se", wineList: "https://www.klovervinbar.se/sv/bottles", instagram: "klovervinbar",
     type: "Vinbar", wine_focus: "Naturvin från mindre franska producenter", food: true,
     description: "Vinbar i hörnet mot Frödingsvägen i Fredhäll, öppnad i slutet av 2025 av paret Suzanna El Khoury och Måns Magnusson. Naturvinerna kommer mest från mindre franska producenter och lutar åt det eleganta snarare än det funkiga. Till det medelhavsinspirerade smårätter. Det går inte att boka bord.",
   },
@@ -312,7 +315,7 @@ export const bars: Bar[] = [
   },
   {
     slug: "la-ruelle-uppsala", name: "La Ruelle", city: "Uppsala", address: "Bredgränd 4", neighborhood: "Centrum",
-    lat: 59.85733, lng: 17.64035, website: "https://www.laruelle.se",
+    lat: 59.85733, lng: 17.64035, website: "https://www.laruelle.se", wineList: "https://starwinelist.com/wine-place/la-ruelle",
     type: "Restaurang", wine_focus: "Naturvin och bra råvaror", food: true,
     description: "Restaurang och vinbar i en gränd i centrala Uppsala, stadens självklara adress för den som gillar naturvin och bra råvaror.",
   },
