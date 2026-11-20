@@ -88,6 +88,7 @@ export const bars: Bar[] = [
     lat: 59.29235, lng: 18.07872, instagram: "barmontan",
     type: "Restaurang", wine_focus: "Naturvin", food: true,
     description: "Bistro i Förbindelsehallen i Slakthusområdet, öppnad 2023, med säsongsmat i små och stora portioner och naturvin. Industriell lokal med loppisinredning.",
+    image: "/barer/bar-montan-stockholm.jpg", imageApproved: false,
   },
   {
     slug: "woodstockholm-stockholm", name: "Woodstockholm", city: "Stockholm", address: "Mosebacke torg 9", neighborhood: "Södermalm",
