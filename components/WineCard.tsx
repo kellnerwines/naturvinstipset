@@ -9,6 +9,7 @@ import type { Wine } from "@/lib/blob";
 import { buildWineProductJsonLd, getArticleNumber } from "@/lib/wineJsonLd";
 import { buyLinks } from "@/lib/buyLinks";
 import OwnImportBadge from "./OwnImportBadge";
+import JsonLd from "./JsonLd";
 
 type Props = { wine: Wine; rating: number; ratingCount: number; likeCount: number; rank?: number; wineOfMonth?: boolean };
 
@@ -54,7 +55,7 @@ export default function WineCard({ wine, rating, ratingCount, likeCount, rank, w
 
   return (
     <div className={`flex flex-col bg-[var(--card)] border-[3px] border-[var(--ink)]${wineOfMonth ? " motm-card" : ""}`}>
-      <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(jsonLd) }} />
+      {jsonLd && <JsonLd data={jsonLd} />}
 
       {/* ── Färgfält med flaskan, plats och vintyp ─────────────────────── */}
       <Link href={`/viner/${wine.slug}`} className="block relative group border-b-[3px] border-[var(--ink)]" style={{ backgroundColor: color }}>

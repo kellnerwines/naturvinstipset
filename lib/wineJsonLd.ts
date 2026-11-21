@@ -20,8 +20,13 @@ type ScoreInput = {
  *  and the individual wine page. Editorial rating (adminRating) is reported as
  *  its own `review`; community votes — when any exist — are reported as a
  *  separate `aggregateRating`, since schema.org/Google guidance treats
- *  aggregateRating as a multi-voter signal distinct from a single editorial review. */
-export function buildWineProductJsonLd(wine: Wine, score: ScoreInput): Record<string, unknown> {
+ *  aggregateRating as a multi-voter signal distinct from a single editorial review.
+ *
+ *  Search Console-krav: adminRating 0 betyder "inte betygsatt" och ger ingen review
+ *  (0 ligger utanför 1–5). Utan bild utelämnas offers, eftersom Google då räknar
+ *  sidan som en ofullständig handlarlistning. Blir inget betyg eller erbjudande kvar
+ *  returneras null och ingen Product skrivs ut. */
+export function buildWineProductJsonLd(wine: Wine, score: ScoreInput): Record<string, unknown> | null {
   const url = `${BASE}/viner/${wine.slug}`;
   const articleNumber = getArticleNumber(wine);
   const displayName = wine.year ? `${wine.name} ${wine.year}` : wine.name;
@@ -70,6 +75,13 @@ export function buildWineProductJsonLd(wine: Wine, score: ScoreInput): Record<st
     ...shippingAndReturns,
   }));
 
+  const image = wine.primaryImageUrl
+    ? /^https?:/.test(wine.primaryImageUrl) ? wine.primaryImageUrl : `${BASE}${wine.primaryImageUrl}`
+    : undefined;
+  const hasReview = wine.adminRating >= 1 && wine.adminRating <= 5;
+  const listOffers = image && offers.length > 0;
+  if (!hasReview && communityAverage === null && !listOffers) return null;
+
   return {
     "@context": "https://schema.org",
     "@type": "Product",
@@ -80,17 +92,22 @@ export function buildWineProductJsonLd(wine: Wine, score: ScoreInput): Record<st
     ...(articleNumber ? { sku: articleNumber } : {}),
     manufacturer: { "@type": "Organization", name: wine.producer },
     ...(wine.producer ? { brand: { "@type": "Brand", name: wine.producer } } : {}),
-    ...(wine.primaryImageUrl ? { image: /^https?:/.test(wine.primaryImageUrl) ? wine.primaryImageUrl : `${BASE}${wine.primaryImageUrl}` } : {}),
-    ...(offers.length ? { offers } : {}),
-    review: {
-      "@type": "Review",
-      reviewRating: {
-        "@type": "Rating",
-        ratingValue: wine.adminRating,
-        bestRating: "5",
-      },
-      author: { "@type": "Organization", name: "Naturvinstipset" },
-    },
+    ...(image ? { image } : {}),
+    ...(listOffers ? { offers } : {}),
+    ...(hasReview
+      ? {
+          review: {
+            "@type": "Review",
+            reviewRating: {
+              "@type": "Rating",
+              ratingValue: wine.adminRating,
+              bestRating: 5,
+              worstRating: 1,
+            },
+            author: { "@type": "Organization", name: "Naturvinstipset" },
+          },
+        }
+      : {}),
     ...(communityAverage !== null
       ? {
           aggregateRating: {
