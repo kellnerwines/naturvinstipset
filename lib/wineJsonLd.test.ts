@@ -4,7 +4,7 @@ import { buildWineProductJsonLd } from "./wineJsonLd";
 
 const base: Wine = {
   id: "1", slug: "saroto-palhete-2024", name: "Saroto Palhete", year: "2024", producer: "Barroca da Malhada",
-  country: "Portugal", wineType: "Rött", description: "", adminRating: 4, createdAt: "", published: true,
+  country: "Portugal", wineType: "Rött", description: "", adminRating: 4, createdAt: "", published: true, primaryImageUrl: "/bilder/saroto.png",
 };
 const score = { combinedRating: 4, communityCount: 0 };
 
@@ -17,7 +17,7 @@ describe("JSON-LD för vin (avsnitt 9)", () => {
         { shop: "Flaskvis", url: "https://www.flaskvis.se/produkt/saroto/", price: 229, inStock: false, lastSyncedAt: "" },
       ],
     }, score);
-    const offers = ld.offers as Record<string, unknown>[];
+    const offers = ld!.offers as Record<string, unknown>[];
     expect(offers).toHaveLength(2);
     expect(offers[0]).toMatchObject({ price: "246", priceCurrency: "SEK", availability: "https://schema.org/InStock", seller: { name: "Systembolaget" } });
     expect(offers[1]).toMatchObject({ price: "229", availability: "https://schema.org/OutOfStock", seller: { name: "Flaskvis" } });
@@ -25,6 +25,22 @@ describe("JSON-LD för vin (avsnitt 9)", () => {
 
   it("gamla viner utan offers får en Offer från Systembolaget", () => {
     const ld = buildWineProductJsonLd({ ...base, systembolagetUrl: "https://www.systembolaget.se/produkt/vin/x-123456/", price: "199" }, score);
-    expect(ld.offers).toEqual([expect.objectContaining({ price: "199", url: "https://www.systembolaget.se/produkt/vin/x-123456/", seller: { "@type": "Organization", name: "Systembolaget" } })]);
+    expect(ld!.offers).toEqual([expect.objectContaining({ price: "199", url: "https://www.systembolaget.se/produkt/vin/x-123456/", seller: { "@type": "Organization", name: "Systembolaget" } })]);
+  });
+
+  it("betyg anges på skalan 1–5 och 0 (ej betygsatt) ger ingen review", () => {
+    const rated = buildWineProductJsonLd(base, score)!;
+    expect(rated.review).toMatchObject({ reviewRating: { ratingValue: 4, bestRating: 5, worstRating: 1 } });
+    const unrated = buildWineProductJsonLd({ ...base, adminRating: 0, price: "199" }, score)!;
+    expect(unrated.review).toBeUndefined();
+    expect(unrated.offers).toHaveLength(1);
+  });
+
+  it("utan bild blir det inga offers, och utan betyg ingen Product alls", () => {
+    const noImage = { ...base, primaryImageUrl: undefined, price: "199" };
+    const ld = buildWineProductJsonLd(noImage, score)!;
+    expect(ld.offers).toBeUndefined();
+    expect(ld.image).toBeUndefined();
+    expect(buildWineProductJsonLd({ ...noImage, adminRating: 0 }, score)).toBeNull();
   });
 });
