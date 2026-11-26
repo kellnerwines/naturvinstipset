@@ -24,6 +24,8 @@ export type Parsed = {
   alone?: boolean;
   shop?: Exclude<ShopPref, "">;
   country?: string;
+  /** Land som nämns men som inga viner kommer från just nu. */
+  noCountry?: string;
   grape?: string;
   like?: string;
 };
@@ -38,7 +40,12 @@ const CRX: Record<string, RegExp> = {
   Slovakien: /slovak/, Slovenien: /sloven/, USA: /\busa\b|amerikansk|kalifornien/,
   "Nederländerna": /nederländ|holländ/, Australien: /australi/, Tyskland: /tyskland|tysk/,
   Grekland: /grekland|grekisk/, Sverige: /sverige|svensk/, Georgien: /georgien|georgisk/,
+  Sydafrika: /sydafrik/, Argentina: /argentin/, Schweiz: /schweiz/, Chile: /chile|chilensk/,
+  Kroatien: /kroati/, Libanon: /libanes|libanon/, Kanada: /kanada|kanadensisk/, "Nya Zeeland": /nya zeeland/,
 };
+
+/** Närmaste land att föreslå när det nämnda saknas. */
+const NEAR: Record<string, string> = { Georgien: "Armenien" };
 
 const grapeCache = new WeakMap<CompassWine[], string[]>();
 function grapesOf(W: CompassWine[]): string[] {
@@ -123,7 +130,11 @@ export function parse(raw: string, W: CompassWine[]): Parsed {
   else if (/hemleverans|leverera|hem till|webbutik|nätet|online/.test(t)) o.shop = "web";
 
   /* land, druva, liknar */
-  for (const [c, r] of Object.entries(CRX)) if (r.test(t) && W.some((w) => w.c === c)) o.country = c;
+  for (const [c, r] of Object.entries(CRX)) {
+    if (!r.test(t)) continue;
+    if (W.some((w) => w.c === c)) o.country = c; else o.noCountry = c;
+  }
+  if (o.country) delete o.noCountry;
   const g = grapesOf(W).find((g) => t.includes(" " + g.toLowerCase()));
   if (g) o.grape = g;
   const lk = t.match(/(?:likt|liknar|som)\s+(.+)$/);
@@ -138,7 +149,7 @@ export function parse(raw: string, W: CompassWine[]): Parsed {
 }
 
 export const understood = (o: Parsed): boolean =>
-  !!(o.shop || o.color || o.budget || o.adv || o.food || o.tags.length || Object.keys(o.ax).length || o.country || o.grape || o.like);
+  !!(o.shop || o.color || o.budget || o.adv || o.food || o.tags.length || Object.keys(o.ax).length || o.country || o.noCountry || o.grape || o.like);
 
 export const regexInterpreter: Interpreter = { parse };
 
@@ -245,6 +256,12 @@ export function reflect(o: Parsed, raw: string, W: CompassWine[]): string {
   if (echo) sentences.push(h ? `${echo}, ${h}.` : `${echo}.`);
   else if (h) sentences.push(h.charAt(0).toUpperCase() + h.slice(1) + ".");
 
+  if (o.noCountry) {
+    const near = NEAR[o.noCountry];
+    const n = near ? W.filter((w) => w.c === near).length : 0;
+    sentences.push(`Från ${o.noCountry} har vi tyvärr inga viner just nu, så jag letar bland alla länder.`
+      + (n ? ` Närmast har vi ${near}, med ${n} ${n === 1 ? "vin" : "viner"}.` : ""));
+  }
   if (o.skin && o.color?.includes("Vitt")) sentences.push("Eftersom du nämner skalkontakt tar jag med orangeviner också, det är vita druvor som fått ligga på skalen.");
   if (o.adv && opener) sentences.push({ "1": "Det ska smaka som ett vanligt vin.", "2": "Gärna något som överraskar lite.", "3": "Och det får vara riktigt funky." }[o.adv]);
   return sentences.join(" ");
