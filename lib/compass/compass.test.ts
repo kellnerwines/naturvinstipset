@@ -205,6 +205,24 @@ describe("fritext", () => {
     expect(parse("ett rött likt fred 12", W).like).toBe(fred.id);
   });
 
+  it("säger till när ett land saknas", () => {
+    const ingaGeorgiska = W.filter((w) => w.c !== "Georgien");
+    const o = parse("rött från georgien", ingaGeorgiska);
+    expect(o).toMatchObject({ color: ["Rött"], noCountry: "Georgien" });
+    expect(o.country).toBeUndefined();
+    expect(reflect(o, "rött från georgien", [...ingaGeorgiska, cw({ c: "Armenien" })]))
+      .toMatch(/Från Georgien har vi tyvärr inga viner just nu, så jag letar bland alla länder\. Närmast har vi Armenien, med \d+ viner?\./);
+    expect(understood(parse("från georgien", ingaGeorgiska))).toBe(true);
+  });
+
+  it("känner igen fler länder", () => {
+    const V = [cw({ c: "Sydafrika" }), cw({ c: "Argentina" }), cw({ c: "Georgien" })];
+    expect(parse("något sydafrikanskt", V).country).toBe("Sydafrika");
+    expect(parse("rött från argentina", V).country).toBe("Argentina");
+    expect(parse("ett georgiskt orangevin", V)).toMatchObject({ country: "Georgien", color: ["Orange"] });
+    expect(parse("ett georgiskt orangevin", V).noCountry).toBeUndefined();
+  });
+
   it("känner igen när inget förstås", () => {
     expect(understood(parse("hej hej", W))).toBe(false);
   });
