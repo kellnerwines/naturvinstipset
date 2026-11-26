@@ -10,7 +10,7 @@ export const dynamic = "force-dynamic";
 
 export const metadata: Metadata = {
   title: "Alla naturviner på Systembolaget och med hemleverans",
-  description: "Hela biblioteket: alla naturviner som går att köpa i Sverige just nu. Filtrera på butik, färg, land och pris, eller sök på vin, producent och druva.",
+  description: "Hela biblioteket: alla naturviner som går att köpa i Sverige just nu. Filtrera på butik, importör, färg, land och pris, eller sök på vin, producent och druva.",
   alternates: { canonical: "/viner" },
   openGraph: {
     title: "Alla naturviner – Naturvinstipset",
@@ -56,7 +56,7 @@ export default async function LibraryPage({ searchParams }: { searchParams: Prom
         <WineLibrary
           wines={wines}
           ratings={ratings}
-          initial={{ butik: pick(sp.butik), farg: pick(sp.farg), land: pick(sp.land), pris: pick(sp.pris), q: pick(sp.q), sort: pick(sp.sort) || "betyg" }}
+          initial={{ butik: pick(sp.butik), importor: pick(sp.importor), farg: pick(sp.farg), land: pick(sp.land), pris: pick(sp.pris), q: pick(sp.q), sort: pick(sp.sort) || "betyg" }}
         />
       </div>
     </div>

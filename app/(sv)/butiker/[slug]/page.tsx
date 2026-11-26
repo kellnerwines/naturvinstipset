@@ -91,7 +91,7 @@ export default async function ShopPage({ params, searchParams }: {
           wines={wines}
           ratings={ratings}
           lockShop
-          initial={{ butik: slug, farg: pick(sp.farg), land: pick(sp.land), pris: pick(sp.pris), q: pick(sp.q), sort: pick(sp.sort) || "betyg" }}
+          initial={{ butik: slug, importor: pick(sp.importor), farg: pick(sp.farg), land: pick(sp.land), pris: pick(sp.pris), q: pick(sp.q), sort: pick(sp.sort) || "betyg" }}
         />
         <GuideSeo
           name={`Naturvin från ${shop.name}`}

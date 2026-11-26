@@ -1,4 +1,4 @@
-// Biblioteket: alla viner i lager som rader, filtrerbara på butik, färg, land, pris och fritext.
+// Biblioteket: alla viner i lager som rader, filtrerbara på butik, importör, färg, land, pris och fritext.
 // Raderna renderas på servern så att alla viner finns i HTML:en; filtret döljer bara rader.
 
 import Link from "next/link";
@@ -28,6 +28,7 @@ export default function WineLibrary({ wines, ratings, initial, lockShop }: {
   };
   const options: LibraryOptions = {
     shops: count(wines.flatMap(shopsOf)).map(([name, n]) => ({ value: shopSlug(name), label: name, n })),
+    importers: count(wines.map((w) => w.importer ?? "")).map(([name, n]) => ({ value: entitySlug(name), label: name, n })),
     types: count(wines.map((w) => w.wineType)).map(([name, n]) => ({ value: entitySlug(name), label: name, n })),
     countries: count(wines.map((w) => w.country)).map(([name, n]) => ({ value: entitySlug(name), label: name, n })),
   };
@@ -42,11 +43,12 @@ export default function WineLibrary({ wines, ratings, initial, lockShop }: {
             <li
               key={w.id}
               data-shops={shops.map(shopSlug).join(" ")}
+              data-importer={w.importer ? entitySlug(w.importer) : ""}
               data-type={entitySlug(w.wineType)}
               data-country={entitySlug(w.country ?? "")}
               data-price={price(w)}
               data-rating={rating.toFixed(2)}
-              data-q={[w.name, w.producer, w.region, w.country, ...grapesOf(w)].join(" ").toLowerCase()}
+              data-q={[w.name, w.producer, w.region, w.country, w.importer, ...grapesOf(w)].join(" ").toLowerCase()}
               className="border-b-2 border-[var(--rule)]"
             >
               <Link href={`/viner/${w.slug}`} className="flex items-center gap-4 py-3 group">
