@@ -5,11 +5,11 @@
 
 import { useEffect, useRef, useState, type ReactNode } from "react";
 
-export type LibraryState = { butik: string; farg: string; land: string; pris: string; q: string; sort: string };
+export type LibraryState = { butik: string; importor: string; farg: string; land: string; pris: string; q: string; sort: string };
 type Option = { value: string; label: string; n: number };
-export type LibraryOptions = { shops: Option[]; types: Option[]; countries: Option[] };
+export type LibraryOptions = { shops: Option[]; importers: Option[]; types: Option[]; countries: Option[] };
 
-const EMPTY: LibraryState = { butik: "", farg: "", land: "", pris: "", q: "", sort: "betyg" };
+const EMPTY: LibraryState = { butik: "", importor: "", farg: "", land: "", pris: "", q: "", sort: "betyg" };
 const PRICES: [string, string][] = [["", "Alla priser"], ["150", "Under 150 kr"], ["200", "Under 200 kr"], ["300", "Under 300 kr"], ["400", "Under 400 kr"]];
 const SORTS: [string, string][] = [["betyg", "Högst betyg"], ["pris", "Lägst pris"], ["pris-hog", "Högst pris"]];
 
@@ -36,6 +36,7 @@ export default function LibraryFilter({ options, initial, total, lockShop, child
     const ranked = rows.map((el) => {
       const d = el.dataset;
       const ok = (!s.butik || (d.shops ?? "").split(" ").includes(s.butik))
+        && (!s.importor || d.importer === s.importor)
         && (!s.farg || d.type === s.farg)
         && (!s.land || d.country === s.land)
         && (max === Infinity || (Number(d.price) > 0 && Number(d.price) < max))
@@ -68,7 +69,7 @@ export default function LibraryFilter({ options, initial, total, lockShop, child
           type="search"
           value={s.q}
           onChange={(e) => set("q")(e.target.value)}
-          placeholder="Sök vin, producent eller druva"
+          placeholder="Sök vin, producent, druva eller importör"
           aria-label="Sök"
           className="w-full text-base border-[3px] border-[var(--ink)] rounded-full px-5 py-2.5 bg-[var(--paper)] mb-1 placeholder:text-[var(--muted)]"
         />
@@ -76,6 +77,12 @@ export default function LibraryFilter({ options, initial, total, lockShop, child
           <select aria-label="Butik" value={s.butik} onChange={(e) => set("butik")(e.target.value)} className={select}>
             <option value="">Alla butiker</option>
             {options.shops.map((o) => <option key={o.value} value={o.value}>{o.label} ({o.n})</option>)}
+          </select>
+        )}
+        {options.importers.length > 0 && (
+          <select aria-label="Importör" value={s.importor} onChange={(e) => set("importor")(e.target.value)} className={select}>
+            <option value="">Alla importörer</option>
+            {options.importers.map((o) => <option key={o.value} value={o.value}>{o.label} ({o.n})</option>)}
           </select>
         )}
         <select aria-label="Färg" value={s.farg} onChange={(e) => set("farg")(e.target.value)} className={select}>
