@@ -3,7 +3,7 @@ import { join } from "path";
 import { describe, expect, it } from "vitest";
 import type { Wine } from "../blob";
 import { applySync, STOCK_HIDDEN, type ShopFeed } from "./apply";
-import { parseSystembolagetPage, sbNumber } from "./systembolaget";
+import { importerName, parseSystembolagetPage, sbNumber } from "./systembolaget";
 import { toCompassWine } from "../compass/engine";
 
 const html = readFileSync(join(__dirname, "fixtures/systembolaget-9448801.html"), "utf8");
@@ -62,6 +62,12 @@ describe("Systembolagets produktsida", () => {
     expect(sbNumber("https://www.systembolaget.se/94488")).toBe("94488");
     expect(sbNumber("https://www.flaskvis.se/produkt/x-123456/")).toBeUndefined();
   });
+  it("importören ur leverantörens bolagsnamn", () => {
+    expect(importerName("Dryckesbutiken Timotejgatan AB")).toBe("Dryckesbutiken");
+    expect(importerName("Boa Pressao AB")).toBe("Boa Pressão");
+    expect(importerName("Wine Waves AB")).toBe("Wine Waves");
+    expect(importerName("Kellner & Kellner AB")).toBe("Kellner & Kellner");
+  });
 });
 
 describe("Systembolaget i synken", () => {
@@ -70,6 +76,12 @@ describe("Systembolaget i synken", () => {
   it("gammalt vin med bara länk får pris, kontrolltid och erbjudande", () => {
     const { wines } = applySync([old], [feed([{ sourceId: "9323901", url: "https://www.systembolaget.se/produkt/vin/fred-9323901/", price: 260, inStock: true }])], NOW);
     expect(wines[0]).toMatchObject({ price: "260", sbCheckedAt: NOW, published: true, offers: [{ shop: "Systembolaget", price: 260, inStock: true }] });
+  });
+  it("vin utan importör får importören från kontrollen, men inte om fältet är låst", () => {
+    const item = { sourceId: "9323901", url: old.systembolagetUrl!, price: 250, inStock: true, importer: "Dryckesbutiken" };
+    expect(applySync([old], [feed([item])], NOW).wines[0].importer).toBe("Dryckesbutiken");
+    const locked = { ...old, lockedFields: ["importer"] };
+    expect(applySync([locked], [feed([item])], NOW).wines[0].importer).toBeUndefined();
   });
   it("slut på Systembolaget och ingen annanstans döljs, och kompassen visar det inte", () => {
     const { wines } = applySync([old], [feed([{ sourceId: "9323901", url: old.systembolagetUrl!, price: 250, inStock: false }])], NOW);

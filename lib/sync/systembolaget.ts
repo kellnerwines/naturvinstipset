@@ -63,6 +63,19 @@ export const SB_IMPORT: { nr: string; producer: string; importer: string }[] = [
     .map(([nr, producer]) => ({ nr, producer, importer: "Vinum Alpes" })),
 ];
 
+/** Leverantörens bolagsnamn hos Systembolaget när sajten kallar importören något annat. */
+const SUPPLIER_NAMES: Record<string, string> = {
+  "Dryckesbutiken Timotejgatan AB": "Dryckesbutiken",
+  "We Are Backyard Wines AB": "Backyard Wines",
+  "Boa Pressao AB": "Boa Pressão",
+  "Wine Trade Sweden AB": "Wine Trade",
+};
+
+/** Importören som sajten visar den, ur Systembolagets leverantörsnamn ("Wine Waves AB" blir "Wine Waves"). */
+export function importerName(supplier: string): string {
+  return SUPPLIER_NAMES[supplier] ?? supplier.replace(/\s+AB$/, "").trim();
+}
+
 /** Artikelnumret i en Systembolaget-länk, t.ex. "9323901" ur …/fred-9323901/. */
 export function sbNumber(url: string | undefined): string | undefined {
   return url?.match(/systembolaget\.se\/(?:.*-)?(\d{5,})\/?(?:[?#].*)?$/)?.[1];
@@ -167,8 +180,8 @@ export async function systembolagetFeed(existing: Wine[], deadline: number, now:
     .filter((w) => checkedAt(w) < (w.syncHidden === STOCK_HIDDEN ? hiddenCutoff : cutoff))
     .sort((a, b) => checkedAt(a).localeCompare(checkedAt(b)));
   const jobs = [
-    ...missing.map((i) => ({ url: `https://www.systembolaget.se/${i.nr}`, importer: i.importer, producer: i.producer, isNew: true, price: 0 })),
-    ...due.map((w) => ({ url: w.systembolagetUrl ?? w.offers!.find((o) => o.shop === SYSTEMBOLAGET)!.url, importer: undefined, producer: "", isNew: false, price: Number(w.price) || 0 })),
+    ...missing.map((i) => ({ url: `https://www.systembolaget.se/${i.nr}`, importer: i.importer, producer: i.producer, isNew: true, price: 0, noImporter: false })),
+    ...due.map((w) => ({ url: w.systembolagetUrl ?? w.offers!.find((o) => o.shop === SYSTEMBOLAGET)!.url, importer: undefined, producer: "", isNew: false, price: Number(w.price) || 0, noImporter: !w.importer })),
   ].slice(0, SB_PER_RUN);
 
   let broken = 0;
@@ -192,6 +205,8 @@ export async function systembolagetFeed(existing: Wine[], deadline: number, now:
     const p = parseSystembolagetPage(await res.text());
     if (!p?.number) { feed.errors.push(`${job.url}: hittade ingen produktdata`); return null; }
     const item: FeedItem = { sourceId: p.number, url: res.url || job.url, price: p.price, inStock: p.inStock };
+    // Äldre viner som lades in för hand saknar ofta importör; den fylls i från leverantören.
+    if (job.noImporter && p.supplier) item.importer = importerName(p.supplier);
     if (!job.isNew) return item;
 
     if (!`${p.producer} ${p.name}`.toLowerCase().includes(job.producer)) {
@@ -221,7 +236,7 @@ export async function systembolagetFeed(existing: Wine[], deadline: number, now:
       ...heuristicProfile("", p.wineType),
       primaryImageUrl: p.image, galleryImages: [], flavorTags: [],
       adminRating: 0, createdAt: now, published: true, wineOfMonth: false,
-      importer: job.importer ?? p.supplier, autoProfile: true,
+      importer: job.importer ?? (p.supplier && importerName(p.supplier)), autoProfile: true,
       source: `systembolaget.se (import ${now.slice(0, 10)}, ${job.importer})`, sourceId: p.number,
     };
     return item;
