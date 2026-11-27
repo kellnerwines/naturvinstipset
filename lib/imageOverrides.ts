@@ -44,6 +44,16 @@ export const CUTOUT_SLUGS = new Set<string>([
   "wt-testalonga-paysan-rouge",
   "wt-trinchero-vigna-del-noce-barbera-dasti-2016",
   "wt-vino-di-anna-sfuso",
+  // Systembolaget saknar bild; utklippta ur RekoVins egna foton 2026-11-27.
+  "sb-5448301",
+  "sb-5670301",
+  "sb-5796901",
+  "sb-5842001",
+  "sb-7090701",
+  "sb-7090901",
+  "sb-7091601",
+  "sb-7196101",
+  "sb-7440101",
 ]);
 
 export function withCutoutImage(w: Wine): Wine {
