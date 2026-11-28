@@ -6,6 +6,7 @@ import {
   deriveWineType, findGrapes, flaskvisScale, parseFlaskvisPage, parseVinNaturPage, splitOrigin, vinNaturVariant,
   isPhilipsonBottle, philipsonName, philipsonProducer, philipsonWineType, isWineTradeBottle, parseWineTradeProduct,
   isJustWineBottle, parseJustWineProduct, JUST_WINE_TAX_TEXT, isNotWine,
+  isSocieteCacheeBottle, parseSocieteCacheeProduct, SOCIETE_CACHEE_TAX_TEXT,
   type PhilipsonProduct, type ShopifyProduct,
 } from "./parse";
 
@@ -119,6 +120,32 @@ describe("Just Wine", () => {
     expect(isJustWineBottle(p({}))).toBe(true);
     expect(isJustWineBottle(p({ title: "Vinterlådan 2026", tags: ["vinlåda"] }))).toBe(false);
     expect(JUST_WINE_TAX_TEXT.test("Ordinarie pris 242 SEK Inklusive moms och svensk alkoholskatt.")).toBe(true);
+  });
+});
+
+describe("Société Cachée", () => {
+  const p = (o: Partial<ShopifyProduct>): ShopifyProduct => ({
+    handle: "x", title: "O2Y - Papillon 2023", product_type: "Wine", tags: ["Jura", "O2Y", "Rött"], vendor: "Societe Cachée",
+    body_html: "<p>Papillon 2023 är ett lätt rött vin på 100 % Trousseau från Jura.</p>",
+    variants: [{ title: "Default Title", price: "359.00", available: true }], ...o,
+  });
+  it("producent och färg ur taggarna, namn och år ur titeln", () => {
+    expect(parseSocieteCacheeProduct(p({}))).toMatchObject({ producer: "O2Y", name: "Papillon", year: "2023", region: "Jura", country: "Frankrike", wineType: "Rött", grapes: ["Trousseau"] });
+  });
+  it("ingen region när taggarna eller texten pekar åt olika håll, och producenten ur taggen", () => {
+    const x = parseSocieteCacheeProduct(p({ title: "Domaine Des Barbatruks - Barbamama", tags: ["Ardèche", "Domaine Des Barbatruks", "Jura", "Rött"], body_html: "<p>Grenache från Vaucluse i södra Rhone.</p>" }));
+    expect(x).toMatchObject({ producer: "Domaine Des Barbatruks", name: "Barbamama", year: "NV", region: undefined, country: "Frankrike" });
+    expect(parseSocieteCacheeProduct(p({ tags: ["Ardèche", "Les Bois Perdus", "Rosé"], body_html: "<p>En rosé i Provence-stil.</p>" })).region).toBeUndefined();
+    expect(parseSocieteCacheeProduct(p({ title: "Le Vignes des Biassou - Le Biassou", tags: ["Ardèche", "Les Vignes des Biassou", "Rött"] })).producer).toBe("Les Vignes des Biassou");
+  });
+  it("utan regiontagg och land i texten skapas inget land", () => {
+    expect(parseSocieteCacheeProduct(p({ tags: ["La Vrille et le Papillon", "Rosé"], body_html: "<p>Frisk rosé.</p>" })).country).toBe("");
+  });
+  it("bara flaskor, och skattetexten känns igen", () => {
+    expect(isSocieteCacheeBottle(p({}))).toBe(true);
+    expect(isSocieteCacheeBottle(p({ title: "Domaine Des Barbatruks - Barbamama 6-pack", tags: ["Låda", "Rött"] }))).toBe(false);
+    expect(isSocieteCacheeBottle(p({ title: "Jura-lådan", tags: [] }))).toBe(false);
+    expect(SOCIETE_CACHEE_TAX_TEXT.test("Ordinarie pris 359 SEK Skatter ingår. 99 kr i frakt")).toBe(true);
   });
 });
 

@@ -41,7 +41,7 @@ export default async function SynkPage() {
       <div className="max-w-5xl mx-auto px-6 py-8 space-y-8">
         <div className={`${card} flex flex-wrap items-start justify-between gap-4`}>
           <div className="max-w-xl">
-            <h2 className="font-bold">Vin &amp; Natur, Flaskvis, Philipson Wine, Wine Trade och Just Wine</h2>
+            <h2 className="font-bold">Vin &amp; Natur, Flaskvis, Philipson Wine, Wine Trade, Just Wine och Société Cachée</h2>
             <p className="text-sm text-[var(--muted)] mt-1">
               Synken körs automatiskt den 1:a varje månad. Den uppdaterar pris och lagerstatus, lägger till nya viner och markerar
               slutsålda. Låsta fält skrivs aldrig över. Brukar ta {Math.max(1, Math.round(estimateSeconds / 60))} min.

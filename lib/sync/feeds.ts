@@ -12,6 +12,7 @@ import {
   type PhilipsonProduct, type ShopifyProduct, type WooProduct,
   VIN_NATUR_TAX_TEXT, isWineTradeBottle, parseWineTradeProduct,
   JUST_WINE_TAX_TEXT, isJustWineBottle, parseJustWineProduct, isNotWine,
+  SOCIETE_CACHEE_TAX_TEXT, isSocieteCacheeBottle, parseSocieteCacheeProduct,
 } from "./parse";
 
 export const VIN_NATUR = "Vin & Natur";
@@ -19,6 +20,7 @@ export const FLASKVIS = "Flaskvis";
 export const PHILIPSON = "Philipson Wine";
 export const WINE_TRADE = "Wine Trade";
 export const JUST_WINE = "Just Wine";
+export const SOCIETE_CACHEE = "Société Cachée";
 
 const sleep = (ms: number) => new Promise((r) => setTimeout(r, ms));
 
@@ -343,6 +345,60 @@ export async function justWineFeed(known: Set<string>, deadline: number, now: st
       description: describe(w.wineType, w.region ?? w.country, w.grapes),
       primaryImageUrl: p.images?.[0]?.src, importer: JUST_WINE,
       source: `justwine.se (synk ${now.slice(0, 10)})`, sourceId: p.handle, autoProfile: true,
+    };
+    return item;
+  });
+  return feed;
+}
+
+// ─── Société Cachée ───────────────────────────────────────────────────────────
+
+/**
+ * Dansk webbutik (Shopify) med franska naturviner som skickas till Sverige (godkänd av admin
+ * 2026-11-28). Bara enskilda flaskor, inte lådor. Skattetexten kontrolleras på varje produktsida.
+ */
+export async function societeCacheeFeed(known: Set<string>, deadline: number, now: string): Promise<ShopFeed> {
+  const feed: ShopFeed = { shop: SOCIETE_CACHEE, source: "societecachee.com", complete: false, items: [], errors: [] };
+  const products: ShopifyProduct[] = [];
+  try {
+    for (let page = 1; page <= 5; page++) {
+      const res = await politeFetch(`https://societecachee.com/products.json?limit=250&page=${page}`, deadline, "application/json");
+      const batch = ((await res.json()) as { products: ShopifyProduct[] }).products ?? [];
+      if (!batch.length) { feed.complete = true; break; }
+      products.push(...batch);
+    }
+  } catch (e) {
+    feed.errors.push(`Produktlistan: ${(e as Error).message}`);
+  }
+
+  const wines = products.filter((p) => isSocieteCacheeBottle(p) && (known.has(p.handle) || p.variants[0].available));
+  feed.items = await mapLimit(wines, 1, async (p): Promise<FeedItem> => {
+    const v = p.variants[0];
+    const url = `https://societecachee.com/products/${p.handle}`;
+    const item: FeedItem = { sourceId: p.handle, url, price: Math.round(Number(v.price)), inStock: v.available, notWine: isNotWine(`${p.title} ${htmlText(p.body_html ?? "")}`) };
+    try {
+      await sleep(400);
+      item.taxIncluded = SOCIETE_CACHEE_TAX_TEXT.test(htmlText(await (await politeFetch(url, deadline)).text()));
+    } catch (e) {
+      feed.errors.push(`${p.handle}: produktsidan ${(e as Error).message}`);
+      if (!known.has(p.handle)) return item;
+    }
+    if (known.has(p.handle)) return item;
+
+    const w = parseSocieteCacheeProduct(p);
+    if (!w.producer || !w.wineType || !w.country) {
+      feed.errors.push(`${p.handle}: kunde inte avgöra ${[!w.producer && "producent", !w.wineType && "färg", !w.country && "land"].filter(Boolean).join(", ")}, skapas inte`);
+      return item;
+    }
+    const text = htmlText(p.body_html ?? "");
+    const id = `sc-${p.handle}`;
+    item.newWine = {
+      ...baseWine(now), ...heuristicProfile(text, w.wineType),
+      id, slug: id, name: w.name, year: w.year, producer: w.producer, region: w.region, country: w.country,
+      grape: w.grapes.join(", "), wineType: w.wineType, price: String(item.price), shop: SOCIETE_CACHEE, shopUrl: url,
+      description: describe(w.wineType, w.region ?? w.country, w.grapes),
+      primaryImageUrl: p.images?.[0]?.src, importer: SOCIETE_CACHEE,
+      source: `societecachee.com (synk ${now.slice(0, 10)})`, sourceId: p.handle, autoProfile: true,
     };
     return item;
   });
