@@ -15,6 +15,8 @@ export const SB_PER_RUN = 80;
 const RECHECK_DAYS = 30;
 /** Viner som döljs för att de är slut kontrolleras oftare, så att de syns igen när de går att köpa. */
 const HIDDEN_RECHECK_DAYS = 1;
+/** Viner utan importör som senast kontrollerades före detta läses om direkt, så att importören fylls i. */
+const IMPORTER_BACKFILL = "2026-11-28T00:00:00.000Z";
 
 /**
  * Naturviner på Systembolaget från importörernas egna listor (Wine Waves, Pompette och
@@ -175,10 +177,12 @@ export async function systembolagetFeed(existing: Wine[], deadline: number, now:
 
   const missing = SB_IMPORT.filter((i) => !known.some((n) => sameNumber(n, i.nr)));
   const hiddenCutoff = new Date(Date.parse(now) - HIDDEN_RECHECK_DAYS * 86_400_000).toISOString();
+  // Viner utan importör som inte kontrollerats sedan importören började fyllas i tas först, en gång.
+  const backfill = (w: Wine) => !w.importer && checkedAt(w) < IMPORTER_BACKFILL;
   const due = existing
     .filter((w) => (w.systembolagetUrl || w.offers?.some((o) => o.shop === SYSTEMBOLAGET)) && !w.lockedFields?.includes("offers"))
-    .filter((w) => checkedAt(w) < (w.syncHidden === STOCK_HIDDEN ? hiddenCutoff : cutoff))
-    .sort((a, b) => checkedAt(a).localeCompare(checkedAt(b)));
+    .filter((w) => backfill(w) || checkedAt(w) < (w.syncHidden === STOCK_HIDDEN ? hiddenCutoff : cutoff))
+    .sort((a, b) => Number(backfill(b)) - Number(backfill(a)) || checkedAt(a).localeCompare(checkedAt(b)));
   const jobs = [
     ...missing.map((i) => ({ url: `https://www.systembolaget.se/${i.nr}`, importer: i.importer, producer: i.producer, isNew: true, price: 0, noImporter: false })),
     ...due.map((w) => ({ url: w.systembolagetUrl ?? w.offers!.find((o) => o.shop === SYSTEMBOLAGET)!.url, importer: undefined, producer: "", isNew: false, price: Number(w.price) || 0, noImporter: !w.importer })),
