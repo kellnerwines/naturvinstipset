@@ -1,7 +1,7 @@
 // Månadssynk mot webbutikerna (BRIEF-KOMPASSEN.md, avsnitt 6). Vercel Cron
 // anropar GET den 1:a varje månad med "Authorization: Bearer $CRON_SECRET".
 // "Synka nu" i admin skickar POST. ?dry=1 hämtar och räknar men skriver inget,
-// ?shop=vinnatur|flaskvis|philipson|winetrade|justwine kör bara en butik.
+// ?shop=vinnatur|flaskvis|philipson|winetrade|justwine|societecachee kör bara en butik.
 
 import { NextRequest, NextResponse } from "next/server";
 import { revalidatePath } from "next/cache";

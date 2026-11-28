@@ -445,3 +445,48 @@ export function parseJustWineProduct(p: ShopifyProduct): { producer?: string; na
       ?? (/(^|[^\p{L}])rött($|[^\p{L}])/u.test(lower) ? "Rött" : /(^|[^\p{L}])vitt($|[^\p{L}])/u.test(lower) ? "Vitt" : undefined);
   return { producer, name: name || p.title, year, region, country, wineType, grapes };
 }
+
+// ─── Société Cachée (Shopify, dansk webbutik som skickar till Sverige) ────────
+
+/** Produktsidan skriver "Skatter ingår" under priset; godkänt som skattetext av admin 2026-11-28. */
+export const SOCIETE_CACHEE_TAX_TEXT = /skatter\s+ingår/i;
+
+const SC_REGIONS: Record<string, string> = { Jura: "Frankrike", Bourgogne: "Frankrike", Beaujolais: "Frankrike", "Ardèche": "Frankrike", Vaucluse: "Frankrike" };
+const SC_COLOURS: Record<string, string> = { "Rött": "Rött", Vitt: "Vitt", Orange: "Orange", "Rosé": "Rosé" };
+const SC_OTHER_REGIONS = /\b(Jura|Bourgogne|Beaujolais|Ardèche|Vaucluse|Rh[oô]ne|Provence|Languedoc|Loire|Alsace|Savoie|Roussillon)\b/g;
+
+/** Lådor och sexpack är inte enskilda viner. */
+export const isSocieteCacheeBottle = (p: ShopifyProduct) =>
+  !tagList(p.tags).includes("Låda") && !/låda|lådan|pack|box|kartong/i.test(p.title) && Number(p.variants[0]?.price) > 0;
+
+/**
+ * Titeln är "Producent - Vin år". Producent, färg och region står också som taggar.
+ * Regionen tas bara när vinet har en enda regiontagg och texten inte nämner någon annan
+ * region, eftersom butiken ibland taggar producentens alla regioner på varje vin.
+ */
+export function parseSocieteCacheeProduct(p: ShopifyProduct): { producer?: string; name: string; year: string; region?: string; country: string; wineType?: string; grapes: string[] } {
+  const tags = tagList(p.tags);
+  const [head, ...rest] = p.title.split(/\s+[-–]\s+/);
+  const producerTag = tags.find((t) => !SC_REGIONS[t] && !SC_COLOURS[t] && t !== "Låda");
+  const producer = producerTag ?? (rest.length ? head.trim() : undefined);
+  const year = p.title.match(/(?:19|20)\d{2}/)?.[0] ?? "NV";
+  const name = (rest.length ? rest.join(" - ") : p.title).replace(/(?:19|20)\d{2}/, "").replace(/\s{2,}/g, " ").trim();
+
+  const text = htmlText(p.body_html ?? "");
+  const regionTags = tags.filter((t) => SC_REGIONS[t]);
+  const mentioned = new Set([...text.matchAll(SC_OTHER_REGIONS)].map((m) => m[1]));
+  const region = regionTags.length === 1 && [...mentioned].every((m) => m === regionTags[0]) ? regionTags[0] : undefined;
+  // Landet följer av regiontaggarna när alla pekar på samma land.
+  const countries = new Set(regionTags.map((t) => SC_REGIONS[t]));
+  const country = countries.size === 1 ? [...countries][0] : COUNTRIES.find((c) => wordRe(c).test(text)) ?? "";
+
+  const lead = text.slice(0, 400);
+  // "Ugni Blanc (som i Italien kallas Trebbiano)" är en druva, inte två.
+  const found = findGrapes(`${p.title} ${lead}`);
+  const grapes = found.includes("Ugni Blanc") ? found.filter((g) => g !== "Trebbiano") : found;
+  const lower = `${p.title} ${lead}`.toLowerCase();
+  const wineType = /pet[ -]?nat|pét[ -]?nat|ancestral/.test(lower) ? "Pét Nat"
+    : /mousserande|bubbel/.test(lower) ? "Mousserande"
+    : tags.map((t) => SC_COLOURS[t]).find(Boolean) ?? deriveWineType(`${p.title} ${lead}`, tags, grapes);
+  return { producer, name: name || p.title, year, region, country, wineType, grapes };
+}
